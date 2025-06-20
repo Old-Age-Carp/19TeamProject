@@ -1,20 +1,24 @@
 ﻿#pragma once
 #include <vector>
 #include <memory>
+#include <string>
 
 class ILogable
 {
 public:
-	virtual class wstring ToString() const = 0;
-	virtual ~ILogable() = default;
+	virtual std::wstring ToString() const = 0;
 };
 // 
-class LogManager
+class CLogManager
 {
 private:
 	std::vector<std::unique_ptr<ILogable>> logs;
 
 public:
-	void AddLog(std::unique_ptr<ILogable> log);
+	inline int GetLogCount() const { return logs.size(); }
+	int AddLog(std::unique_ptr<ILogable> log);
+	inline const std::vector<std::unique_ptr<ILogable>>& GetLogs() const { return logs; }
+
+	~CLogManager() = default;
 };
 
