@@ -28,7 +28,6 @@
   <ItemGroup>
    <ClCompile Include="main.cpp" />
     <ClCompile Include="CMonster.cpp" />
-    <ClCompile Include="Printer.cpp" />
     <ClCompile Include="CPrinter.cpp" />
     <ClCompile Include="Private\CGameManager.cpp" />
     <ClCompile Include="Private\CGameObject.cpp" />
