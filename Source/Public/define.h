@@ -3,6 +3,7 @@
 
 enum class EGameState
 {
+	START,				//게임시작
 	IDLE,				//기본상태-게임시작시
 	BATTLE,				//배틀중
 	SELECT,				//메뉴고르는중
