@@ -1,18 +1,19 @@
 ﻿#pragma once
 #include <string>
 #include <vector>
+#include "CObject.h"
 
-class CMonster {
+class CMonster : public CObject {
 public:
     enum class EMonsterType { Normal, Boss };
 
 private:
     EMonsterType type;
     int expReward;
-    std::vector<int> dropItemTableIDs;  
+    std::vector<int> dropItemTableIDs;
 
 public:
-    CMonster(int id, const std::string& name, int atk, int def, int hp,
+    CMonster(int id, const std::wstring& name, int atk, int def, int hp,
         EMonsterType type, int exp, const std::vector<int>& dropItemTableIDs);
 
     EMonsterType GetType() const;
