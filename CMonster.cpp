@@ -1,12 +1,10 @@
 ﻿#include "CMonster.h"
 
 
-CMonster::CMonster(int id, const std::wstring& name, int atk, int def, int hp,
+CMonster::CMonster(const std::string& name, int atk, int hp,
     EMonsterType type, int exp, const std::vector<int>& dropItemTableIDs)
-    : CObject(id, name, atk, def, hp), 
-    type(type),
-    expReward(exp),
-    dropItemTableIDs(dropItemTableIDs)
+    : CGameObject(name, 1, hp, atk),
+    type(type), expReward(exp), dropItemTableIDs(dropItemTableIDs)
 {
 }
 CMonster::EMonsterType CMonster::GetType() const
