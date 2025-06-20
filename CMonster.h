@@ -12,8 +12,9 @@ private:
     std::vector<int> dropItemTableIDs;  
 
 public:
-    CMonster(int id, const std::string& name, int atk, int def, int hp,
+    CMonster(const std::string& name, int atk, int hp,
         EMonsterType type, int exp, const std::vector<int>& dropItemTableIDs);
+
 
     EMonsterType GetType() const;
     int GetExpReward() const;
