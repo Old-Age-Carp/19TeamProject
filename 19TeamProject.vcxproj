@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CGameItem.cpp" />
     <ClCompile Include="CLogManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="CPrinter.cpp" />
@@ -27,6 +28,7 @@
     <ClCompile Include="Private\CShopManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CGameItem.h" />
     <ClInclude Include="CLogManager.h" />
     <ClInclude Include="CPrinter.h" />
     <ClInclude Include="Public\CGameManager.h" />
