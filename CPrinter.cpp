@@ -1,10 +1,11 @@
-﻿#include "Printer.h"
-#define NOMINMAX
+﻿#define NOMINMAX
 #include <windows.h>
 #include <sstream>
 #include <limits>
 #include <iostream>
-#include "LogManager.h"
+#include "CPrinter.h"
+#include "CLogManager.h"
+#include "Public\CGameManager.h"
 
 using namespace std;
 
@@ -47,6 +48,11 @@ void CPrinter::PrintAllLog(const vector<unique_ptr<ILogable>>& logs)
 		}
 	}
     PrintBoxes(wrappedLog, 80, wrappedLog.size() + 3, 1);
+}
+
+void CPrinter::PrintGameState(const CGameManager& gameManager)
+{
+    // 게임 매니저에서 현재 상태를 가져와 적절한 포맷으로 출력하기.
 }
 
 void CPrinter::PrintLine(const wstring& line)

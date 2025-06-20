@@ -1,4 +1,4 @@
-﻿#include "LogManager.h"
+﻿#include "CLogManager.h"
 
 /// <param name="log">내용</param>
 /// <returns>몇 번째 로그인지</returns>

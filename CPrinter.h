@@ -4,6 +4,8 @@
 #include <memory>
 
 class ILogable;
+class CGameManager;
+enum EGameState;
 
 static class CPrinter
 {
@@ -13,6 +15,7 @@ public:
     static void Pause();
     static void Print(const std::wstring& message);
 	static void PrintAllLog(const std::vector<std::unique_ptr<ILogable>>& log);
+	static void PrintGameState(const CGameManager& gameManager);
 
     static std::wstring PlayerInfoToString();
     static std::wstring BattleInfoToString();
