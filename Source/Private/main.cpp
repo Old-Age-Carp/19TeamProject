@@ -1,6 +1,6 @@
 ﻿#include <vector>
 #include <string>
-#include "public/CGameManager.h"
+#include "CGameManager.h"
 
 
 int main()

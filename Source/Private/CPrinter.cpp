@@ -5,7 +5,7 @@
 #include <iostream>
 #include "CPrinter.h"
 #include "CLogManager.h"
-#include "Public\CGameManager.h"
+#include "CGameManager.h"
 
 using namespace std;
 

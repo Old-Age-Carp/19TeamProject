@@ -7,7 +7,7 @@ class ILogable;
 class CGameManager;
 enum EGameState;
 
-static class CPrinter
+class CPrinter
 {
 public:
     static void ClearScreen();
