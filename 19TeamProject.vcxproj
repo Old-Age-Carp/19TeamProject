@@ -22,10 +22,16 @@
     <ClCompile Include="LogManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Printer.cpp" />
+    <ClCompile Include="Private\CGameManager.cpp" />
+    <ClCompile Include="Private\CGameObject.cpp" />
+    <ClCompile Include="Private\CShopManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LogManager.h" />
     <ClInclude Include="Printer.h" />
+    <ClInclude Include="Public\CGameManager.h" />
+    <ClInclude Include="Public\CGameObject.h" />
+    <ClInclude Include="Public\CShopManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
