@@ -16,8 +16,8 @@ private:
 
 public:
 	inline int GetLogCount() const { return logs.size(); }
-	int AddLog(std::unique_ptr<ILogable> log);
 	inline const std::vector<std::unique_ptr<ILogable>>& GetLogs() const { return logs; }
+	int AddLog(std::unique_ptr<ILogable> log);
 
 	~CLogManager() = default;
 };
