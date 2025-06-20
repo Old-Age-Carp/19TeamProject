@@ -14,7 +14,7 @@ public:
 		: sName(name), iLevel(level), iHealth_Max(health), iHealth(health), iAttack(attack) {
 	}
 
-	virtual string getName() const = 0;
+	virtual string	getName() const = 0;
 	virtual int		getHealth() const = 0;
 	virtual int		getAttack() const = 0;
 

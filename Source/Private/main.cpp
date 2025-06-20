@@ -1,10 +1,15 @@
 ﻿#include <vector>
 #include <string>
-#include "CGameManager.h"
+#include "..\public/CGameManager.h"
 
 
 int main()
 {
-	
+    CGameManager* pGameMgr = CGameManager::GetInstance();
+
+    pGameMgr->Main();
+
+    pGameMgr->DestroyInstance();
+
     return 0;
 }
