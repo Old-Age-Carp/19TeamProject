@@ -24,12 +24,18 @@
     <ClCompile Include="Printer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CMonster.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LogManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Printer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CMonster.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
