@@ -1,6 +1,5 @@
 ﻿#include "CMonster.h"
 
-
 CMonster::CMonster(int id, const std::string& name, int atk, int def, int hp,
     EMonsterType type, int exp, const std::vector<int>& dropItemTableIDs)
     : Object(id, name, atk, def, hp),
