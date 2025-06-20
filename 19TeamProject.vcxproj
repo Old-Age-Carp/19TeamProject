@@ -32,6 +32,7 @@
     <ClInclude Include="Public\CGameManager.h" />
     <ClInclude Include="Public\CGameObject.h" />
     <ClInclude Include="Public\CShopManager.h" />
+    <ClInclude Include="Public\define.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
