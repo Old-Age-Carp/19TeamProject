@@ -1,14 +1,21 @@
 ﻿#pragma once
 #include <string>
 #include <vector>
+#include <memory>
 
-class Printer
+class ILogable;
+class CGameManager;
+enum EGameState;
+
+static class CPrinter
 {
 public:
-    void ClearScreen() const;
-    void ClearInputBuffer() const;
-    void Pause() const;
-    void Print(const std::wstring& message) const;
+    static void ClearScreen();
+    static void ClearInputBuffer();
+    static void Pause();
+    static void Print(const std::wstring& message);
+	static void PrintAllLog(const std::vector<std::unique_ptr<ILogable>>& log);
+	static void PrintGameState(const CGameManager& gameManager);
 
     static std::wstring PlayerInfoToString();
     static std::wstring BattleInfoToString();

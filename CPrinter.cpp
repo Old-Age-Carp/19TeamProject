@@ -1,33 +1,61 @@
-﻿#include "Printer.h"
-#define NOMINMAX
+﻿#define NOMINMAX
 #include <windows.h>
 #include <sstream>
 #include <limits>
 #include <iostream>
+#include "CPrinter.h"
+#include "CLogManager.h"
+#include "Public\CGameManager.h"
 
 using namespace std;
 
-void Printer::ClearScreen() const
+void CPrinter::ClearScreen()
 {
     system("cls");
 }
 
-void Printer::ClearInputBuffer() const
+void CPrinter::ClearInputBuffer() 
 {
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 }
 
-void Printer::Pause() const
+void CPrinter::Pause() 
 {
     system("pause");
 }
 
-void Printer::Print(const std::wstring& message) const
+void CPrinter::Print(const std::wstring& message)
 {
     PrintLine(message);
 }
 
-void Printer::PrintLine(const std::wstring& line)
+void CPrinter::PrintAllLog(const vector<unique_ptr<ILogable>>& logs)
+{
+	vector<wstring> wrappedLog(logs.size() * 2);
+    for (const unique_ptr<ILogable>& log : logs)
+    {
+        vector<wstring> wrapped = WrapText(log.get()->ToString(), 80); // 80은 박스 너비
+        for (size_t i = 0; i < wrapped.size(); ++i)
+        {
+            if (i < wrappedLog.size())
+            {
+                wrappedLog[i] += wrapped[i];
+            }
+            else
+            {
+                wrappedLog.push_back(wrapped[i]);
+            }
+		}
+	}
+    PrintBoxes(wrappedLog, 80, wrappedLog.size() + 3, 1);
+}
+
+void CPrinter::PrintGameState(const CGameManager& gameManager)
+{
+    // 게임 매니저에서 현재 상태를 가져와 적절한 포맷으로 출력하기.
+}
+
+void CPrinter::PrintLine(const wstring& line)
 {
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
     DWORD written;
@@ -35,46 +63,28 @@ void Printer::PrintLine(const std::wstring& line)
     WriteConsoleW(hOut, L"\n", 1, &written, nullptr);
 }
 
-std::vector<std::wstring> Printer::WrapText(const std::wstring& text, size_t width)
+vector<wstring> CPrinter::WrapText(const wstring& text, size_t width)
 {
     vector<wstring> lines;
-    wstringstream iss(text);
-    wstring word, line;
-
-    while (iss >> word)
+    for (size_t i = 0; i < text.length(); i += width)
     {
-        if (line.length() + word.length() + 1 > width)
-        {
-            lines.push_back(line);
-            line = word;
-        }
-        else
-        {
-            if (!line.empty()) line += L" ";
-            line += word;
-        }
+        lines.push_back(text.substr(i, width)); // 강제 분할
     }
-
-    if (!line.empty())
-    {
-        lines.push_back(line);
-    }
-
     return lines;
 }
 
-std::wstring Printer::PadRight(const std::wstring& text, size_t width)
+wstring CPrinter::PadRight(const wstring& text, size_t width)
 {
     if (text.length() >= width)
     {
         return text.substr(0, width);
     }
 
-    return text + std::wstring(width - text.length(), L' ');
+    return text + wstring(width - text.length(), L' ');
 }
 
-void Printer::PrintBoxes(
-    const std::vector<std::wstring>& texts,
+void CPrinter::PrintBoxes(
+    const vector<wstring>& texts,
     size_t boxWidth,
     size_t boxHeight,
     size_t boxCount
@@ -88,13 +98,11 @@ void Printer::PrintBoxes(
 
         if (i < texts.size())
         {
-            wstringstream ss(texts[i]);
-            wstring line;
+            vector<wstring> wrapped;
 
-            while (getline(ss, line))
+            if (i < texts.size())
             {
-                auto w = WrapText(line, boxWidth);
-                wrapped.insert(wrapped.end(), w.begin(), w.end());
+                wrapped = WrapText(texts[i], boxWidth); // boxWidth 전달
             }
         }
 

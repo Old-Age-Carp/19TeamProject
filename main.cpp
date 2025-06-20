@@ -1,8 +1,8 @@
 ﻿#include <vector>
 #include <string>
-#include "Printer.h"
+#include "public/CGameManager.h"
 
-using namespace std;
+
 int main()
 {
 	
