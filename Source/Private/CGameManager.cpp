@@ -1,10 +1,23 @@
 ﻿// Copyright Epic Games, Inc. All Rights Reserved.
 #include "..\Public\CGameManager.h"
+#include "CShopManager.h"
+#include "..\Public\CLogManager.h"
+
 CGameManager* CGameManager::instance = nullptr;
+
+CGameManager::CGameManager()
+{
+	m_pShopManager = CShopManager::GetInstance();
+
+	//m_pLogManager 
+
+}
 
 CGameManager::~CGameManager()
 {
 }
+
+
 
 CGameManager* CGameManager::GetInstance()
 {
