@@ -68,9 +68,6 @@ void CGameManager::Main()
 
 void CGameManager::CreateHero()
 {
-	cout << "캐릭터의 이름 입력:" << endl;
-
-	//이름받고 플레이어 클래스 만들기
 
 	Set_GameState(EGameState::SELECT); 
 	

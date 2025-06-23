@@ -5,7 +5,7 @@
 #include "CMonster.h"
 #include "CLogManager.h"
 #include "CStaticDataManager.h"
-#include "CGameItem.h"
+
 
 class CBattleManager
 {
@@ -20,7 +20,6 @@ public:
 
 private:
 	CGameObject* m_pGameObject;
-	CMonster m_Monster;
 	CLogManager* m_pLogger;
 	CStaticDataManager* m_pStaticDataManager;
 

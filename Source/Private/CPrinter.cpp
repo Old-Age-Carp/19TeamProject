@@ -1,28 +1,20 @@
 ﻿
-#include <sstream>
-#include <limits>
-#include <iostream>
 #include "CPrinter.h"
 #include "CLogManager.h"
 #include "CGameManager.h"
 
-using namespace std;
+using std::wstring;
+using std::vector;
 
 void CPrinter::ClearScreen()
 {
     system("cls");
 }
 
-void CPrinter::ClearInputBuffer() 
-{
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-}
-
 void CPrinter::Pause() 
 {
     system("pause");
 }
-
 
 void CPrinter::PrintLine(const wstring& line)
 {

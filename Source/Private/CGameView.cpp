@@ -55,7 +55,17 @@ void CGameView::ViewGameState(const CGameManager& gameMgr)
     }
 }
 
-void CGameView::ViewObjectStat(const CGameObject& stat)
+void CGameView::ViewObjectStat(const CGameObject& gameObject)
 {
+    vector<wstring> stats;
+    stats.resize(6);
+    stats.push_back(L"이름 :" + gameObject.getName());
+    stats.push_back(L"레벨 :" + gameObject.getLevel());
+    stats.push_back(L"체력 :" + gameObject.getHealth());
+    stats.push_back(L"공격 :" + gameObject.getAttack());
+    stats.push_back(L"방어 :" + gameObject.getDefense());
+      
+    
+    CPrinter::PrintBoxes(stats, 1, 6, 1);
 }
 
