@@ -1,8 +1,13 @@
 ﻿#include "CStaticDataManager.h"
+#include "define.h"
+#include "TSingleton.h"
 #include <iostream>
 #include <exception>
 #include <utility>
-
+#include <map>
+#include <string>
+#include <locale>
+#include <memory>
 
 bool CStaticDataManager::LoadAllStaticData()
 {
@@ -177,6 +182,52 @@ const FItemData* CStaticDataManager::GetItemData(int id) const
 {
     auto it = itemDataTableByID.find(id);
     if (it != itemDataTableByID.end())
+    {
+        return it->second.get();
+    }
+    return nullptr;
+}
+
+CStaticDataManager::CStaticDataManager()
+{
+    std::locale::global(std::locale(""));
+    std::wcout.imbue(std::locale(""));
+
+    loadItemData();
+}
+
+void CStaticDataManager::loadItemData()
+{
+    itemTable[1001] = std::make_unique<FItemPotionData>(
+        1001, L"작은 물약", 10, 50
+    );
+    itemTable[1002] = std::make_unique<FItemPotionData>(
+        1002, L"큰 물약", 30, 100
+    );
+    itemTable[2001] = std::make_unique<FItemWeaponData>(
+        2001, L"철검", 20, 5, 0, 0
+    );
+    itemTable[2002] = std::make_unique<FItemWeaponData>(
+        2002, L"미스릴검", 50, 15, 5, 0
+    );
+    itemTable[2003] = std::make_unique<FItemWeaponData>(
+        2003, L"전설의명검", 100, 50, 15, 50
+    );
+    itemTable[3001] = std::make_unique<FItemArmorData>(
+        3001, L"낡은 도복", 20, 5, 0
+    );
+    itemTable[3002] = std::make_unique<FItemArmorData>(
+        3002, L"철 갑옷", 50, 30, 10
+    );
+    itemTable[3003] = std::make_unique<FItemArmorData>(
+        3003, L"불멸의흑갑", 100, 60, 100
+    );
+}
+
+const FItemData* CStaticDataManager::GetItemData(int id) const
+{
+    auto it = itemTable.find(id);
+    if (it != itemTable.end())
     {
         return it->second.get();
     }

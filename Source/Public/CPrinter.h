@@ -7,16 +7,14 @@
 #include <memory>
 #include <optional>
 
+// 한글 출력이 안되는 문제는 링크 참고
+// https://www.notion.so/teamsparta/19-1ff2dc3ef514807b9a50e62984d74000 
 
 class ILogable;
-class CGameManager;
-
-
 class CPrinter
 {
 public:
 	static void ClearScreen();
-	static void ClearInputBuffer();
 	static void Pause();
 	static void PrintLine(const std::wstring& line);
 	static std::wstring Trim(const std::wstring& str);

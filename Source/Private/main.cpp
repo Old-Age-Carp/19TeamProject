@@ -2,6 +2,7 @@
 #include <string>
 #include "..\public/CGameManager.h"
 
+#include "CGameView.h"
 
 int main()
 {
@@ -10,6 +11,8 @@ int main()
     pGameMgr->Main();
 
     pGameMgr->DestroyInstance();
+
+    
 
     return 0;
 }

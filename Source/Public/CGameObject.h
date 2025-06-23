@@ -14,10 +14,12 @@ public:
 		: sName(name), iLevel(level), iHealth_Max(health), iHealth(health), iAttack(attack) {
 	}
 
-	std::wstring	getName()			{ return sName; }
-	int		getHealth()			{ return iHealth; }
-	int		getHealth_Max()		{ return iHealth_Max; }
-	int		getAttack()			{ return iAttack; }
+	std::wstring	getName() const { return sName; }
+	int		getHealth()	const { return iHealth; }
+	int		getHealth_Max() const { return iHealth_Max; }
+	int		getAttack() const { return iAttack; }
+	int		getArmor() const { return iArmor; }
+	int		getLevel()	const { return iLevel; }
 
 	void    setName(std::wstring arg) { sName = arg; }
 
