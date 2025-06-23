@@ -22,7 +22,7 @@ private:
 	CGameObject* m_pGameObject;
 	CMonster m_Monster;
 	CLogManager* m_pLogger;
-	CMonsterManager* m_pMonsterManager;
+	CStaticDataManager* staticDataManager;
 
 	std::wstring m_MonsterCurrentName;
 	int m_MonsterCurrentHp = 0;
