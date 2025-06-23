@@ -4,7 +4,6 @@
 #include "CGameObject.h"
 #include "CMonster.h"
 #include "CLogManager.h"
-#include "CMonsterManager.h"
 
 
 class CBattleManager

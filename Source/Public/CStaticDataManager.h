@@ -6,7 +6,6 @@
 #include <unordered_map>
 #include <string>
 #include "CMonster.h"
-#include "CItem.h"
 
 
 class CStaticDataManager : public TSingleton<CStaticDataManager>
