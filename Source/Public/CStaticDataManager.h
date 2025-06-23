@@ -4,14 +4,13 @@
 #include "define.h"
 #include <memory>
 #include <unordered_map>
+#include <map>
 #include <string>
 #include "CMonster.h"
 
 class CStaticDataManager : public TSingleton<CStaticDataManager>
 {
 	friend class TSingleton<CStaticDataManager>;
-
-	static CMonsterManager& GetInstance();
 
 	bool LoadMonsterData();
 
@@ -26,8 +25,6 @@ private:
 	std::map<int, std::unique_ptr<FItemData>> itemTable;
 	CStaticDataManager();
 	void loadItemData();
-	CMonsterManager() = default;
 	std::unordered_map<std::wstring, FMonsterData> monsterDataTable;
 	std::unordered_map<int, FMonsterData> monsterDataTableByID;
-
 };
