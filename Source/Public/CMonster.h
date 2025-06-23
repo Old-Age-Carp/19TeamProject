@@ -10,6 +10,7 @@ enum class EMonsterType
 
 struct FMonsterData
 {
+    int id;
     std::wstring name;
     int atk;
     int hp;
