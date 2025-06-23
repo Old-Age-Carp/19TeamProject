@@ -5,15 +5,15 @@
 #include <map>
 #include <memory>
 
-class StaticDataManager : public TSingleton<StaticDataManager>
+class CStaticDataManager : public TSingleton<CStaticDataManager>
 {
-	friend class TSingleton<StaticDataManager>;
+	friend class TSingleton<CStaticDataManager>;
 
 public:
 	const FItemData* GetItemData(int id) const;
 
 private:
 	std::map<int, std::unique_ptr<FItemData>> itemTable;
-	StaticDataManager();
+	CStaticDataManager();
 	void loadItemData();
 };
