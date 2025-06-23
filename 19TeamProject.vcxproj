@@ -19,25 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CStaticDataManager.cpp" />
-    <ClCompile Include="Source\Private\CGameItem.cpp" />
-    <ClCompile Include="Source\Private\CGameManager.cpp" />
-    <ClCompile Include="Source\Private\CGameObject.cpp" />
-    <ClCompile Include="Source\Private\CGameView.cpp" />
-    <ClCompile Include="Source\Private\CLogManager.cpp" />
-    <ClCompile Include="Source\Private\CPrinter.cpp" />
-    <ClCompile Include="Source\Private\CShopManager.cpp" />
-    <ClCompile Include="Source\Private\main.cpp" />
-    <ClInclude Include="Source\Public\CGameManager.h" />
-    <ClInclude Include="Source\Public\CGameObject.h" />
-    <ClInclude Include="Source\Public\CGameView.h" />
-    <ClInclude Include="Source\Public\CLogManager.h" />
-    <ClInclude Include="Source\Public\CMonster.h" />
-    <ClInclude Include="Source\Public\CPrinter.h" />
-    <ClInclude Include="Source\Public\CShopManager.h" />
-    <ClInclude Include="Source\Public\CStaticDataManager.h" />
-    <ClInclude Include="Source\Public\define.h" />
-    <ClInclude Include="Source\Public\TSingleton.h" />
+	  <ClCompile Include="Source\**\*.cpp" />
+	  <ClInclude Include="Source\**\*.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
