@@ -1,4 +1,4 @@
-#include "..\Public/CBattleManager.h"
+#include "..\Public\CBattleManager.h"
 
 void CBattleManager::SetBattle()
 {
