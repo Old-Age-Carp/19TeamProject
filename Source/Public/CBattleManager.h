@@ -1,16 +1,21 @@
 ﻿#pragma once
 
-#include <memory>
+#include <random>
 #include "CGameObject.h"
 #include "CMonster.h"
 #include "CLogManager.h"
 #include "CStaticDataManager.h"
 
-
 class CBattleManager
 {
 public:
-	CBattleManager(CGameObject* gameObject, CLogManager* logger, CStaticDataManager* staticDataManager);
+	CBattleManager(CGameObject* gameObject, CLogManager* logger, CStaticDataManager* staticDataManager):
+		m_pGameObject(gameObject),
+		m_pLogger(logger),
+		m_pStaticDataManager(staticDataManager),
+		m_bIsBossBattle(false)
+	{
+	};
 
 	void SetBattle();
 	void PlayerTurn();
@@ -19,15 +24,10 @@ public:
 	bool MonsterIsAlive();
 
 private:
+	void GenerateMonster(bool isBoss, int monsterId);
 	CGameObject* m_pGameObject;
+	CMonster m_Monster;
 	CLogManager* m_pLogger;
 	CStaticDataManager* m_pStaticDataManager;
-
-	std::wstring m_MonsterCurrentName;
-	int m_MonsterCurrentHp = 0;
-	int m_MonsterCurrentAtk = 0;
-
 	bool m_bIsBossBattle;
-
-	CMonster GenerateMonster();
 };
