@@ -1,9 +1,10 @@
-#include "CGameView.h"
+﻿#include "CGameView.h"
 #include "define.h"
 
 using std::vector;
 using std::unique_ptr;
 using std::wstring;
+using std::to_wstring;
 
 void CGameView::ViewLogs(const std::vector<std::unique_ptr<ILogable>>& logs)
 
@@ -57,15 +58,10 @@ void CGameView::ViewGameState(const CGameManager& gameMgr)
 
 void CGameView::ViewObjectStat(const CGameObject& gameObject)
 {
-    vector<wstring> stats;
-    stats.reserve(6);
-    stats.push_back(L"이름 :" + gameObject.getName());
-    stats.push_back(L"레벨 :" + gameObject.getLevel());
-    stats.push_back(L"체력 :" + gameObject.getHealth());
-    stats.push_back(L"공격 :" + gameObject.getAttack());
-    stats.push_back(L"방어 :" + gameObject.getArmor());
-      
-    
-    CPrinter::PrintBoxes(stats, 1, 6, 1);
+    CPrinter::PrintLine(L"이름 :" + gameObject.getName());
+    CPrinter::PrintLine(L"레벨 :" + to_wstring(gameObject.getLevel()));
+    CPrinter::PrintLine(L"체력 :" + to_wstring(gameObject.getHealth()));
+    CPrinter::PrintLine(L"공격 :" + to_wstring(gameObject.getAttack()));
+    CPrinter::PrintLine(L"방어 :" + to_wstring(gameObject.getArmor()));   
 }
 
