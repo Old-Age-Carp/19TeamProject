@@ -8,7 +8,7 @@ enum class EMonsterType
     Boss
 };
 
-struct MonsterDataf
+struct FMonsterData
 {
     std::wstring name;
     int atk;
