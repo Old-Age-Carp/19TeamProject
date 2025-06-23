@@ -15,6 +15,8 @@ public:
 	void SetBattle();
 	void PlayerTurn();
 	void MonsterTurn();
+	bool GameObjectIsAlive();
+	bool MonsterIsAlive();
 
 private:
 	CGameObject* m_pGameObject;

@@ -30,22 +30,24 @@ void CBattleManager::SetBattle()
 
 	m_bIsBossBattle = (pData->type == EMonsterType::Boss);
 	m_Monster = CMonster(*pData);
+	
 	m_MonsterCurrentName = pData->Name;
 	m_MonsterCurrentHp = pData->hp;
 	m_MonsterCurrentAtk = pData->atk;
+
 	m_pLogger->Log(L"Battle started with monster: " + m_MonsterCurrentName + L" (HP: " + std::to_wstring(m_MonsterCurrentHp) + L", ATK: " + std::to_wstring(m_MonsterCurrentAtk) + L")");
 }
 
 CMonster CBattleManager::GenerateMonster()
 {
-	m_pLoger->Log(L"Generating monster...");
+	m_pLogger->Log(L"Generating monster...");
 	return CMonster(*m_pMonsterManager->GetMonsterData(monsterId));
 }
 
 void CBattleManager::PlayerTurn()
 {
 	m_MonsterCurrentHp -= m_pGameObject->getAttack();
-	if(m_MonsterCurrentHp <= 0)
+	if(!MonsterIsAlive())
 	{
 		m_pLogger->Log(L"You defeated the monster: " + m_MonsterCurrentName);
 		return;
@@ -55,14 +57,9 @@ void CBattleManager::PlayerTurn()
 
 void CBattleManager::MonsterTurn()
 {
-	if(m_MonsterCurrentHp <= 0)
-	{
-		return;
-	}
-
 	m_pGameObject->getHealth() -= m_MonsterCurrentAtk;
 
-	if(m_pGameObject->getHealth() <= 0)
+	if(!GameObjectIsAlive())
 	{
 		m_pLogger->Log(L"The monster " + m_MonsterCurrentName + L" has defeated you!");
 		return;
@@ -70,21 +67,12 @@ void CBattleManager::MonsterTurn()
 	m_pLogger->Log(L"The monster " + m_MonsterCurrentName + L" attacked you! (Your remaining health: " + std::to_wstring(m_pGameObject->getHealth()) + L")");
 }
 
-void CBattleManager::EndBattle()
+bool CBattleManager::GameObjectIsAlive()
 {
-	if(m_pGameObject->getHealth() <= 0)
-	{
-		m_pLogger->Log(L"You have been defeated by the monster: " + m_MonsterCurrentName);
-		return;
-	}
+	return m_pGameObject->getHealth() > 0;
+}
 
-	m_pLogger->Log(L"Battle ended with monster: " + m_MonsterCurrentName);
-	if (m_MonsterCurrentHp <= 0)
-	{
-		m_pLogger->Log(L"You have defeated the monster: " + m_MonsterCurrentName);
-	}
-	else
-	{
-		m_pLogger->Log(L"The monster " + m_MonsterCurrentName + L" has escaped!");
-	}
+bool CBattleManager::MonsterIsAlive()
+{
+	return m_MonsterCurrentHp > 0;
 }
