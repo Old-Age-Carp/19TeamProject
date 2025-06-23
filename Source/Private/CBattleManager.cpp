@@ -1,57 +1,77 @@
-﻿#include "CBattleManager.h"
-#include "CLogManager.h"
-#include <random>
-
-CBattleManager::CBattleManager(CPlayer* player, CLogManager* logger, m_pMonsterManager* monsterManager)
-	:m_pPlayer(player), m_pLogger(logger), m_pMonsterManager(monsterManager), m_bIsBossBattle(false), m_MonsterCurrnetHp(0), m_MonsterCurrentAtk(0)
-{
-}
+#include "..\Public/CBattleManager.h"
 
 void CBattleManager::SetBattle()
 {
-	const int monsterId
-	if(m_pPlayer*->GetLevel() >= 10)
+	int monsterId;
+	if(*(m_pGameObject->Get_pLevel()) >= 10)
 	{
 		int BossIds[] =  { 107, 108 };
-		monsterId = bossIds[rand() % 2];
+		monsterId = BossIds[rand() % 2];
 		m_bIsBossBattle = true;
 	}
 	else
 	{
-		monsterId = 101 + rnad() % 6;
+		monsterId = 101 + rand() % 6;
 		m_bIsBossBattle = false; 
 	}
 
-	FMonsterData* pData = m_pMonsterManager->GetMonsterData(monsterId);
+	const FMonsterData* pData = m_pStaticDataManager->GetMonsterData(monsterId);
 	if(!pData)
 	{
-		retern;
+		m_pLogger->AddLog(L"Error: Monster data not found for ID: " + std::to_wstring(monsterId));
+		return;
 	}
 
-	m_bIsBossBattle = (pData->type == EMonsterType::Boss);
-	m_Monster = CMonster(*pData);
-	m_MonsterCurrentName = pData->Name;
-	m_MonsterCurrentHp = pData->hp;
-	m_MonsterCurrentAtk = pData->atk;
+	m_Monster = CMonster(pData);
+	GenerateMonster(m_bIsBossBattle, monsterId);
+
+	m_pLogger->AddLog(L"Battle started with monster: " + m_Monster.GetName() + L" (HP: " + std::to_wstring(m_Monster.GetCurrentHP()) + L", ATK: " + std::to_wstring(m_Monster.GetAttack()) + L")");
 }
 
-CMonster CBattleManager::GenerateMonster()
+void CBattleManager::GenerateMonster(bool isBoss, int monsterId)
 {
-	return CMonster(*m_pMonsterManager->GetMonsterData(monsterId));
+	if(isBoss)
+	{
+		m_pLogger->AddLog(L"Generating boss monster...");
+	}
+	else
+	{
+		m_pLogger->AddLog(L"Generating regular monster...");
+	}
 }
 
 void CBattleManager::PlayerTurn()
 {
-	m_MonsterCurrentHp -= m_pPlayer.GetAttack();
+	m_Monster.TakeDamage(m_pGameObject->getAttack());
+	if(!m_Monster.IsAlive())
+	{
+		m_pLogger->AddLog(L"You defeated the monster: " + m_Monster.GetName());
+		return;
+	}
+	m_pLogger->AddLog(L"You attacked the monster: " + m_Monster.GetName() + L" (Remaining HP: " + std::to_wstring(m_Monster.GetCurrentHP()) + L")");
 }
 
 void CBattleManager::MonsterTurn()
 {
-	if(m_MonsterCurrentHp <= 0)
+	int damage = m_Monster.GetAttack();
+	*m_pGameObject->Get_pHealth() -= damage;
+	if(*m_pGameObject->Get_pHealth() < 0)
 	{
+		*m_pGameObject->Get_pHealth() = 0;	}
+	if(!GameObjectIsAlive())
+	{
+		m_pLogger->AddLog(L"The monster " + m_Monster.GetName() + L" has defeated you!");
 		return;
 	}
-
-	m_pPlayer->Damage(m_MonsterCurrentAtk);
+	m_pLogger->AddLog(L"The monster " + m_Monster.GetName() + L" attacked you! (Your remaining health: " + std::to_wstring(*m_pGameObject->Get_pHealth()) + L")");
 }
 
+bool CBattleManager::GameObjectIsAlive()
+{
+	return m_pGameObject->getHealth() > 0;
+}
+
+bool CBattleManager::MonsterIsAlive()
+{
+	return m_Monster.IsAlive();
+}

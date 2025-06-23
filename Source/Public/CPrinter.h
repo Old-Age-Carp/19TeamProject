@@ -9,14 +9,11 @@
 
 
 class ILogable;
-class CGameManager;
-
 
 class CPrinter
 {
 public:
 	static void ClearScreen();
-	static void ClearInputBuffer();
 	static void Pause();
 	static void PrintLine(const std::wstring& line);
 	static std::wstring Trim(const std::wstring& str);
