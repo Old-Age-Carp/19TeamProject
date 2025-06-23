@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include <memory>
-#include "CPlayer.h"
+#include "CGameObject.h"
 #include "CMonster.h"
 #include "CLogManager.h"
 #include "CMonsterManager.h"
@@ -10,7 +10,7 @@
 class CBattleManager
 {
 public:
-	CBattleManager(CPlayer* player, CLogManager* loger, CMonsterManager* monsterManager);
+	CBattleManager(CGameObject* gameObject, CLogManager* loger, CMonsterManager* monsterManager);
 
 
 	void SetBattle();
@@ -18,7 +18,7 @@ public:
 	void MonsterTurn();
 
 private:
-	CPlayer* m_pPlayer;
+	CGameObject* m_pGameObject;
 	CMonster m_Monster;
 	CLogManager* m_pLogger;
 	CMonsterManager* m_pMonsterManager;
