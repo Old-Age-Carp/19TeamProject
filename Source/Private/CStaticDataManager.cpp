@@ -188,48 +188,42 @@ const FItemData* CStaticDataManager::GetItemData(int id) const
     return nullptr;
 }
 
-CStaticDataManager::CStaticDataManager()
+bool CStaticDataManager::LoadItemDataInternal()
 {
-    std::locale::global(std::locale(""));
-    std::wcout.imbue(std::locale(""));
-
-    loadItemData();
-}
-
-void CStaticDataManager::loadItemData()
-{
-    itemTable[1001] = std::make_unique<FItemPotionData>(
-        1001, L"작은 물약", 10, 50
-    );
-    itemTable[1002] = std::make_unique<FItemPotionData>(
-        1002, L"큰 물약", 30, 100
-    );
-    itemTable[2001] = std::make_unique<FItemWeaponData>(
-        2001, L"철검", 20, 5, 0, 0
-    );
-    itemTable[2002] = std::make_unique<FItemWeaponData>(
-        2002, L"미스릴검", 50, 15, 5, 0
-    );
-    itemTable[2003] = std::make_unique<FItemWeaponData>(
-        2003, L"전설의명검", 100, 50, 15, 50
-    );
-    itemTable[3001] = std::make_unique<FItemArmorData>(
-        3001, L"낡은 도복", 20, 5, 0
-    );
-    itemTable[3002] = std::make_unique<FItemArmorData>(
-        3002, L"철 갑옷", 50, 30, 10
-    );
-    itemTable[3003] = std::make_unique<FItemArmorData>(
-        3003, L"불멸의흑갑", 100, 60, 100
-    );
-}
-
-const FItemData* CStaticDataManager::GetItemData(int id) const
-{
-    auto it = itemTable.find(id);
-    if (it != itemTable.end())
+    try
     {
-        return it->second.get();
+        // FItemPotionData (물약)
+        itemDataTableByID[1001] = std::make_unique<FItemPotionData>(1001, L"작은 물약", 10, 50);
+        itemDataTableByName[L"작은 물약"] = std::make_unique<FItemPotionData>(1001, L"작은 물약", 10, 50);
+
+        itemDataTableByID[1002] = std::make_unique<FItemPotionData>(1002, L"큰 물약", 30, 100);
+        itemDataTableByName[L"큰 물약"] = std::make_unique<FItemPotionData>(1002, L"큰 물약", 30, 100);
+
+        // FItemWeaponData (무기)
+        itemDataTableByID[2001] = std::make_unique<FItemWeaponData>(2001, L"철검", 20, 5, 0, 0);
+        itemDataTableByName[L"철검"] = std::make_unique<FItemWeaponData>(2001, L"철검", 20, 5, 0, 0);
+
+        itemDataTableByID[2002] = std::make_unique<FItemWeaponData>(2002, L"미스릴검", 50, 15, 5, 0);
+        itemDataTableByName[L"미스릴검"] = std::make_unique<FItemWeaponData>(2002, L"미스릴검", 50, 15, 5, 0);
+
+        itemDataTableByID[2003] = std::make_unique<FItemWeaponData>(2003, L"전설의명검", 100, 50, 15, 50);
+        itemDataTableByName[L"전설의명검"] = std::make_unique<FItemWeaponData>(2003, L"전설의명검", 100, 50, 15, 50);
+
+        // FItemArmorData (방어구)
+        itemDataTableByID[3001] = std::make_unique<FItemArmorData>(3001, L"낡은 도복", 20, 5, 0);
+        itemDataTableByName[L"낡은 도복"] = std::make_unique<FItemArmorData>(3001, L"낡은 도복", 20, 5, 0);
+
+        itemDataTableByID[3002] = std::make_unique<FItemArmorData>(3002, L"철 갑옷", 50, 30, 10);
+        itemDataTableByName[L"철 갑옷"] = std::make_unique<FItemArmorData>(3002, L"철 갑옷", 50, 30, 10);
+
+        itemDataTableByID[3003] = std::make_unique<FItemArmorData>(3003, L"불멸의흑갑", 100, 60, 100);
+        itemDataTableByName[L"불멸의흑갑"] = std::make_unique<FItemArmorData>(3003, L"불멸의흑갑", 100, 60, 100);
+
+        return true;
     }
-    return nullptr;
+    catch (const std::exception& e)
+    {
+        std::wcerr << L"아이템 데이터 로드 중 오류 발생: " << e.what() << std::endl;
+        return false;
+    }
 }
