@@ -63,7 +63,7 @@ void CGameView::ViewObjectStat(const CGameObject& gameObject)
     stats.push_back(L"레벨 :" + gameObject.getLevel());
     stats.push_back(L"체력 :" + gameObject.getHealth());
     stats.push_back(L"공격 :" + gameObject.getAttack());
-    stats.push_back(L"방어 :" + gameObject.getDefense());
+    stats.push_back(L"방어 :" + gameObject.getArmor());
       
     
     CPrinter::PrintBoxes(stats, 1, 6, 1);
