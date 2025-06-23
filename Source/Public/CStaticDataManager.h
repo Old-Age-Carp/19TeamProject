@@ -6,28 +6,32 @@
 #include <unordered_map>
 #include <string>
 #include "CMonster.h"
+#include "CItem.h"
+
 
 class CStaticDataManager : public TSingleton<CStaticDataManager>
 {
-	friend class TSingleton<CStaticDataManager>;
-
-	static CMonsterManager& GetInstance();
-
-	bool LoadMonsterData();
-
-	const FMonsterData* GetMonsterData(const std::wstring& name) const;
-
-	const FMonsterData* GetMonsterData(int id) const;
+    friend class TSingleton<CStaticDataManager>;
 
 public:
-	const FItemData* GetItemData(int id) const;
+    bool LoadAllStaticData();
+
+    const FMonsterData* GetMonsterData(const std::wstring& name) const;
+    const FMonsterData* GetMonsterData(int id) const;
+
+    const FItemData* GetItemData(const std::wstring& name) const; // 이름으로 찾는 기능 
+    const FItemData* GetItemData(int id) const;
 
 private:
-	std::map<int, std::unique_ptr<FItemData>> itemTable;
-	CStaticDataManager();
-	void loadItemData();
-	CMonsterManager() = default;
-	std::unordered_map<std::wstring, FMonsterData> monsterDataTable;
-	std::unordered_map<int, FMonsterData> monsterDataTableByID;
+    CStaticDataManager() = default;
+    ~CStaticDataManager() = default;
 
+    bool LoadMonsterDataInternal();
+    bool LoadItemDataInternal();
+
+    std::unordered_map<std::wstring, FMonsterData> monsterDataTable;
+    std::unordered_map<int, FMonsterData> monsterDataTableByID;
+
+    std::unordered_map<int, std::unique_ptr<FItemData>> itemDataTableByID;
+    std::unordered_map<std::wstring, std::unique_ptr<FItemData>> itemDataTableByName; // 이름으로 찾는 맵 
 };
