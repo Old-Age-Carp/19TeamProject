@@ -21,7 +21,6 @@
   <ItemGroup>
     <ClCompile Include="Source\**\*.cpp" />
     <ClInclude Include="Source\**\*.h" />
-    <ClInclude Include="TSingleton.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
