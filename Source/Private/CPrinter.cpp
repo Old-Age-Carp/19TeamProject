@@ -1,5 +1,4 @@
-﻿#define NOMINMAX
-#include <windows.h>
+﻿
 #include <sstream>
 #include <limits>
 #include <iostream>
@@ -24,36 +23,6 @@ void CPrinter::Pause()
     system("pause");
 }
 
-void CPrinter::Print(const std::wstring& message)
-{
-    PrintLine(message);
-}
-
-void CPrinter::PrintAllLog(const vector<unique_ptr<ILogable>>& logs)
-{
-	vector<wstring> wrappedLog(logs.size() * 2);
-    for (const unique_ptr<ILogable>& log : logs)
-    {
-        vector<wstring> wrapped = WrapText(log.get()->ToString(), 80); // 80은 박스 너비
-        for (size_t i = 0; i < wrapped.size(); ++i)
-        {
-            if (i < wrappedLog.size())
-            {
-                wrappedLog[i] += wrapped[i];
-            }
-            else
-            {
-                wrappedLog.push_back(wrapped[i]);
-            }
-		}
-	}
-    PrintBoxes(wrappedLog, 80, wrappedLog.size() + 3, 1);
-}
-
-void CPrinter::PrintGameState(const CGameManager& gameManager)
-{
-    // 게임 매니저에서 현재 상태를 가져와 적절한 포맷으로 출력하기.
-}
 
 void CPrinter::PrintLine(const wstring& line)
 {
