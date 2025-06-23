@@ -3,9 +3,10 @@
 #include "CPrinter.h"
 #include "CLogManager.h"
 #include "CGameManager.h"
+#include "CGameObject.h"
 
 /// <summary>
-/// 게임관련 입출력을 담당하는 클래스
+/// 게임관련 출력을 담당하는 클래스 일종의 UI 역할
 /// </summary>
 class CGameView
 {
@@ -15,5 +16,8 @@ public:
 
 	void ViewGameState(const CGameManager& gameMgr);
 
+	void ViewObjectStat(const CGameObject& stat);
+
+	void ViewRequireInputFor(const EGameState state);
 };
 

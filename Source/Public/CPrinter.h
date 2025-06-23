@@ -19,9 +19,12 @@ public:
 	static void ClearInputBuffer();
 	static void Pause();
 	static void PrintLine(const std::wstring& line);
+	static std::wstring Trim(const std::wstring& str);
 
 	template<typename T>
 	static T GetInput();
+	template<typename T>
+	std::optional<T> ParseInput(const std::wstring& input);
 
 	static std::vector<std::wstring> WrapText(const std::wstring& text, size_t width);
 	static std::wstring PadRight(const std::wstring& text, size_t width);
@@ -36,19 +39,8 @@ public:
 private:
 };
 
-std::wstring Trim(const std::wstring& str)
-{
-	if (str.empty()) return L"";
-
-	size_t start = str.find_first_not_of(L" \t\r\n");
-	size_t end = str.find_last_not_of(L" \t\r\n");
-
-	if (start == std::wstring::npos) return L"";
-	return str.substr(start, end - start + 1);
-}
-
 template<typename T>
-std::optional<T> ParseInput(const std::wstring& input)
+std::optional<T> CPrinter::ParseInput(const std::wstring& input)
 {
 	static_assert(std::is_same_v<T, int> || std::is_same_v<T, std::wstring>,
 		"Only int and wstring are supported");

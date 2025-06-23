@@ -1,4 +1,5 @@
 ﻿#include "CGameView.h"
+#include "define.h"
 
 using std::vector;
 using std::unique_ptr;
@@ -25,3 +26,36 @@ void CGameView::ViewLogs(const std::vector<std::unique_ptr<ILogable>>& logs)
     }
     CPrinter::PrintBoxes(wrappedLog, 80, wrappedLog.size() + 3, 1);
 }
+
+void CGameView::ViewGameState(const CGameManager& gameMgr)
+{
+    EGameState state = gameMgr.GetGameState();
+
+    switch (state)
+    {
+    case EGameState::START:
+        CPrinter::PrintLine(L"캐릭터 이름을 입력하세요 : ");
+        break;
+    case EGameState::IDLE:
+        break;
+    case EGameState::BATTLE:
+        break;
+    case EGameState::SELECT:
+        break;
+    case EGameState::SHOP:
+        break;
+    case EGameState::LEVELUP:
+        break;
+    case EGameState::INVENTORY:
+        break;
+    case EGameState::GAMEOVER:
+        break;
+    case EGameState::END:
+        break;
+    }
+}
+
+void CGameView::ViewObjectStat(const CGameObject& stat)
+{
+}
+
