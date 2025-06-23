@@ -11,7 +11,8 @@
 
 class CStaticDataManager : public TSingleton<CStaticDataManager>
 {
-    friend class TSingleton<CStaticDataManager>;
+
+	friend class TSingleton<CStaticDataManager>;
 
 public:
     bool LoadAllStaticData();
@@ -23,15 +24,15 @@ public:
     const FItemData* GetItemData(int id) const;
 
 private:
-    CStaticDataManager() = default;
-    ~CStaticDataManager() = default;
+    CStaticDataManager() = default; 
+    ~CStaticDataManager() = default; 
 
-    bool LoadMonsterDataInternal();
-    bool LoadItemDataInternal();
+    bool LoadMonsterDataInternal(); 
+    bool LoadItemDataInternal();    
 
-    std::unordered_map<std::wstring, FMonsterData> monsterDataTable;
-    std::unordered_map<int, FMonsterData> monsterDataTableByID;
+    std::unordered_map<std::wstring, FMonsterData> monsterDataTable; 
+    std::unordered_map<int, FMonsterData> monsterDataTableByID;     
 
-    std::unordered_map<int, std::unique_ptr<FItemData>> itemDataTableByID;
-    std::unordered_map<std::wstring, std::unique_ptr<FItemData>> itemDataTableByName; // 이름으로 찾는 맵 
+    std::unordered_map<int, std::unique_ptr<FItemData>> itemDataTableByID;       
+    std::unordered_map<std::wstring, std::unique_ptr<FItemData>> itemDataTableByName; 
 };
