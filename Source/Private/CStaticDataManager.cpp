@@ -13,7 +13,7 @@ bool CStaticDataManager::LoadAllStaticData()
 {
     if (!LoadMonsterDataInternal())
     {
-        std::wcerr << L"." << std::endl;
+        std::wcerr << L"failed to load item data" << std::endl;
         return false;
     }
 
