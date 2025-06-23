@@ -1,6 +1,9 @@
 ﻿#pragma once
 #include <string>
 #include <vector>
+#include "IAttack.h"
+#include "IHitAble.h"
+
 
 enum class EMonsterType
 {
@@ -48,7 +51,7 @@ public:
 
     int GetCurrentHP() const { return m_currentHP; }
 
-    int GetAttack() const { return m_baseData ? m_baseData->atk : 0; }
+    int GetAttackValue() const { return m_baseData ? m_baseData->atk : 0; }
 
     const std::wstring& GetName() const { return m_baseData ? m_baseData->name : L"Unknown"; }
 

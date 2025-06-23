@@ -19,8 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-	  <ClCompile Include="Source\**\*.cpp" />
-	  <ClInclude Include="Source\**\*.h" />
+    <ClCompile Include="Source\**\*.cpp" />
+    <ClInclude Include="IAttack.h" />
+    <ClInclude Include="IHitable.h" />
+    <ClInclude Include="Source\**\*.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
