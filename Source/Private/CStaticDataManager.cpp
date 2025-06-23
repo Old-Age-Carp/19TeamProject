@@ -149,18 +149,25 @@ bool CStaticDataManager::LoadItemDataInternal()
     {
         itemDataTableByID[1001] = std::make_unique<FItemPotionData>(1001, L"작은 물약", 10, 50);
         itemDataTableByName.insert({ L"작은 물약", itemDataTableByID[1001].get() });
+
         itemDataTableByID[1002] = std::make_unique<FItemPotionData>(1002, L"큰 물약", 30, 100);
         itemDataTableByName.insert({ L"큰 물약", itemDataTableByID[1002].get() });
+
         itemDataTableByID[2001] = std::make_unique<FItemWeaponData>(2001, L"철검", 20, 5, 0, 0);
         itemDataTableByName.insert({ L"철검", itemDataTableByID[2001].get() });
+
         itemDataTableByID[2002] = std::make_unique<FItemWeaponData>(2002, L"미스릴검", 50, 15, 5, 0);
         itemDataTableByName.insert({ L"미스릴검", itemDataTableByID[2002].get() });
+
         itemDataTableByID[2003] = std::make_unique<FItemWeaponData>(2003, L"전설의명검", 100, 50, 15, 50);
         itemDataTableByName.insert({ L"전설의명검", itemDataTableByID[2003].get() });
+
         itemDataTableByID[3001] = std::make_unique<FItemArmorData>(3001, L"낡은 도복", 20, 5, 0);
         itemDataTableByName.insert({ L"낡은 도복", itemDataTableByID[3001].get() });
+
         itemDataTableByID[3002] = std::make_unique<FItemArmorData>(3002, L"철 갑옷", 50, 30, 10);
         itemDataTableByName.insert({ L"철 갑옷", itemDataTableByID[3002].get() });
+
         itemDataTableByID[3003] = std::make_unique<FItemArmorData>(3003, L"불멸의흑갑", 100, 60, 100);
         itemDataTableByName.insert({ L"불멸의흑갑", itemDataTableByID[3003].get() });
 
@@ -203,12 +210,3 @@ const FItemData* CStaticDataManager::GetItemData(int id) const
     return nullptr;
 }
 
-const FItemData* CStaticDataManager::GetItemData(const std::wstring& name) const
-{
-    auto it = itemDataTableByName.find(name); 
-    if (it != itemDataTableByName.end())
-    {
-        return it->second; 
-    }
-    return nullptr;
-}
