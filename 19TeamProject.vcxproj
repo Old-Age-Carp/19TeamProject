@@ -20,15 +20,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\**\*.cpp" />
+    <ClCompile Include="StaticDataManager.cpp" />
     <ClInclude Include="Source\**\*.h" />
   </ItemGroup>
-	<ItemGroup>
-		<None Include=".editorconfig" />
-	</ItemGroup>
-	<PropertyGroup>
-		<IncludePath>$(ProjectDir)Source\Public;$(IncludePath)</IncludePath>
-	</PropertyGroup>
-
+  <ItemGroup>
+    <None Include=".editorconfig" />
+  </ItemGroup>
+  <PropertyGroup>
+    <IncludePath>$(ProjectDir)Source\Public;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
