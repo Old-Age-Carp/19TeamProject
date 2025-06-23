@@ -2,7 +2,7 @@
 #include "CLogManager.h"
 #include <random>
 
-CBattleManager::CBattleManager(CGameObject* gameObject, CLogManager* logger, m_pMonsterManager* monsterManager)
+CBattleManager::CBattleManager(CGameObject* gameObject, CLogManager* logger, CStaticDataManager* staticDataManager)
 	:m_pGameObject(gameObject), m_pLogger(logger), m_pMonsterManager(monsterManager), m_bIsBossBattle(false), m_MonsterCurrnetHp(0), m_MonsterCurrentAtk(0)
 {
 }
