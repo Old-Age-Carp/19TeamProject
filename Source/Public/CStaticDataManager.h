@@ -6,7 +6,7 @@
 #include <unordered_map>
 #include <string>
 #include "CMonster.h"
-
+#include "CGameItem.h"
 
 class CStaticDataManager : public TSingleton<CStaticDataManager>
 {
