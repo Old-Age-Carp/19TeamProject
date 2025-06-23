@@ -2,15 +2,21 @@
 #pragma once
 
 #include "define.h"
+#include <iostream>
+
+class CPlayer;
 
 //이준식 작업
 class CGameManager
 {
 private:
+	class CPrinter*			m_pPrinter = nullptr;
+
 	class CShopManager*		m_pShopManager	= nullptr;
 	class CLogManager*		m_pLogManager	= nullptr;
 	static CGameManager* instance; //싱글톤 선언
 
+	class CPlayer* m_pPlayer = nullptr;
 	CGameManager(); // 생성자
 	~CGameManager(); //소멸자
 
@@ -19,10 +25,10 @@ private:
 
 	void CreateHero(); //캐릭터생성
 	void SelectMenu();
+	void goStatus();
 	void goBattle();
 	void goShop();
 	void goInvetory();
-	void SeleteMenu();
 
 	void Set_GameState(EGameState arg) { m_eGameState = arg; }
 public:
