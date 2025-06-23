@@ -3,22 +3,22 @@
 #include <random>
 
 CBattleManager::CBattleManager(CPlayer* player, CLogManager* logger, m_pMonsterManager* monsterManager)
-	:m_pGame(player), m_pLogger(logger), m_pMonsterManager(monsterManager), m_bIsBossBattle(false), m_MonsterCurrnetHp(0), m_MonsterCurrentAtk(0)
+	:m_pGameObject(gameObject), m_pLogger(logger), m_pMonsterManager(monsterManager), m_bIsBossBattle(false), m_MonsterCurrnetHp(0), m_MonsterCurrentAtk(0)
 {
 }
 
 void CBattleManager::SetBattle()
 {
-	const int monsterId
-	if(m_pPlayer*->GetLevel() >= 10)
+	const int monsterId;
+	if(m_pGameObject->iLevel() >= 10)
 	{
 		int BossIds[] =  { 107, 108 };
-		monsterId = bossIds[rand() % 2];
+		monsterId = BossIds[rand() % 2];
 		m_bIsBossBattle = true;
 	}
 	else
 	{
-		monsterId = 101 + rnad() % 6;
+		monsterId = 101 + rand() % 6;
 		m_bIsBossBattle = false; 
 	}
 
@@ -35,12 +35,21 @@ void CBattleManager::SetBattle()
 	m_MonsterCurrentHp = pData->hp;
 	m_MonsterCurrentAtk = pData->atk;
 
+	GenerateMonster();
+
 	m_pLogger->Log(L"Battle started with monster: " + m_MonsterCurrentName + L" (HP: " + std::to_wstring(m_MonsterCurrentHp) + L", ATK: " + std::to_wstring(m_MonsterCurrentAtk) + L")");
 }
 
 CMonster CBattleManager::GenerateMonster()
 {
-	m_pLogger->Log(L"Generating monster...");
+	if(m_bIsBossBattle)
+	{
+		m_pLogger->Log(L"Generating boss monster...");
+	}
+	else
+	{
+		m_pLogger->Log(L"Generating regular monster...");
+	}
 	return CMonster(*m_pMonsterManager->GetMonsterData(monsterId));
 }
 
