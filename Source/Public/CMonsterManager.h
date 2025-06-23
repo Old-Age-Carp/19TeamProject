@@ -9,9 +9,13 @@ public:
     static CMonsterManager& GetInstance();
 
     bool LoadMonsterData();
-    const MonsterData* GetMonsterData(const std::wstring& name) const;
+
+    const FMonsterData* GetMonsterData(const std::wstring& name) const;
+
+    const FMonsterData* GetMonsterData(int id) const;
 
 private:
     CMonsterManager() = default;
-    std::unordered_map<std::wstring, MonsterData> monsterDataTable;
+    std::unordered_map<std::wstring, FMonsterData> monsterDataTable;
+    std::unordered_map<int, FMonsterData> monsterDataTableByID;
 };

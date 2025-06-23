@@ -1,8 +1,17 @@
 ﻿#include "CMonsterManager.h" 
 #include "CMonster.h"       
 #include <iostream>           
-#include <map>                 
+#include <unordered_map>                 
 
+const FMonsterData* CMonsterManager::GetMonsterData(int id) const
+{
+    auto it = monsterDataTableByID.find(id); // ID 기반 맵에서 검색
+    if (it != monsterDataTableByID.end())
+    {
+        return &(it->second);
+    }
+    return nullptr; 
+}
 
 
 bool CMonsterManager::LoadMonsterData()
@@ -10,7 +19,9 @@ bool CMonsterManager::LoadMonsterData()
     
     try
     {
-        MonsterData goblin = { L"고블린",
+        FMonsterData goblin = {
+            101,
+            L"고블린",
             10,
             50,
             EMonsterType::Normal,
@@ -18,8 +29,11 @@ bool CMonsterManager::LoadMonsterData()
             {1001}
         }; // 드롭 아이템 ID 1001 (작은 물약)
         monsterDataTable.insert({ goblin.name, goblin }); 
+        monsterDataTableByID.insert({ goblin.id, goblin });
 
-        MonsterData orc = { L"오크",
+        FMonsterData orc = {
+            102,
+            L"오크",
             25,
             120,
             EMonsterType::Normal,
@@ -27,8 +41,11 @@ bool CMonsterManager::LoadMonsterData()
             {2001, 1001}
         }; // 드롭 아이템 ID 2001 (철검), 1001 (작은 물약)
         monsterDataTable.insert({ orc.name, orc });
+        monsterDataTableByID.insert({ orc.id, orc });
 
-        MonsterData slime = { L"슬라임",
+        FMonsterData slime = {
+            103,
+            L"슬라임",
             5,
             30,
             EMonsterType::Normal,
@@ -36,8 +53,11 @@ bool CMonsterManager::LoadMonsterData()
             {}
         }; // 드롭 아이템 없음
         monsterDataTable.insert({ slime.name, slime });
+        monsterDataTableByID.insert({ slime.id, slime });
 
-        MonsterData zombie = { L"좀비",
+        FMonsterData zombie = {
+            104,
+            L"좀비",
             15,
             70,
             EMonsterType::Normal,
@@ -45,8 +65,11 @@ bool CMonsterManager::LoadMonsterData()
             {1001, 3001}
         }; // 작은 물약, 낡은 도복
         monsterDataTable.insert({ zombie.name, zombie });
+        monsterDataTableByID.insert({ zombie.id, zombie });
 
-        MonsterData skeleton = { L"스켈레톤",
+        FMonsterData skeleton = {
+            105,
+            L"스켈레톤",
             20,
             60,
             EMonsterType::Normal,
@@ -54,8 +77,11 @@ bool CMonsterManager::LoadMonsterData()
             {2001}
         }; // 철검
         monsterDataTable.insert({ skeleton.name, skeleton });
+        monsterDataTableByID.insert({ skeleton.id, skeleton });
 
-        MonsterData golem = { L"골렘",
+        FMonsterData golem = {
+            106,
+            L"골렘",
             40,
             200,
             EMonsterType::Normal,
@@ -63,8 +89,11 @@ bool CMonsterManager::LoadMonsterData()
             {3002, 1002}
         }; // 철 갑옷, 큰 물약
         monsterDataTable.insert({ golem.name, golem });
+        monsterDataTableByID.insert({ golem.id, golem });
 
-        MonsterData lich = { L"리치",
+        FMonsterData lich = {
+            107,
+            L"리치",
             60,
             350,
             EMonsterType::Boss,
@@ -72,8 +101,11 @@ bool CMonsterManager::LoadMonsterData()
             {2002, 3002, 1002}
         }; // 미스릴검, 철 갑옷, 큰 물약
         monsterDataTable.insert({ lich.name, lich });
+        monsterDataTableByID.insert({ lich.id, lich });
 
-        MonsterData dragon = { L"드래곤",
+        FMonsterData dragon = {
+            108,
+            L"드래곤",
             80,
             500,
             EMonsterType::Boss,
@@ -81,7 +113,7 @@ bool CMonsterManager::LoadMonsterData()
             {2003, 3003, 1002}
         }; // 전설의명검, 불멸의흑갑, 큰 물약
         monsterDataTable.insert({ dragon.name, dragon });
-
+        monsterDataTableByID.insert({ dragon.id, dragon });
       
         return true; 
     }
@@ -93,13 +125,13 @@ bool CMonsterManager::LoadMonsterData()
 }
 
 
-const MonsterData* CMonsterManager::GetMonsterData(const std::wstring& name) const
+const FMonsterData* CMonsterManager::GetMonsterData(const std::wstring& name) const
 {
     auto it = monsterDataTable.find(name);
     if (it != monsterDataTable.end())
     {
         return &(it->second);
-
-        return nullptr;
     }
+        return nullptr;
+    
 }
