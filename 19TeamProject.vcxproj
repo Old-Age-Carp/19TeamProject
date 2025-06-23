@@ -20,7 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\**\*.cpp" />
-    <ClInclude Include="Source\Public\CStaticDataManager.h" />
+    <ClInclude Include="Source\**\*.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

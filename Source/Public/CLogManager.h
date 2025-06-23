@@ -2,7 +2,7 @@
 #include <vector>
 #include <memory>
 #include <string>
-#include "CGameItem.h"
+#include "TSingleton.h"
 
 class ILogable
 {
@@ -10,7 +10,7 @@ public:
 	virtual std::wstring ToString() const = 0;
 };
 
-class CLogManager : public Singleton<CLogManager>
+class CLogManager : public TSingleton<CLogManager>
 {
 private:
 	std::vector<std::unique_ptr<ILogable>> mlogs;
