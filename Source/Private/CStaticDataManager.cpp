@@ -8,7 +8,7 @@ bool CStaticDataManager::LoadAllStaticData()
 {
     if (!LoadMonsterDataInternal())
     {
-        std::wcerr << L"Failed to load monster data." << std::endl;
+        std::wcerr << L"." << std::endl;
         return false;
     }
 
@@ -25,7 +25,8 @@ bool CStaticDataManager::LoadMonsterDataInternal()
 {
     try
     {
-        FMonsterData goblin = {
+        FMonsterData goblin =
+        {
             101,
             L"고블린",
             10,
@@ -37,7 +38,8 @@ bool CStaticDataManager::LoadMonsterDataInternal()
         monsterDataTable.insert({ goblin.name, goblin });
         monsterDataTableByID.insert({ goblin.id, goblin });
 
-        FMonsterData orc = {
+        FMonsterData orc =
+        {
             102,
             L"오크",
             25,
@@ -49,7 +51,8 @@ bool CStaticDataManager::LoadMonsterDataInternal()
         monsterDataTable.insert({ orc.name, orc });
         monsterDataTableByID.insert({ orc.id, orc });
 
-        FMonsterData slime = {
+        FMonsterData slime =
+        {
             103,
             L"슬라임",
             5,
@@ -61,7 +64,8 @@ bool CStaticDataManager::LoadMonsterDataInternal()
         monsterDataTable.insert({ slime.name, slime });
         monsterDataTableByID.insert({ slime.id, slime });
 
-        FMonsterData zombie = {
+        FMonsterData zombie =
+        {
             104,
             L"좀비",
             15,
@@ -73,7 +77,8 @@ bool CStaticDataManager::LoadMonsterDataInternal()
         monsterDataTable.insert({ zombie.name, zombie });
         monsterDataTableByID.insert({ zombie.id, zombie });
 
-        FMonsterData skeleton = {
+        FMonsterData skeleton =
+        {
             105,
             L"스켈레톤",
             20,
@@ -85,7 +90,8 @@ bool CStaticDataManager::LoadMonsterDataInternal()
         monsterDataTable.insert({ skeleton.name, skeleton });
         monsterDataTableByID.insert({ skeleton.id, skeleton });
 
-        FMonsterData golem = {
+        FMonsterData golem =
+        {
             106,
             L"골렘",
             40,
@@ -97,7 +103,8 @@ bool CStaticDataManager::LoadMonsterDataInternal()
         monsterDataTable.insert({ golem.name, golem });
         monsterDataTableByID.insert({ golem.id, golem });
 
-        FMonsterData lich = {
+        FMonsterData lich =
+        {
             107,
             L"리치",
             60,
@@ -109,7 +116,8 @@ bool CStaticDataManager::LoadMonsterDataInternal()
         monsterDataTable.insert({ lich.name, lich });
         monsterDataTableByID.insert({ lich.id, lich });
 
-        FMonsterData dragon = {
+        FMonsterData dragon =
+        {
             108,
             L"드래곤",
             80,
