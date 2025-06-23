@@ -76,7 +76,7 @@ void CGameManager::CreateHero()
 {
 	std::wstring PlayerName;
 	CPrinter::PrintLine(L"캐릭터 이름을 입력하세요 : ");
-	std::wcin >> PlayerName;
+	std::getline(std::wcin, PlayerName);
 	//cout << "캐릭터의 이름 입력:" << endl;
 
 	m_pPlayer = new CPlayer(PlayerName);
@@ -85,6 +85,8 @@ void CGameManager::CreateHero()
 	CPrinter::PrintLine(testName);
 	//이름받고 플레이어 클래스 만들기
 
+	CPrinter::PrintLine(L"\nEnter를 눌러서 계속...");
+	std::wcin.get();  // Enter 키까지 대기
 	Set_GameState(EGameState::SELECT); 
 	
 }
@@ -101,7 +103,7 @@ void CGameManager::SelectMenu()
 
 	int i_select = 0;
 	CPrinter::PrintLine(L"원하시는 번호 입력:");
-	std::cin >> i_select;
+	std::wcin >> i_select;
 
 	switch (i_select)
 	{
@@ -130,15 +132,20 @@ void CGameManager::goStatus()
 
 	std::wstring testname = m_pPlayer->getName();
 	wchar_t buffer[256];
-	swprintf_s(buffer, 256, L"이름: %ws", testname.c_str());
-	CPrinter::PrintLine(L"테스트 출력");
-	CPrinter::PrintLine(buffer);
+	//swprintf_s(buffer, 256, L"이름: %ws", testname.c_str());
+	//CPrinter::PrintLine(L"테스트 출력");
+	//CPrinter::PrintLine(buffer);
+	//swprintf_s(buffer, 256, L"체력: %d", m_pPlayer->getHealth());
+	//CPrinter::PrintLine(buffer);
+	//CPrinter::PrintLine(L"마무리");
+	CPrinter::PrintLine(testname);
+
 	swprintf_s(buffer, 256, L"체력: %d", m_pPlayer->getHealth());
 	CPrinter::PrintLine(buffer);
-	CPrinter::PrintLine(L"마무리");
 
+		
 	CPrinter::PrintLine(L"\nEnter를 눌러서 계속...");
-	std::cin.get();  // Enter 키까지 대기
+	std::wcin.get();  // Enter 키까지 대기
 }
 void CGameManager::goBattle()
 {
