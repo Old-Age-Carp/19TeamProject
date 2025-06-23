@@ -5,7 +5,7 @@
 
 class ILogable;
 class CGameManager;
-enum EGameState;
+//enum EGameState;
 
 class CPrinter
 {
