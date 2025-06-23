@@ -2,7 +2,7 @@
 
 #include <string>
 
-using namespace std;
+
 
 class CGameObject
 {
@@ -10,13 +10,26 @@ public:
 	CGameObject() = default;
 
 	// 매개변수 생성자
-	CGameObject(const std::string& name, int level = 1, int health = 200, int attack = 30)
+	CGameObject(const std::wstring& name, int level = 1, int health = 200, int attack = 30)
 		: sName(name), iLevel(level), iHealth_Max(health), iHealth(health), iAttack(attack) {
 	}
 
-	virtual string	getName() const = 0;
-	virtual int		getHealth() const = 0;
-	virtual int		getAttack() const = 0;
+	std::wstring	getName()			{ return sName; }
+	int		getHealth()			{ return iHealth; }
+	int		getHealth_Max()		{ return iHealth_Max; }
+	int		getAttack()			{ return iAttack; }
+
+	void    setName(std::wstring arg) { sName = arg; }
+
+	//겟셋대체용으로 포인터 가져와서 활용
+	
+	int* Get_pLevel()				{ return &iLevel; }
+	int* Get_pHealthMax()			{ return &iHealth_Max; }
+	int* Get_pHealth()				{ return &iHealth; }
+	int* Get_pExp()					{ return &iExp; }
+	int* Get_pGold()				{ return &iGold; }
+	int* Get_pAttack()				{ return &iAttack; }
+	int* Get_pArmor()				{ return &iArmor; }
 
 	virtual ~CGameObject() = default;
 private:
@@ -24,13 +37,14 @@ private:
 	
 
 protected:
-	string sName;
+	std::wstring sName;
 	int		iLevel = 1;
 	int		iHealth_Max = 200;
 	int		iHealth = 200; //현재체력
 	int		iExp = 0;
 	int		iGold = 0;
 	int		iAttack = 30;
+	int		iArmor = 10;
 
 };
 

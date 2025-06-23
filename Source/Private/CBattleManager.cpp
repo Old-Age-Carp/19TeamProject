@@ -3,7 +3,7 @@
 #include <random>
 
 CBattleManager::CBattleManager(CGameObject* gameObject, CLogManager* logger, CStaticDataManager* staticDataManager)
-	:m_pGameObject(gameObject), m_pLogger(logger), m_pMonsterManager(monsterManager), m_bIsBossBattle(false), m_MonsterCurrnetHp(0), m_MonsterCurrentAtk(0)
+	:m_pGameObject(gameObject), m_pLogger(logger), m_pStaticDataManager(staticDataManager), m_bIsBossBattle(false), m_MonsterCurrnetHp(0), m_MonsterCurrentAtk(0)
 {
 }
 
@@ -22,7 +22,7 @@ void CBattleManager::SetBattle()
 		m_bIsBossBattle = false; 
 	}
 
-	FMonsterData* pData = m_pMonsterManager->GetMonsterData(monsterId);
+	FMonsterData* pData = m_pStaticDataManager->GetMonsterData(monsterId);
 	if(!pData)
 	{
 		retern;
