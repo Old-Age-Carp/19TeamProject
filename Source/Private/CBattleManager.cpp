@@ -43,7 +43,7 @@ void CBattleManager::GenerateMonster(bool isBoss, int monsterId)
 void CBattleManager::PlayerTurn()
 {
 	m_Monster.TakeDamage(m_pGameObject->getAttack());
-	if(!m_Monster.IsAlive())
+	if(!IsAlive(m_Monster.GetCurrentHP()))
 	{
 		m_pLogger->AddLog(L"You defeated the monster: " + m_Monster.GetName());
 		return;
@@ -55,10 +55,13 @@ void CBattleManager::MonsterTurn()
 {
 	int damage = m_Monster.GetAttack();
 	*m_pGameObject->Get_pHealth() -= damage;
+	
 	if(*m_pGameObject->Get_pHealth() < 0)
 	{
-		*m_pGameObject->Get_pHealth() = 0;	}
-	if(!GameObjectIsAlive())
+		*m_pGameObject->Get_pHealth() = 0;	
+	}
+
+	if(!IsAlive(*m_pGameObject->Get_pHealth()))
 	{
 		m_pLogger->AddLog(L"The monster " + m_Monster.GetName() + L" has defeated you!");
 		return;
@@ -66,12 +69,7 @@ void CBattleManager::MonsterTurn()
 	m_pLogger->AddLog(L"The monster " + m_Monster.GetName() + L" attacked you! (Your remaining health: " + std::to_wstring(*m_pGameObject->Get_pHealth()) + L")");
 }
 
-bool CBattleManager::GameObjectIsAlive()
+bool CBattleManager::IsAlive(int m_health) const
 {
-	return m_pGameObject->getHealth() > 0;
-}
-
-bool CBattleManager::MonsterIsAlive()
-{
-	return m_Monster.IsAlive();
+	return m_health > 0;
 }
