@@ -19,7 +19,7 @@ public:
     const FMonsterData* GetMonsterData(const std::wstring& name) const;
     const FMonsterData* GetMonsterData(int id) const;
 
-    const FItemData* GetItemData(const std::wstring& name) const; // 이름으로 찾는 기능 
+    const FItemData* GetItemData(const std::wstring& name) const;
     const FItemData* GetItemData(int id) const;
 
 private:
@@ -33,5 +33,5 @@ private:
     std::unordered_map<int, FMonsterData> monsterDataTableByID;     
 
     std::unordered_map<int, std::unique_ptr<FItemData>> itemDataTableByID;       
-    std::unordered_map<std::wstring, std::unique_ptr<FItemData>> itemDataTableByName; 
+    std::unordered_map<std::wstring, FItemData*> itemDataTableByName;
 };
