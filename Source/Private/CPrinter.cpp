@@ -1,4 +1,4 @@
-﻿
+
 #include "CPrinter.h"
 #include "CLogManager.h"
 #include "CGameManager.h"
@@ -59,8 +59,6 @@ void CPrinter::PrintBoxes(
 
         if (i < texts.size())
         {
-            vector<wstring> wrapped;
-
             if (i < texts.size())
             {
                 wrapped = WrapText(texts[i], boxWidth); // boxWidth 전달

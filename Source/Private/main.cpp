@@ -1,4 +1,4 @@
-﻿#include <vector>
+#include <vector>
 #include <string>
 #include "..\public/CGameManager.h"
 
@@ -6,19 +6,13 @@
 
 int main()
 {
-    /*CGameManager* pGameMgr = CGameManager::GetInstance();
+    CGameManager* pGameMgr = CGameManager::GetInstance();
 
     pGameMgr->Main();
 
-    pGameMgr->DestroyInstance();*/
+    pGameMgr->DestroyInstance();
 
-    CGameView view;
-    CGameObject obj
-    {
-        L"아무개",
-    };
-
-    view.ViewObjectStat(obj);
+    
 
     return 0;
 }
