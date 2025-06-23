@@ -1,4 +1,4 @@
-﻿#include "CGameView.h"
+#include "CGameView.h"
 #include "define.h"
 
 using std::vector;
@@ -55,7 +55,17 @@ void CGameView::ViewGameState(const CGameManager& gameMgr)
     }
 }
 
-void CGameView::ViewObjectStat(const CGameObject& stat)
+void CGameView::ViewObjectStat(const CGameObject& gameObject)
 {
+    vector<wstring> stats;
+    stats.reserve(6);
+    stats.push_back(L"이름 :" + gameObject.getName());
+    stats.push_back(L"레벨 :" + gameObject.getLevel());
+    stats.push_back(L"체력 :" + gameObject.getHealth());
+    stats.push_back(L"공격 :" + gameObject.getAttack());
+    stats.push_back(L"방어 :" + gameObject.getArmor());
+      
+    
+    CPrinter::PrintBoxes(stats, 1, 6, 1);
 }
 

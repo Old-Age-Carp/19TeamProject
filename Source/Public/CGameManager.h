@@ -2,10 +2,6 @@
 #pragma once
 
 #include "define.h"
-#include <iostream>
-
-
-using namespace std;
 
 //이준식 작업
 class CGameManager
