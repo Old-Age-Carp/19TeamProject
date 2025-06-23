@@ -1,29 +1,28 @@
 ﻿#pragma once
 
 #include <memory>
-#include "CPlayer.h"
+#include "CGameObject.h"
 #include "CMonster.h"
 #include "CLogManager.h"
-#include "CMonsterManager.h"
+#include "CStaticDataManager.h"
 #include "CGameItem.h"
 
 class CBattleManager
 {
 public:
-	CBattleManager(CPlayer* player, CLogManager* loger, CMonsterManager* monsterManager);
-
+	CBattleManager(CGameObject* gameObject, CLogManager* logger, CStaticDataManager* staticDataManager);
 
 	void SetBattle();
 	void PlayerTurn();
 	void MonsterTurn();
 
 private:
-	CPlayer* m_pPlayer;
+	CGameObject* m_pGameObject;
 	CMonster m_Monster;
 	CLogManager* m_pLogger;
 	CMonsterManager* m_pMonsterManager;
 
-	std::wstring MonsterCurrentName; 
+	std::wstring m_MonsterCurrentName;
 	int m_MonsterCurrentHp = 0;
 	int m_MonsterCurrentAtk = 0;
 

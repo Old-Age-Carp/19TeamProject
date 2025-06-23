@@ -3,7 +3,7 @@
 #include <random>
 
 CBattleManager::CBattleManager(CPlayer* player, CLogManager* logger, m_pMonsterManager* monsterManager)
-	:m_pPlayer(player), m_pLogger(logger), m_pMonsterManager(monsterManager), m_bIsBossBattle(false), m_MonsterCurrnetHp(0), m_MonsterCurrentAtk(0)
+	:m_pGame(player), m_pLogger(logger), m_pMonsterManager(monsterManager), m_bIsBossBattle(false), m_MonsterCurrnetHp(0), m_MonsterCurrentAtk(0)
 {
 }
 
@@ -33,16 +33,24 @@ void CBattleManager::SetBattle()
 	m_MonsterCurrentName = pData->Name;
 	m_MonsterCurrentHp = pData->hp;
 	m_MonsterCurrentAtk = pData->atk;
+	m_pLogger->Log(L"Battle started with monster: " + m_MonsterCurrentName + L" (HP: " + std::to_wstring(m_MonsterCurrentHp) + L", ATK: " + std::to_wstring(m_MonsterCurrentAtk) + L")");
 }
 
 CMonster CBattleManager::GenerateMonster()
 {
+	m_pLoger->Log(L"Generating monster...");
 	return CMonster(*m_pMonsterManager->GetMonsterData(monsterId));
 }
 
 void CBattleManager::PlayerTurn()
 {
-	m_MonsterCurrentHp -= m_pPlayer.GetAttack();
+	m_MonsterCurrentHp -= m_pGameObject->getAttack();
+	if(m_MonsterCurrentHp <= 0)
+	{
+		m_pLogger->Log(L"You defeated the monster: " + m_MonsterCurrentName);
+		return;
+	}
+	m_pLogger->Log(L"You attacked the monster: " + m_MonsterCurrentName + L" (Remaining HP: " + std::to_wstring(m_MonsterCurrentHp) + L")");
 }
 
 void CBattleManager::MonsterTurn()
@@ -52,6 +60,31 @@ void CBattleManager::MonsterTurn()
 		return;
 	}
 
-	m_pPlayer->Damage(m_MonsterCurrentAtk);
+	m_pGameObject->getHealth() -= m_MonsterCurrentAtk;
+
+	if(m_pGameObject->getHealth() <= 0)
+	{
+		m_pLogger->Log(L"The monster " + m_MonsterCurrentName + L" has defeated you!");
+		return;
+	}
+	m_pLogger->Log(L"The monster " + m_MonsterCurrentName + L" attacked you! (Your remaining health: " + std::to_wstring(m_pGameObject->getHealth()) + L")");
 }
 
+void CBattleManager::EndBattle()
+{
+	if(m_pGameObject->getHealth() <= 0)
+	{
+		m_pLogger->Log(L"You have been defeated by the monster: " + m_MonsterCurrentName);
+		return;
+	}
+
+	m_pLogger->Log(L"Battle ended with monster: " + m_MonsterCurrentName);
+	if (m_MonsterCurrentHp <= 0)
+	{
+		m_pLogger->Log(L"You have defeated the monster: " + m_MonsterCurrentName);
+	}
+	else
+	{
+		m_pLogger->Log(L"The monster " + m_MonsterCurrentName + L" has escaped!");
+	}
+}
