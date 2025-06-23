@@ -10,7 +10,7 @@ public:
 	CPlayer() = default;
 
 
-	CPlayer(const std::string& name, int level = 1, int health = 200, int attack = 30)
+	CPlayer(const std::wstring& name, int level = 1, int health = 200, int attack = 30)
 		: CGameObject(name, level, health, attack)
 	{
 	}

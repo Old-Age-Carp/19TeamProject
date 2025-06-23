@@ -7,9 +7,13 @@ int main()
 {
     CGameManager* pGameMgr = CGameManager::GetInstance();
 
-    pGameMgr->Main();
+    while (true)
+    {
+        pGameMgr->Main();
+    }
+    //pGameMgr->Main();
 
-    pGameMgr->DestroyInstance();
+    //pGameMgr->DestroyInstance();
 
     return 0;
 }
