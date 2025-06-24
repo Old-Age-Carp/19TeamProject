@@ -26,11 +26,11 @@ bool CIsBattleAble::IsTeamBattleAvailable(int teamCount) const
     {
         if(battler && battler->IsAlive())
         {
-            int teamIndex = battler->GetTeamIndex();
+            int teamId = battler->GetTeamId();
 
-            if(teamIndex >= 0 && teamIndex < teamCount)
+            if(teamId >= 0 && teamId < teamCount)
             {
-                teamAliveCount[teamIndex]++;
+                teamAliveCount[teamId]++;
             }
         }
     }
