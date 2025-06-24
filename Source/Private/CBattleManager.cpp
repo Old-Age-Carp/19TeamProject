@@ -48,12 +48,15 @@ void CBattleManager::PlayerTurn()
 		m_pLogger->AddLog(L"You defeated the monster: " + m_Monster.GetName());
 		return;
 	}
-	m_pLogger->AddLog(L"You attacked the monster: " + m_Monster.GetName() + L" (Remaining HP: " + std::to_wstring(m_Monster.GetCurrentHP()) + L")");
+	else
+	{
+		m_pLogger->AddLog(L"You attacked the monster: " + m_Monster.GetName() + L" (Remaining HP: " + std::to_wstring(m_Monster.GetCurrentHP()) + L")");
+	}
 }
 
 void CBattleManager::MonsterTurn()
 {
-	int damage = m_Monster.GetAttack();
+	int damage = m_Monster.GetAttackValue();
 	*m_pGameObject->Get_pHealth() -= damage;
 	
 	if(*m_pGameObject->Get_pHealth() < 0)
@@ -63,6 +66,7 @@ void CBattleManager::MonsterTurn()
 
 	if(!IsAlive(*m_pGameObject->Get_pHealth()))
 	{
+		
 		m_pLogger->AddLog(L"The monster " + m_Monster.GetName() + L" has defeated you!");
 		return;
 	}
