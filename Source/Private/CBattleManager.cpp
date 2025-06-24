@@ -2,28 +2,27 @@
 
 void CBattleManager::SetBattle()
 {
-	int monsterId;
 	if(*(m_pGameObject->Get_pLevel()) >= 10)
 	{
 		int BossIds[] =  { 107, 108 };
-		monsterId = BossIds[rand() % 2];
+		*m_pMonsterId = BossIds[rand() % 2];
 		m_bIsBossBattle = true;
 	}
 	else
 	{
-		monsterId = 101 + rand() % 6;
-		m_bIsBossBattle = false; 
+		*m_pMonsterId = 101 + rand() % 6;
+		m_bIsBossBattle = false;
 	}
 
-	const FMonsterData* pData = m_pStaticDataManager->GetMonsterData(monsterId);
+	const FMonsterData* pData = m_pStaticDataManager->GetMonsterData(*m_pMonsterId);
 	if(!pData)
 	{
-		m_pLogger->AddLog(L"Error: Monster data not found for ID: " + std::to_wstring(monsterId));
+		m_pLogger->AddLog(L"Error: Monster data not found for ID: " + std::to_wstring(*m_pMonsterId));
 		return;
 	}
 
 	m_Monster = CMonster(pData);
-	GenerateMonster(m_bIsBossBattle, monsterId);
+	GenerateMonster(m_bIsBossBattle, *m_pMonsterId);
 
 	m_pLogger->AddLog(L"Battle started with monster: " + m_Monster.GetName() + L" (HP: " + std::to_wstring(m_Monster.GetCurrentHP()) + L", ATK: " + std::to_wstring(m_Monster.GetAttack()) + L")");
 }
@@ -46,6 +45,17 @@ void CBattleManager::PlayerTurn()
 	if(!IsAlive(m_Monster.GetCurrentHP()))
 	{
 		m_pLogger->AddLog(L"You defeated the monster: " + m_Monster.GetName());
+		*m_pGameObject->Get_pExp() += m_Monster.GetExpReward();
+		if(*m_pGameObject->Get_pExp() >= 100)
+		{
+			while(*m_pGameObject->Get_pExp() >= 100)
+			{
+				*m_pGameObject->Get_pLevel() += 1;
+				*m_pGameObject->Get_pExp() -= 100;
+			}
+			*m_pGameObject->Get_pHealth() = *m_pGameObject->Get_pHealthMax();
+			m_pLogger->AddLog(L"You leveled up! New level: " + std::to_wstring(*m_pGameObject->Get_pLevel()));
+		}
 		return;
 	}
 	else
@@ -66,7 +76,6 @@ void CBattleManager::MonsterTurn()
 
 	if(!IsAlive(*m_pGameObject->Get_pHealth()))
 	{
-		
 		m_pLogger->AddLog(L"The monster " + m_Monster.GetName() + L" has defeated you!");
 		return;
 	}

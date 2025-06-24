@@ -26,8 +26,7 @@ public:
 		m_pLogger(logger),
 		m_pStaticDataManager(staticDataManager),
 		m_bIsBossBattle(false)
-	{
-	};
+	{};
 
 	void SetBattle();
 	void PlayerTurn();
@@ -41,4 +40,5 @@ private:
 	CLogManager* m_pLogger;
 	CStaticDataManager* m_pStaticDataManager;
 	bool m_bIsBossBattle;
+	int* m_pMonsterId;
 };
