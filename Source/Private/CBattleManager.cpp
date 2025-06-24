@@ -42,10 +42,14 @@ void CBattleManager::GenerateMonster(bool isBoss, int monsterId)
 void CBattleManager::PlayerTurn()
 {
 	m_Monster.TakeDamage(m_pGameObject->getAttack());
+
 	if(!IsAlive(m_Monster.GetCurrentHP()))
 	{
 		m_pLogger->AddLog(L"You defeated the monster: " + m_Monster.GetName());
+		
 		*m_pGameObject->Get_pExp() += m_Monster.GetExpReward();
+		m_pLogger->AddLog(L"You gained " + std::to_wstring(m_Monster.GetExpReward()) + L" experience points!");
+
 		if(*m_pGameObject->Get_pExp() >= 100)
 		{
 			while(*m_pGameObject->Get_pExp() >= 100)
