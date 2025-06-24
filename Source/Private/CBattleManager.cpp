@@ -24,7 +24,7 @@ void CBattleManager::SetBattle()
 	m_Monster = CMonster(pData);
 	GenerateMonster(m_bIsBossBattle, *m_pMonsterId);
 
-	m_pLogger->AddLog(L"Battle started with monster: " + m_Monster.GetName() + L" (HP: " + std::to_wstring(m_Monster.GetCurrentHP()) + L", ATK: " + std::to_wstring(m_Monster.GetAttack()) + L")");
+	m_pLogger->AddLog(L"Battle started with monster: " + m_Monster.GetName() + L" (HP: " + std::to_wstring(m_Monster.GetCurrentHP()) + L", ATK: " + std::to_wstring(m_Monster.GetAttackValue()) + L")");
 }
 
 void CBattleManager::GenerateMonster(bool isBoss, int monsterId)
