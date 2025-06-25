@@ -1,6 +1,7 @@
 #include "..\Public\CBattleManager.h"
 #include "..\Public\CMonster.h"
 #include "..\Public\CGameObject.h"
+#include "..\Public\CBattleAI.h"
 #include <cstdlib>
 #include <ctime>
 
@@ -75,46 +76,55 @@ void CBattleManager::PlayerTurn()
 	}
 }
 
-void CBattleManager::MonsterTurn()
+void CBattleManager::MonsterTurn(const std::vector<CIsBattleAble*>& monsterTeam)
 {
 	if (!m_pMonster || !m_pPlayer) 
 	{
 		return;
 	}
+	
+	IBattleAI* ai = new CBattleAI(m_pMonster);
+	EActionKind action = ai->Think();
+	CBattleAbleObject* target = ai->ThinkTarget(action, monsterTeam);
 
-	m_pPlayer->TakeDamage(m_pMonster->GetAttackValue());
+	if (!target)
+	{
+		return;
+	}
 
+	if (action == EActionKind::Attack)
+    {
+        target->TakeDamage(m_pMonster->GetAttackValue());
+    }
+	
 	if (*m_pPlayer->Get_pHealth() < 0)
 	{
 		*m_pPlayer->Get_pHealth() = 0;
 	}
 }
 
-bool CBattleManager::NextTurn()
+void CBattleManager::MonsterTurn(const std::vector<CIsBattleAble*>& otherTeams)
 {
-    if (!m_turnSelector)
+    if (!m_pMonster || !m_pPlayer)
 	{
-        return true;
+		return;
 	}
+		
+    CBattleAI ai(m_pMonster);
+    EActionKind action = ai.Think();
+    CBattleAbleObject* target = ai.ThinkTarget(action, otherTeams);
 
-    CBattleAbleObject* nextActor = m_turnSelector->GetNextTurn();
+    if (!target) return;
 
-	if (!nextActor)
+    if (action == EActionKind::Attack)
 	{
-		return true;
+		target->TakeDamage(m_pMonster->GetAttackValue());
 	}
-
-	if (nextActor == m_pPlayer)
+	
+	if (*m_pPlayer->Get_pHealth() < 0)
 	{
-		PlayerTurn();
-		return !IsAlive(*m_pMonster->Get_pHealth());
+		*m_pPlayer->Get_pHealth() = 0;
 	}
-	else if (nextActor == m_pMonster)
-	{
-		MonsterTurn();
-		return !IsAlive(*m_pPlayer->Get_pHealth());
-	}
-    return true;
 }
 
 CBattleAbleObject* CBattleManager::GetCurrentTurn()

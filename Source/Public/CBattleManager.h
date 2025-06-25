@@ -13,7 +13,7 @@ public:
 
 	void SetBattle(std::unique_ptr<IBattleTurnSelector> turnSelector, CBattleAbleObject* team1, CBattleAbleObject* team2);
 	void PlayerTurn();
-	void MonsterTurn();
+	void MonsterTurn(const std::vector<CIsBattleAble*>& otherTeams);
 	bool IsAlive(int health) const { return health > 0; };
 	bool NextTurn();				// 턴 넘기기 + 전투 종료 여부 반환
     CBattleAbleObject* GetCurrentTurn();	// 현재 턴 주체 반환
