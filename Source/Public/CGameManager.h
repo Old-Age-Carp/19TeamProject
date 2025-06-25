@@ -23,6 +23,7 @@ private:
 	//class CStaticDataManager	m_pStaticDataManger;
 	class CStaticDataManager*	m_pStaticDataManger = nullptr;
 	class CPlayer* m_pPlayer = nullptr;
+	std::unique_ptr<class CIsBattleAble> m_pPlayerTeam = nullptr;
 	
 	CGameManager(); // 생성자
 	~CGameManager(); //소멸자

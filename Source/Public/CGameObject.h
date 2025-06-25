@@ -49,4 +49,3 @@ protected:
 	int				iArmor = 10;
 
 };
-

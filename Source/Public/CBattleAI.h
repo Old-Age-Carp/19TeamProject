@@ -4,13 +4,23 @@
 class CBattleAbleObject;
 class CIsBattleAble;
 
-class CBattleAI
+class IBattleAI
+{
+public :
+
+    virtual ~IBattleAI() = default;
+    virtual EActionKind Think() = 0;
+    virtual CBattleAbleObject* ThinkTarget(EActionKind action, std::vector<CIsBattleAble*> otherTeams) = 0;
+};
+
+class CBattleAI : public IBattleAI
 {
 private:
     CBattleAbleObject* battler;
-    CIsBattleAble* team;
+    CBattleAI();
 public:
-    CBattleAI(CBattleAbleObject* _battleObj, CIsBattleAble* _team) : battler(_battleObj), team(_team) {}
+    CBattleAI(CBattleAbleObject* _battleObj) : battler(_battleObj) {}
     EActionKind Think(); // 뭘 해야할지 결정
-    CBattleAbleObject* ThinkTarget(EActionKind action, std::vector<CIsBattleAble*> otherTeams); // 어떤 행동을 할 때 대상 지정
+    CBattleAbleObject* ThinkTarget(EActionKind action,
+        std::vector<CIsBattleAble*> otherTeams); // 어떤 행동을 할 때 대상 지정
 };

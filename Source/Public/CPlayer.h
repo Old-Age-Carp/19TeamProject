@@ -2,19 +2,19 @@
 //
 
 
-#include "CGameObject.h"
+#include "CBattleAbleObject.h"
 #include "define.h"
 
 #include <vector>
 
-class CPlayer : public CGameObject
+class CPlayer : public CBattleAbleObject
 {
 public:
 	CPlayer() = default;
 
 
 	CPlayer(const std::wstring& name, int level = 1, int health = 200, int attack = 30)
-		: CGameObject(name, level, health, attack)
+		: CBattleAbleObject(name, level, health, attack)
 	{
 		int* pGold = Get_pGold();
 		*pGold = 200;
@@ -30,6 +30,7 @@ public:
 
 	void Equip(int i_arg);
 	void UsePotion(int i_arg);
+	std::vector<CItem*> GetHaveItems() override;
 protected:
 	virtual ~CPlayer() = default;
 	std::vector<std::pair<int, FItemData*>> m_vecInventory;

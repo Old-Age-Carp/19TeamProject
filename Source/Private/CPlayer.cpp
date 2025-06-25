@@ -2,7 +2,7 @@
 
 #include "..\Public\CPlayer.h"
 #include "..\Public\CPrinter.h"
-#include "CPlayer.h"
+
 
 void CPlayer::LevelUp()
 {
@@ -332,4 +332,9 @@ void CPlayer::UsePotion(int i_arg)
             }
         }
     }
+}
+
+std::vector<CItem*> CPlayer::GetHaveItems()
+{
+    return std::vector<CItem*>();
 }

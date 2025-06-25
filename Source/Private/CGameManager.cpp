@@ -9,6 +9,7 @@
 #include "CBattleManager.h"
 #include "CBattleTurnSelectorEachTurn.h"
 #include "CMonster.h"
+#include "CIsBattleAble.h"
 
 using std::wstring;
 CGameManager* CGameManager::instance = nullptr;
@@ -92,6 +93,7 @@ void CGameManager::CreateHero()
 	//cout << "캐릭터의 이름 입력:" << endl;
 
 	m_pPlayer = new CPlayer(PlayerName);
+	m_pPlayer->SetBattleAI(std::make_unique<CBattleAI>(m_pPlayer));
 	*(m_pPlayer->Get_pHealth()) = 20;
 
 	ShowStatus();
