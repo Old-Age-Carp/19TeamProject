@@ -1,4 +1,4 @@
-#include "..\Public\CBattleManager.h"
+﻿#include "..\Public\CBattleManager.h"
 
 void CBattleManager::SetBattle()
 {
@@ -84,11 +84,6 @@ void CBattleManager::MonsterTurn()
 		return;
 	}
 	m_pLogger->AddLog(L"The monster " + m_pMonster->GetName() + L" attacked you! (Your remaining health: " + std::to_wstring(*m_pGameObject->Get_pHealth()) + L")");
-}
-
-bool CBattleManager::IsAlive(int m_health) const
-{
-	return m_health > 0;
 }
 
 bool CBattleManager::NextTurn()

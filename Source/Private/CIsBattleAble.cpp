@@ -1,7 +1,6 @@
-#include "..\Public\CIsBattleAble.h"
-#include "..\Public\IHitAble.h"
+﻿#include "..\Public\CIsBattleAble.h"
 
-CIsBattleAble::CIsBattleAble(std::vector<IHitAble*>& battlers)
+CIsBattleAble::CIsBattleAble(std::vector<CBattleAbleObject*>& battlers)
 	: m_battlers(battlers)
 {
 }
@@ -26,7 +25,7 @@ bool CIsBattleAble::IsTeamBattleAvailable(int teamCount) const
     {
         if(battler && battler->IsAlive())
         {
-            int teamId = battler->GetTeamId();
+            int teamId = 0;// battler->GetTeamId();
 
             if(teamId >= 0 && teamId < teamCount)
             {

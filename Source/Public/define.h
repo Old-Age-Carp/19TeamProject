@@ -2,6 +2,16 @@
 
 #include <string>
 
+/// <summary>
+///  캐릭터가 각 턴에 할 수 있는 행동 종류
+/// </summary>
+enum class EActionKind : char
+{
+	Attack,
+	UseItem,
+	// ....
+};
+
 enum class EGameState
 {
 	START,				//게임시작
