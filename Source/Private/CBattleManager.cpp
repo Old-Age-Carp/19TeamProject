@@ -1,7 +1,8 @@
 ﻿#include "..\Public\CBattleManager.h"
 
-void CBattleManager::SetBattle()
+void CBattleManager::SetBattle(std::unique_ptr<IBattleTurnSelector> turnSelector)
 {
+	m_turnSelector = std::move(turnSelector);
 	if(*(m_pGameObject->Get_pLevel()) >= 10)
 	{
 		int BossIds[] =  { 107, 108 };

@@ -1,4 +1,5 @@
 ﻿#include "CBattleTurnSelectorEachTurn.h"
+#include "CIsBattleAble.h"
 #include <algorithm>
 
 CBattleAbleObject* CBattleTurnSelectorEachTurn::GetNextTurn()

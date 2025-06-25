@@ -2,6 +2,7 @@
 
 #include <random>
 #include <vector>
+#include <memory>
 #include "CGameObject.h"
 #include "CMonster.h"
 #include "CLogManager.h"
@@ -12,16 +13,17 @@
 class CBattleManager
 {
 public:
-	CBattleManager(CGameObject* gameObject, CLogManager* logger, CStaticDataManager* staticDataManager, int* monsterId ,std::unique_ptr<IBattleTurnSelector> turnSelector):
+	CBattleManager(CGameObject* gameObject, CLogManager* logger, CStaticDataManager* staticDataManager, int* monsterId) :
 		m_pGameObject(gameObject),
 		m_pLogger(logger),
 		m_pStaticDataManager(staticDataManager),
 		m_bIsBossBattle(false),
 		m_pMonsterId(monsterId),
-		m_turnSelector(std::move(turnSelector))
-	{}
+		m_turnSelector(nullptr)
+	{
+	}
 
-	void SetBattle();
+	void SetBattle(std::unique_ptr<IBattleTurnSelector> turnSelector);
 	void PlayerTurn();
 	void MonsterTurn();
 	bool IsAlive(int health) const { return health > 0; };

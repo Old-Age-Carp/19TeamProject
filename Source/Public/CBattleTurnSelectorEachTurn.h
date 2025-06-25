@@ -23,4 +23,6 @@ public:
 			: weak_ptr(mTeamList[mCurrentTeamIndex]);
 	}
 	void SetTeams(vector<shared_ptr<CIsBattleAble>>& teamList) override;
+
+	~CBattleTurnSelectorEachTurn() override = default;
 };
