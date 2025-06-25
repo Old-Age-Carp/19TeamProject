@@ -56,7 +56,9 @@ FItemData* CShopManager::Buy_Item(int i_arg , class CPlayer* pPlayer)
 		else
 		{
 			*Player_gold -= item_value;
-			pPlayer->Add_Inventory(Select_item);
+			//pPlayer->Add_Inventory(Select_item);
+			//CItem* pCItem
+			pPlayer->Add_Inventory_FItemData(Select_item);
 		}
 
 		return Select_item;
