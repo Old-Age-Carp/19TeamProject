@@ -7,16 +7,18 @@
 #include "CLogManager.h"
 #include "CStaticDataManager.h"
 #include "CIsBattleAble.h"
+#include "IBattleTurnSelector.h"
 
 class CBattleManager
 {
 public:
-	CBattleManager(CGameObject* gameObject, CLogManager* logger, CStaticDataManager* staticDataManager, int* monsterId):
+	CBattleManager(CGameObject* gameObject, CLogManager* logger, CStaticDataManager* staticDataManager, int* monsterId ,std::unique_ptr<IBattleTurnSelector> turnSelector):
 		m_pGameObject(gameObject),
 		m_pLogger(logger),
 		m_pStaticDataManager(staticDataManager),
 		m_bIsBossBattle(false),
-		m_pMonsterId(monsterId)
+		m_pMonsterId(monsterId),
+		m_turnSelector(std::move(turnSelector))
 	{}
 
 	void SetBattle();
@@ -33,6 +35,7 @@ private:
 	CMonster* m_pMonster;
 	CLogManager* m_pLogger;
 	CStaticDataManager* m_pStaticDataManager;
-	bool m_bIsBossBattle;
+	std::unique_ptr<IBattleTurnSelector> m_turnSelector;
+	bool m_bIsBossBattle = false;
 	int* m_pMonsterId;
 };

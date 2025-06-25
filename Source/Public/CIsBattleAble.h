@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <vector>
 
@@ -7,6 +7,7 @@
 class CIsBattleAble
 {
 public:
+    CIsBattleAble(std::vector<CBattleAbleObject*>& battlers);
     CIsBattleAble(std::vector<CBattleAbleObject*>& battlers);
     bool IsAvailable() const;
     bool IsTeamBattleAvailable(int teamCount = 2) const;

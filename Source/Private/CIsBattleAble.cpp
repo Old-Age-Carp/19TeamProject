@@ -1,4 +1,5 @@
-﻿#include "..\Public\CIsBattleAble.h"
+#include "..\Public\CIsBattleAble.h"
+#include "..\Public\IHitAble.h"
 
 CIsBattleAble::CIsBattleAble(std::vector<CBattleAbleObject*>& battlers)
 	: m_battlers(battlers)
