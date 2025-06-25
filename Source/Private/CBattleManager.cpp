@@ -1,8 +1,9 @@
-﻿#include "..\Public\CBattleManager.h"
+#include "..\Public\CBattleManager.h"
 
 void CBattleManager::SetBattle(std::unique_ptr<IBattleTurnSelector> turnSelector)
-{
+{	
 	m_turnSelector = std::move(turnSelector);
+
 	if(*(m_pGameObject->Get_pLevel()) >= 10)
 	{
 		int BossIds[] =  { 107, 108 };
@@ -22,8 +23,13 @@ void CBattleManager::SetBattle(std::unique_ptr<IBattleTurnSelector> turnSelector
 		return;
 	}
 
+	if(m_pMonster)
+	{
+		delete m_pMonster;
+		m_pMonster = nullptr;
+	}
+
 	m_pMonster = new CMonster(pData);
-	GenerateMonster(m_bIsBossBattle, *m_pMonsterId);
 
 	m_pLogger->AddLog(L"Battle started with monster: " + m_pMonster->GetName() + L" (HP: " + std::to_wstring(m_pMonster->GetCurrentHP()) + L", ATK: " + std::to_wstring(m_pMonster->GetAttackValue()) + L")");
 }
@@ -87,23 +93,37 @@ void CBattleManager::MonsterTurn()
 	m_pLogger->AddLog(L"The monster " + m_pMonster->GetName() + L" attacked you! (Your remaining health: " + std::to_wstring(*m_pGameObject->Get_pHealth()) + L")");
 }
 
+bool CBattleManager::IsAlive(int m_health) const
+{
+	return m_health > 0;
+}
+
 bool CBattleManager::NextTurn()
 {
-    if (!m_pGameObject || !m_pMonster)
-        return true;										// 전투 대상이 없으면 종료로 간주
+    if (!m_turnSelector)
+	{
+        return true;
+	}
 
-    m_bIsPlayerTurn = !m_bIsPlayerTurn; 					// 턴 전환
+    CBattleAbleObject* nextActor = m_turnSelector->GetNextTurn();
 
-    if (m_bIsPlayerTurn)
-    {
-        PlayerTurn();
-        return !IsAlive(m_pMonster->GetCurrentHP());		// 몬스터 사망 여부
-    }
-    else
+	if (!nextActor)
+	{
+		return true;
+	}
+
+	if (nextActor == dynamic_cast<CBattleAbleObject*>(m_pGameObject))
+	{
+		PlayerTurn();
+		return !IsAlive(m_pMonster->GetCurrentHP());
+	}
+    else if (nextActor == dynamic_cast<CBattleAbleObject*>(m_pMonster))
     {
         MonsterTurn();
-        return !IsAlive(*m_pGameObject->Get_pHealth()); 	// 플레이어 사망 여부
+        return !IsAlive(*m_pGameObject->Get_pHealth());
     }
+
+    return true;
 }
 
 CGameObject* CBattleManager::GetCurrentTurn()

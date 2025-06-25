@@ -13,11 +13,11 @@ int main()
 
     CGameManager* pGameMgr = CGameManager::GetInstance();
 
-    while (true)
+    while (*pGameMgr->Get_pGameRunning())
     {
         pGameMgr->Main();
     }
-    //pGameMgr->Main();
+
 
     pGameMgr->DestroyInstance();
 
