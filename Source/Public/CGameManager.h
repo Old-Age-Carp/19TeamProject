@@ -2,7 +2,8 @@
 #pragma once
 
 #include "define.h"
-#include <iostream>
+///#include <iostream>
+#include <memory>
 
 class CPlayer;
 //class CStaticDataManager;
@@ -19,6 +20,7 @@ private:
 	//class CStaticDataManager	m_pStaticDataManger;
 	class CStaticDataManager*	m_pStaticDataManger = nullptr;
 	class CPlayer* m_pPlayer = nullptr;
+	class std::unique_ptr<class CGameView> m_pView = nullptr;
 	CGameManager(); // 생성자
 	~CGameManager(); //소멸자
 
@@ -32,6 +34,10 @@ private:
 	void goShop();
 	void goInvetory();
 	void goLevelUp();
+
+	vector<class CItem> DropItem(class CMonster* monster);
+	CMonster* MakeMonster(EMonsterType type);
+
 	void ShowStatus();
 	void Stanby_enter(); //엔터입력 대기
 	void Set_GameState(EGameState arg) { m_eGameState = arg; }

@@ -3,6 +3,7 @@
 #include <random>
 #include <vector>
 #include <memory>
+#include "TSingleton.h"
 #include "CGameObject.h"
 #include "CMonster.h"
 #include "CLogManager.h"
@@ -10,18 +11,10 @@
 #include "CIsBattleAble.h"
 #include "IBattleTurnSelector.h"
 
-class CBattleManager
+class CBattleManager : public TSingleton<CBattleManager>
 {
 public:
-	CBattleManager(CGameObject* gameObject, CLogManager* logger, CStaticDataManager* staticDataManager, int* monsterId) :
-		m_pGameObject(gameObject),
-		m_pLogger(logger),
-		m_pStaticDataManager(staticDataManager),
-		m_bIsBossBattle(false),
-		m_pMonsterId(monsterId),
-		m_turnSelector(nullptr)
-	{
-	}
+	CBattleManager() = default;
 
 	void SetBattle(std::unique_ptr<IBattleTurnSelector> turnSelector);
 	void PlayerTurn();
