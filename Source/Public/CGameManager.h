@@ -38,6 +38,7 @@ private:
 	vector<class CItem> DropItem(class CMonster* monster);
 	CMonster* MakeMonster(EMonsterType type);
 
+	void ShowStatus();
 	void Stanby_enter(); //엔터입력 대기
 	void Set_GameState(EGameState arg) { m_eGameState = arg; }
 public:
