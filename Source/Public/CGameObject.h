@@ -43,10 +43,9 @@ protected:
 	int				iLevel = 1;
 	int				iHealth_Max = 200;
 	int				iHealth = 200; //현재체력
-	unsigned int				iExp = 0;
+	unsigned int	iExp = 0;
 	int				iGold = 0;
 	int				iAttack = 30;
 	int				iArmor = 10;
 
 };
-

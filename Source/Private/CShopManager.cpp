@@ -9,7 +9,7 @@ CShopManager* CShopManager::instance = nullptr;
 
 CShopManager::CShopManager()
 {
-	m_pStaticDataManger = &CStaticDataManager::getInstance();
+	m_pStaticDataManager = &CStaticDataManager::getInstance();
 
 }
 
@@ -19,7 +19,7 @@ CShopManager::~CShopManager()
 
 void CShopManager::Show_ShopItem()
 {
-	m_pStaticDataManger->Print_AllItem();
+	m_pStaticDataManager->Print_AllItem();
 
 }
 
@@ -29,7 +29,7 @@ FItemData* CShopManager::Buy_Item(int i_arg , class CPlayer* pPlayer)
 	wchar_t buffer[256];
 	int item_value = 0;
 
-	Select_item = m_pStaticDataManger->GetItemData(i_arg);
+	Select_item = m_pStaticDataManager->GetItemData(i_arg);
 	
 	
 	if (Select_item == nullptr)

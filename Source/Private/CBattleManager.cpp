@@ -1,9 +1,8 @@
-#include "..\Public\CBattleManager.h"
+﻿#include "..\Public\CBattleManager.h"
 
 void CBattleManager::SetBattle(std::unique_ptr<IBattleTurnSelector> turnSelector)
-{	
+{
 	m_turnSelector = std::move(turnSelector);
-
 	if(*(m_pGameObject->Get_pLevel()) >= 10)
 	{
 		int BossIds[] =  { 107, 108 };
@@ -23,15 +22,10 @@ void CBattleManager::SetBattle(std::unique_ptr<IBattleTurnSelector> turnSelector
 		return;
 	}
 
-	if(m_pMonster)
-	{
-		delete m_pMonster;
-		m_pMonster = nullptr;
-	}
-
 	m_pMonster = new CMonster(pData);
+	GenerateMonster(m_bIsBossBattle, *m_pMonsterId);
 
-	m_pLogger->AddLog(L"Battle started with monster: " + m_pMonster->GetName() + L" (HP: " + std::to_wstring(m_pMonster->GetCurrentHP()) + L", ATK: " + std::to_wstring(m_pMonster->GetAttackValue()) + L")");
+	m_pLogger->AddLog(L"Battle started with monster: " + m_pMonster->getName() + L" (HP: " + std::to_wstring(m_pMonster->GetCurrentHP()) + L", ATK: " + std::to_wstring(m_pMonster->GetAttackValue()) + L")");
 }
 
 void CBattleManager::GenerateMonster(bool isBoss, int monsterId)
@@ -52,7 +46,7 @@ void CBattleManager::PlayerTurn()
 
 	if(!IsAlive(m_pMonster->GetCurrentHP()))
 	{
-		m_pLogger->AddLog(L"You defeated the monster: " + m_pMonster->GetName());
+		m_pLogger->AddLog(L"You defeated the monster: " + m_pMonster->getName());
 
 		*m_pGameObject->Get_pExp() += m_pMonster->GetExpReward();
 		m_pLogger->AddLog(L"You gained " + std::to_wstring(m_pMonster->GetExpReward()) + L" experience points!");
@@ -71,7 +65,7 @@ void CBattleManager::PlayerTurn()
 	}
 	else
 	{
-		m_pLogger->AddLog(L"You attacked the monster: " + m_pMonster->GetName() + L" (Remaining HP: " + std::to_wstring(m_pMonster->GetCurrentHP()) + L")");
+		m_pLogger->AddLog(L"You attacked the monster: " + m_pMonster->getName() + L" (Remaining HP: " + std::to_wstring(m_pMonster->GetCurrentHP()) + L")");
 	}
 }
 
@@ -87,46 +81,32 @@ void CBattleManager::MonsterTurn()
 
 	if(!IsAlive(*m_pGameObject->Get_pHealth()))
 	{
-		m_pLogger->AddLog(L"The monster " + m_pMonster->GetName() + L" has defeated you!");
+		m_pLogger->AddLog(L"The monster " + m_pMonster->getName() + L" has defeated you!");
 		return;
 	}
-	m_pLogger->AddLog(L"The monster " + m_pMonster->GetName() + L" attacked you! (Your remaining health: " + std::to_wstring(*m_pGameObject->Get_pHealth()) + L")");
-}
-
-bool CBattleManager::IsAlive(int m_health) const
-{
-	return m_health > 0;
+	m_pLogger->AddLog(L"The monster " + m_pMonster->getName() + L" attacked you! (Your remaining health: " + std::to_wstring(*m_pGameObject->Get_pHealth()) + L")");
 }
 
 bool CBattleManager::NextTurn()
 {
-    if (!m_turnSelector)
-	{
-        return true;
-	}
+    if (!m_pGameObject || !m_pMonster)
+        return true;										// 전투 대상이 없으면 종료로 간주
 
-    CBattleAbleObject* nextActor = m_turnSelector->GetNextTurn();
+    m_bIsPlayerTurn = !m_bIsPlayerTurn; 					// 턴 전환
 
-	if (!nextActor)
-	{
-		return true;
-	}
-
-	if (nextActor == dynamic_cast<CBattleAbleObject*>(m_pGameObject))
-	{
-		PlayerTurn();
-		return !IsAlive(m_pMonster->GetCurrentHP());
-	}
-    else if (nextActor == dynamic_cast<CBattleAbleObject*>(m_pMonster))
+    if (m_bIsPlayerTurn)
+    {
+        PlayerTurn();
+        return !IsAlive(m_pMonster->GetCurrentHP());		// 몬스터 사망 여부
+    }
+    else
     {
         MonsterTurn();
-        return !IsAlive(*m_pGameObject->Get_pHealth());
+        return !IsAlive(*m_pGameObject->Get_pHealth()); 	// 플레이어 사망 여부
     }
-
-    return true;
 }
 
 CGameObject* CBattleManager::GetCurrentTurn()
 {
-	return m_bIsPlayerTurn ? m_pGameObject : m_pMonster;
+	return  m_bIsPlayerTurn ? m_pGameObject : static_cast<CGameObject*>(m_pMonster);
 }
