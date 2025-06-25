@@ -8,7 +8,9 @@
 #include <string>
 #include <locale>
 #include <memory>
-
+//준식추가
+#include "..\Public\CPrinter.h"
+#include <algorithm>
 bool CStaticDataManager::LoadAllStaticData()
 {
     if (!LoadMonsterDataInternal())
@@ -180,7 +182,7 @@ bool CStaticDataManager::LoadItemDataInternal()
     }
 }
 
-const FMonsterData* CStaticDataManager::GetMonsterData(const std::wstring& name) const
+FMonsterData* CStaticDataManager::GetMonsterData(const std::wstring& name) 
 {
     auto it = monsterDataTable.find(name);
     if (it != monsterDataTable.end())
@@ -190,7 +192,7 @@ const FMonsterData* CStaticDataManager::GetMonsterData(const std::wstring& name)
     return nullptr;
 }
 
-const FMonsterData* CStaticDataManager::GetMonsterData(int id) const
+FMonsterData* CStaticDataManager::GetMonsterData(int id) 
 {
     auto it = monsterDataTableByID.find(id);
     if (it != monsterDataTableByID.end())
@@ -200,7 +202,7 @@ const FMonsterData* CStaticDataManager::GetMonsterData(int id) const
     return nullptr;
 }
 
-const FItemData* CStaticDataManager::GetItemData(int id) const
+FItemData* CStaticDataManager::GetItemData(int id) 
 {
     auto it = itemDataTableByID.find(id);
     if (it != itemDataTableByID.end())
@@ -208,5 +210,54 @@ const FItemData* CStaticDataManager::GetItemData(int id) const
         return it->second.get();
     }
     return nullptr;
+}
+
+void CStaticDataManager::Print_AllItem()
+{
+    CPrinter::PrintLine(L"========================================================");
+    int item_id = 0, item_gold = 0, item_hp = 0, item_atk=0, item_dep = 0;
+    wchar_t buffer[256];
+    std::wstring item_name;
+
+    std::vector<int> sortedIDs;
+    for (const auto& pair : itemDataTableByID)
+    {
+        sortedIDs.push_back(pair.first);
+    }
+    std::sort(sortedIDs.begin(), sortedIDs.end());  // 오름차순 정렬
+
+    for (int id : sortedIDs)
+    {
+        const FItemData* pItem = itemDataTableByID[id].get();
+
+        item_id = pItem->id;
+        item_gold = pItem->value;
+        item_name = pItem->name;
+        swprintf_s(buffer, 256, L"이름: %ws", item_name.c_str());
+        CPrinter::PrintLine(buffer);
+        swprintf_s(buffer, 256, L"ID : %d, 가격 : %d ", item_id, item_gold);
+        CPrinter::PrintLine(buffer);
+
+        if (auto pPotion = dynamic_cast<const FItemPotionData*>(pItem))
+        {
+            swprintf_s(buffer, 256, L"[포션] 회복량: %d", pPotion->healAmount);
+            CPrinter::PrintLine(buffer);
+        }
+        else if (auto pWeapon = dynamic_cast<const FItemWeaponData*>(pItem))
+        {
+            swprintf_s(buffer, 256, L"[무기] 공격력: %d, 방어력: %d, 체력: %d",
+                pWeapon->attackBonus, pWeapon->defenseBonus, pWeapon->healthBonus);
+            CPrinter::PrintLine(buffer);
+        }
+        else if (auto pArmor = dynamic_cast<const FItemArmorData*>(pItem))
+        {
+            swprintf_s(buffer, 256, L"[방어구] 방어력: %d, 체력: %d",
+                pArmor->defenseBonus, pArmor->healthBonus);
+            CPrinter::PrintLine(buffer);
+        }
+
+    }
+
+    CPrinter::PrintLine(L"========================================================");
 }
 

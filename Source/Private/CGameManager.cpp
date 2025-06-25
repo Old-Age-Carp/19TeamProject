@@ -4,14 +4,16 @@
 #include "..\Public\CLogManager.h"
 #include "..\Public\CPlayer.h"
 #include "..\Public\CPrinter.h"
+#include "..\Public\CStaticDataManager.h"
 
 CGameManager* CGameManager::instance = nullptr;
 
 CGameManager::CGameManager()
 {
 	m_pShopManager = CShopManager::GetInstance();
-	//m_pLogManager 
 
+	m_pStaticDataManger = &CStaticDataManager::getInstance();
+	m_pStaticDataManger->LoadAllStaticData();
 }
 
 CGameManager::~CGameManager()
@@ -51,15 +53,19 @@ void CGameManager::Main()
 		break;
 
 	case EGameState::BATTLE:
+		goBattle();
 		break;
 	case EGameState::SELECT:
 		SelectMenu();
 		break;
 	case EGameState::SHOP:
+		goShop();
 		break;
 	case EGameState::LEVELUP:
+
 		break;
 	case EGameState::INVENTORY:
+		goInvetory();
 		break;
 	case EGameState::GAMEOVER:
 		break;
@@ -81,12 +87,10 @@ void CGameManager::CreateHero()
 
 	m_pPlayer = new CPlayer(PlayerName);
 
-	std::wstring testName = m_pPlayer->getName();
-	CPrinter::PrintLine(testName);
-	//이름받고 플레이어 클래스 만들기
-
 	CPrinter::PrintLine(L"\nEnter를 눌러서 계속...");
 	std::wcin.get();  // Enter 키까지 대기
+	//Stanby_enter();
+
 	Set_GameState(EGameState::SELECT); 
 	
 }
@@ -97,7 +101,7 @@ void CGameManager::SelectMenu()
 
 	CPrinter::PrintLine(L"1: 현재정보 보기 ");
 	CPrinter::PrintLine(L"2: 상점  ");
-	CPrinter::PrintLine(L"3: 장비창 ");
+	CPrinter::PrintLine(L"3: 인벤토리 ");
 	CPrinter::PrintLine(L"4: 사냥시작 ");
 	CPrinter::PrintLine(L"5: 게임종료");
 
@@ -108,19 +112,23 @@ void CGameManager::SelectMenu()
 	switch (i_select)
 	{
 	case 1:
-		m_eGameState = EGameState::STATUS;
+		Set_GameState(EGameState::STATUS);
 		break;
 	case 2:
-		m_eGameState = EGameState::SHOP;
+		Set_GameState(EGameState::SHOP);
+
 		break;
 	case 3:
-		m_eGameState = EGameState::INVENTORY;
+		Set_GameState(EGameState::INVENTORY);
+
 		break;
 	case 4:
-		m_eGameState = EGameState::BATTLE;
+		Set_GameState(EGameState::BATTLE);
+
 		break;
 	case 5:
-		m_eGameState = EGameState::GAMEOVER;
+		Set_GameState(EGameState::GAMEOVER);
+
 		break;
 	}
 }
@@ -131,21 +139,27 @@ void CGameManager::goStatus()
 	CPrinter::ClearScreen();
 
 	std::wstring testname = m_pPlayer->getName();
-	wchar_t buffer[256];
-	//swprintf_s(buffer, 256, L"이름: %ws", testname.c_str());
-	//CPrinter::PrintLine(L"테스트 출력");
-	//CPrinter::PrintLine(buffer);
-	//swprintf_s(buffer, 256, L"체력: %d", m_pPlayer->getHealth());
-	//CPrinter::PrintLine(buffer);
-	//CPrinter::PrintLine(L"마무리");
-	CPrinter::PrintLine(testname);
 
-	swprintf_s(buffer, 256, L"체력: %d", m_pPlayer->getHealth());
+	wchar_t buffer[256];
+	swprintf_s(buffer, 256, L"이름: %ws", testname.c_str());
+	CPrinter::PrintLine(buffer);
+	swprintf_s(buffer, 256, L"레벨: %d", m_pPlayer->getLevel());
+	CPrinter::PrintLine(buffer);
+	swprintf_s(buffer, 256, L"경험치: %d  / 100", *m_pPlayer->Get_pExp());
+	CPrinter::PrintLine(buffer);
+	swprintf_s(buffer, 256, L"공격력: %d", *m_pPlayer->Get_pAttack());
+	CPrinter::PrintLine(buffer);
+	swprintf_s(buffer, 256, L"방어력: %d", *m_pPlayer->Get_pArmor());
+	CPrinter::PrintLine(buffer);
+	swprintf_s(buffer, 256, L"체력: %d / %d", m_pPlayer->getHealth(), *m_pPlayer->Get_pHealthMax());
+	CPrinter::PrintLine(buffer);
+	swprintf_s(buffer, 256, L"골드: %d ", *m_pPlayer->Get_pGold());
 	CPrinter::PrintLine(buffer);
 
-		
-	CPrinter::PrintLine(L"\nEnter를 눌러서 계속...");
-	std::wcin.get();  // Enter 키까지 대기
+	Stanby_enter();
+
+	Set_GameState(EGameState::SELECT);
+
 }
 void CGameManager::goBattle()
 {
@@ -153,10 +167,86 @@ void CGameManager::goBattle()
 
 void CGameManager::goShop()
 {
+	wchar_t buffer[256];
+	int i_select = 0;
+
+	CPrinter::ClearScreen();
+	m_pShopManager->Show_ShopItem();
+
+	swprintf_s(buffer, 256, L"현재 골드 : %d", *m_pPlayer->Get_pGold());
+	CPrinter::PrintLine(buffer);
+
+	swprintf_s(buffer, 256, L"구매할 아이템 ID 입력: %d, (메뉴:9)", i_select);
+	CPrinter::PrintLine(buffer);
+
+	std::wcin >> i_select;
+	if (i_select == 9)
+	{
+		Set_GameState(EGameState::SELECT);
+	}
+	else {
+		FItemData* Buyed_item = m_pShopManager->Buy_Item(i_select,m_pPlayer);
+		Stanby_enter();
+	}
+
+
 }
 
 void CGameManager::goInvetory()
 {
+	m_pPlayer->Show_Inventory();
+
+	wchar_t buffer[256];
+	int i_select = 0;
+
+
+	swprintf_s(buffer, 256, L"현재 골드 : %d", *m_pPlayer->Get_pGold());
+	CPrinter::PrintLine(buffer);
+
+	swprintf_s(buffer, 256, L"사용하거나 장착할 아이템 ID: %d, (메뉴:9)", i_select);
+	CPrinter::PrintLine(buffer);
+
+	std::wcin >> i_select;
+	if (i_select == 9)
+	{
+		Set_GameState(EGameState::SELECT);
+	}
+	else {
+		m_pPlayer->Equip(i_select);
+		Stanby_enter();
+	}
+
+}
+
+void CGameManager::goLevelUp()
+{
+	int pre_level = 0, pre_attack = 0 ,pre_health=0;
+
+	if (*m_pPlayer->Get_pExp() >= 100)
+	{
+		pre_level = *m_pPlayer->Get_pLevel();
+		pre_attack = *m_pPlayer->Get_pAttack();
+		pre_health  = m_pPlayer->getHealth_Max();
+		m_pPlayer->LevelUp();
+
+
+		wchar_t buffer[256];
+		swprintf_s(buffer, 256, L"레벨업!  %d  -> %d", pre_level, m_pPlayer->getLevel());
+		CPrinter::PrintLine(buffer);
+		swprintf_s(buffer, 256, L"공격력:  %d  -> %d", pre_attack, m_pPlayer->getAttack());
+		CPrinter::PrintLine(buffer);
+		swprintf_s(buffer, 256, L"체력:  %d  -> %d", pre_health, m_pPlayer->getHealth_Max());
+		CPrinter::PrintLine(buffer);
+
+	}
+
+}
+
+void CGameManager::Stanby_enter()
+{
+	std::wcin.ignore(std::numeric_limits<std::streamsize>::max(), L'\n');
+	CPrinter::PrintLine(L"\nEnter를 눌러서 계속...");
+	std::wcin.get();  // Enter 키까지 대기
 }
 
 
