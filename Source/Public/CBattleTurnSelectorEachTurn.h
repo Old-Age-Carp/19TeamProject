@@ -17,6 +17,10 @@ private:
 
 public:
 	weak_ptr<CGameObject> GetNextTurn() override;
-
+	inline weak_ptr<CIsBattleAble> GetCurrentTeam() override
+	{
+		return currentTeamIndex < 0 ? weak_ptr<CIsBattleAble>()
+			: weak_ptr(mTeamList[currentTeamIndex]);
+	}
 	void SetTeams(vector<const shared_ptr<CIsBattleAble>>& teamList) override;
 };

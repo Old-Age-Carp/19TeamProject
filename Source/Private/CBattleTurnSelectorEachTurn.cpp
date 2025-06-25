@@ -1,9 +1,16 @@
 ﻿#include "CBattleTurnSelectorEachTurn.h"
 #include <algorithm>
 
-unique_ptr<CGameObject> CBattleTurnSelectorEachTurn::GetNextTurn()
+weak_ptr<CGameObject> CBattleTurnSelectorEachTurn::GetNextTurn()
 {
-	return unique_ptr<CGameObject>();
+	++currentTeamIndex;
+	int currentTeamIndex = ++mTeamLastTurnIndexList[currentTeamIndex];
+	
+	shared_ptr<CIsBattleAble> team = mTeamList[currentTeamIndex];
+
+	auto& battlerList = team->GetTeamBattlerList();
+	IBattleAble& battler = 
+	//return weak_ptr(team[currentTeamIndex]);
 }
 
 /// <summary>
