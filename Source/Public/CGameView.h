@@ -4,11 +4,12 @@
 #include "CLogManager.h"
 #include "CGameManager.h"
 #include "CGameObject.h"
+#include "TSingleton.h"
 
 /// <summary>
 /// 게임관련 출력을 담당하는 클래스 일종의 UI 역할
 /// </summary>
-class CGameView
+class CGameView : public TSingleton<CGameView>
 {
 
 public:
