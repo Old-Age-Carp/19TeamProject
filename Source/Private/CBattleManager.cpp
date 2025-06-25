@@ -90,3 +90,28 @@ bool CBattleManager::IsAlive(int m_health) const
 {
 	return m_health > 0;
 }
+
+bool CBattleManager::NextTurn()
+{
+    if (!m_pGameObject || !m_pMonster)
+        return true;										// 전투 대상이 없으면 종료로 간주
+
+    m_bIsPlayerTurn = !m_bIsPlayerTurn; 					// 턴 전환
+
+    // 현재 턴의 주체가 행동
+    if (m_bIsPlayerTurn)
+    {
+        PlayerTurn();
+        return !IsAlive(m_pMonster->GetCurrentHP());		// 몬스터 사망 여부
+    }
+    else
+    {
+        MonsterTurn();
+        return !IsAlive(*m_pGameObject->Get_pHealth()); 	// 플레이어 사망 여부
+    }
+}
+
+CGameObject* CBattleManager::GetCurrentTurn()
+{
+	return m_bIsPlayerTurn ? m_pGameObject : m_pMonster;
+}
