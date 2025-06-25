@@ -21,10 +21,10 @@ void CBattleManager::SetBattle()
 		return;
 	}
 
-	m_Monster = CMonster(pData);
+	m_pMonster = new CMonster(pData);
 	GenerateMonster(m_bIsBossBattle, *m_pMonsterId);
 
-	m_pLogger->AddLog(L"Battle started with monster: " + m_Monster.GetName() + L" (HP: " + std::to_wstring(m_Monster.GetCurrentHP()) + L", ATK: " + std::to_wstring(m_Monster.GetAttackValue()) + L")");
+	m_pLogger->AddLog(L"Battle started with monster: " + m_pMonster->GetName() + L" (HP: " + std::to_wstring(m_pMonster->GetCurrentHP()) + L", ATK: " + std::to_wstring(m_pMonster->GetAttackValue()) + L")");
 }
 
 void CBattleManager::GenerateMonster(bool isBoss, int monsterId)
@@ -41,14 +41,14 @@ void CBattleManager::GenerateMonster(bool isBoss, int monsterId)
 
 void CBattleManager::PlayerTurn()
 {
-	m_Monster.TakeDamage(m_pGameObject->getAttack());
+	m_pMonster->TakeDamage(m_pGameObject->getAttack());
 
-	if(!IsAlive(m_Monster.GetCurrentHP()))
+	if(!IsAlive(m_pMonster->GetCurrentHP()))
 	{
-		m_pLogger->AddLog(L"You defeated the monster: " + m_Monster.GetName());
-		
-		*m_pGameObject->Get_pExp() += m_Monster.GetExpReward();
-		m_pLogger->AddLog(L"You gained " + std::to_wstring(m_Monster.GetExpReward()) + L" experience points!");
+		m_pLogger->AddLog(L"You defeated the monster: " + m_pMonster->GetName());
+
+		*m_pGameObject->Get_pExp() += m_pMonster->GetExpReward();
+		m_pLogger->AddLog(L"You gained " + std::to_wstring(m_pMonster->GetExpReward()) + L" experience points!");
 
 		if(*m_pGameObject->Get_pExp() >= 100)
 		{
@@ -64,13 +64,13 @@ void CBattleManager::PlayerTurn()
 	}
 	else
 	{
-		m_pLogger->AddLog(L"You attacked the monster: " + m_Monster.GetName() + L" (Remaining HP: " + std::to_wstring(m_Monster.GetCurrentHP()) + L")");
+		m_pLogger->AddLog(L"You attacked the monster: " + m_pMonster->GetName() + L" (Remaining HP: " + std::to_wstring(m_pMonster->GetCurrentHP()) + L")");
 	}
 }
 
 void CBattleManager::MonsterTurn()
 {
-	int damage = m_Monster.GetAttackValue();
+	int damage = m_pMonster->GetAttackValue();
 	*m_pGameObject->Get_pHealth() -= damage;
 	
 	if(*m_pGameObject->Get_pHealth() < 0)
@@ -80,10 +80,10 @@ void CBattleManager::MonsterTurn()
 
 	if(!IsAlive(*m_pGameObject->Get_pHealth()))
 	{
-		m_pLogger->AddLog(L"The monster " + m_Monster.GetName() + L" has defeated you!");
+		m_pLogger->AddLog(L"The monster " + m_pMonster->GetName() + L" has defeated you!");
 		return;
 	}
-	m_pLogger->AddLog(L"The monster " + m_Monster.GetName() + L" attacked you! (Your remaining health: " + std::to_wstring(*m_pGameObject->Get_pHealth()) + L")");
+	m_pLogger->AddLog(L"The monster " + m_pMonster->GetName() + L" attacked you! (Your remaining health: " + std::to_wstring(*m_pGameObject->Get_pHealth()) + L")");
 }
 
 bool CBattleManager::IsAlive(int m_health) const
