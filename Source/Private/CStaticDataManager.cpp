@@ -11,6 +11,7 @@
 //준식추가
 #include "..\Public\CPrinter.h"
 #include <algorithm>
+
 bool CStaticDataManager::LoadAllStaticData()
 {
     if (!LoadMonsterDataInternal())
@@ -22,6 +23,12 @@ bool CStaticDataManager::LoadAllStaticData()
     if (!LoadItemDataInternal())
     {
         std::wcerr << L"아이템 데이터 로드 실패!" << std::endl;
+        return false;
+    }
+
+    if (!LoadDropTableDataInternal())
+    {
+        std::wcerr << L"드롭 테이블 데이터 로드 실패!" << std::endl;
         return false;
     }
 
@@ -66,7 +73,7 @@ bool CStaticDataManager::LoadMonsterDataInternal()
             30,
             EMonsterType::Normal,
             10,
-            {}
+            {3001}
         };
         monsterDataTable.insert({ slime.name, slime });
         monsterDataTableByID.insert({ slime.id, slime });
@@ -182,7 +189,7 @@ bool CStaticDataManager::LoadItemDataInternal()
     }
 }
 
-FMonsterData* CStaticDataManager::GetMonsterData(const std::wstring& name) 
+FMonsterData* CStaticDataManager::GetMonsterData(const std::wstring& name)
 {
     auto it = monsterDataTable.find(name);
     if (it != monsterDataTable.end())
@@ -192,7 +199,7 @@ FMonsterData* CStaticDataManager::GetMonsterData(const std::wstring& name)
     return nullptr;
 }
 
-FMonsterData* CStaticDataManager::GetMonsterData(int id) 
+FMonsterData* CStaticDataManager::GetMonsterData(int id)
 {
     auto it = monsterDataTableByID.find(id);
     if (it != monsterDataTableByID.end())
@@ -212,7 +219,7 @@ FItemData* CStaticDataManager::GetItemData(const std::wstring& name)
     return nullptr;
 }
 
-FItemData* CStaticDataManager::GetItemData(int id) 
+FItemData* CStaticDataManager::GetItemData(int id)
 {
     auto it = itemDataTableByID.find(id);
     if (it != itemDataTableByID.end())
@@ -222,10 +229,20 @@ FItemData* CStaticDataManager::GetItemData(int id)
     return nullptr;
 }
 
+FGameDropTable* CStaticDataManager::GetDropTable(int id)
+{
+    auto it = dropTableDataByID.find(id);
+    if (it != dropTableDataByID.end())
+    {
+        return &it->second;
+    }
+    return nullptr;
+}
+
 void CStaticDataManager::Print_AllItem()
 {
     CPrinter::PrintLine(L"========================================================");
-    int item_id = 0, item_gold = 0, item_hp = 0, item_atk=0, item_dep = 0;
+    int item_id = 0, item_gold = 0, item_hp = 0, item_atk = 0, item_dep = 0;
     wchar_t buffer[256];
     std::wstring item_name;
 
@@ -234,7 +251,7 @@ void CStaticDataManager::Print_AllItem()
     {
         sortedIDs.push_back(pair.first);
     }
-    std::sort(sortedIDs.begin(), sortedIDs.end());  // 오름차순 정렬
+    std::sort(sortedIDs.begin(), sortedIDs.end());
 
     for (int id : sortedIDs)
     {
@@ -265,9 +282,84 @@ void CStaticDataManager::Print_AllItem()
                 pArmor->defenseBonus, pArmor->healthBonus);
             CPrinter::PrintLine(buffer);
         }
-
     }
 
     CPrinter::PrintLine(L"========================================================");
 }
 
+bool CStaticDataManager::LoadDropTableDataInternal()
+{
+    try
+    {
+        FGameDropTable dropTable1001;
+        dropTable1001.id = 1001;
+        FDropItemData potionDropItem;
+        potionDropItem.mItemIDList.push_back(1001);
+        potionDropItem.mDropRate.push_back(300);
+        dropTable1001.possibleDrops.push_back(potionDropItem);
+        dropTableDataByID[dropTable1001.id] = dropTable1001;
+
+        FGameDropTable dropTable1002;
+        dropTable1002.id = 1002;
+        FDropItemData bigPotionDropItem;
+        bigPotionDropItem.mItemIDList.push_back(1002);
+        bigPotionDropItem.mDropRate.push_back(200);
+        dropTable1002.possibleDrops.push_back(bigPotionDropItem);
+        dropTableDataByID[dropTable1002.id] = dropTable1002;
+
+        FGameDropTable dropTable2001;
+        dropTable2001.id = 2001;
+        FDropItemData ironSwordDropItem;
+        ironSwordDropItem.mItemIDList.push_back(2001);
+        ironSwordDropItem.mDropRate.push_back(150);
+        dropTable2001.possibleDrops.push_back(ironSwordDropItem);
+        dropTableDataByID[dropTable2001.id] = dropTable2001;
+
+        FGameDropTable dropTable2002;
+        dropTable2002.id = 2002;
+        FDropItemData mithrilSwordDropItem;
+        mithrilSwordDropItem.mItemIDList.push_back(2002);
+        mithrilSwordDropItem.mDropRate.push_back(100);
+        dropTable2002.possibleDrops.push_back(mithrilSwordDropItem);
+        dropTableDataByID[dropTable2002.id] = dropTable2002;
+
+        FGameDropTable dropTable2003;
+        dropTable2003.id = 2003;
+        FDropItemData legendarySwordDropItem;
+        legendarySwordDropItem.mItemIDList.push_back(2003);
+        legendarySwordDropItem.mDropRate.push_back(50);
+        dropTable2003.possibleDrops.push_back(legendarySwordDropItem);
+        dropTableDataByID[dropTable2003.id] = dropTable2003;
+
+        FGameDropTable dropTable3001;
+        dropTable3001.id = 3001;
+        FDropItemData oldRobeDropItem;
+        oldRobeDropItem.mItemIDList.push_back(3001);
+        oldRobeDropItem.mDropRate.push_back(250);
+        dropTable3001.possibleDrops.push_back(oldRobeDropItem);
+        dropTableDataByID[dropTable3001.id] = dropTable3001;
+
+        FGameDropTable dropTable3002;
+        dropTable3002.id = 3002;
+        FDropItemData ironArmorDropItem;
+        ironArmorDropItem.mItemIDList.push_back(3002);
+        ironArmorDropItem.mDropRate.push_back(150);
+        dropTable3002.possibleDrops.push_back(ironArmorDropItem);
+        dropTableDataByID[dropTable3002.id] = dropTable3002;
+
+        FGameDropTable dropTable3003;
+        dropTable3003.id = 3003;
+        FDropItemData immortalArmorDropItem;
+        immortalArmorDropItem.mItemIDList.push_back(3003);
+        immortalArmorDropItem.mDropRate.push_back(70);
+        dropTable3003.possibleDrops.push_back(immortalArmorDropItem);
+        dropTableDataByID[dropTable3003.id] = dropTable3003;
+
+        return true;
+    }
+    catch (const std::exception& e)
+    {
+        std::wcerr << L"드롭 테이블 데이터 로드 중 오류 발생: " << e.what() << std::endl;
+        return false;
+    }
+}

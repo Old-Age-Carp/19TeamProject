@@ -2,7 +2,11 @@
 #pragma once
 
 #include "define.h"
-#include <iostream>
+#include "CMonster.h"
+///#include <iostream>
+#include <memory>
+#include <optional>
+#include "CPrinter.h"
 
 class CPlayer;
 //class CStaticDataManager;
@@ -19,6 +23,7 @@ private:
 	//class CStaticDataManager	m_pStaticDataManger;
 	class CStaticDataManager*	m_pStaticDataManger = nullptr;
 	class CPlayer* m_pPlayer = nullptr;
+	
 	CGameManager(); // 생성자
 	~CGameManager(); //소멸자
 
@@ -33,8 +38,14 @@ private:
 	void goInvetory();
 	void goGameOver();
 	void goLevelUp();
+
+	vector<class CItem> DropItem( CMonster* monster);
+	CMonster* MakeMonster(EMonsterType type);
+
 	void ShowStatus();
 	void Stanby_enter(); //엔터입력 대기
+	template<typename T>
+	T GetInput();
 	void Set_GameState(EGameState arg) { m_eGameState = arg; }
 public:
 	static CGameManager* GetInstance();
@@ -54,3 +65,19 @@ protected:
 
 };
 
+template<typename T>
+T CGameManager::GetInput()
+{
+	std::optional<T> retOpt = std::nullopt;
+	while (true)
+	{
+		retOpt = CPrinter::GetInput<T>();
+		if (retOpt.has_value() == false)
+		{
+			CPrinter::PrintLine(L"잘못 된 입력입니다 다시 입력해주세요.");
+		}
+		else break;
+	}
+
+	return retOpt.value();
+}
