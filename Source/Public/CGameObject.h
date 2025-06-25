@@ -28,7 +28,7 @@ public:
 	int* Get_pLevel()				{ return &iLevel; }
 	int* Get_pHealthMax()			{ return &iHealth_Max; }
 	int* Get_pHealth()				{ return &iHealth; }
-	int* Get_pExp()					{ return &iExp; }
+	unsigned int* Get_pExp()					{ return &iExp; }
 	int* Get_pGold()				{ return &iGold; }
 	int* Get_pAttack()				{ return &iAttack; }
 	int* Get_pArmor()				{ return &iArmor; }
@@ -43,7 +43,7 @@ protected:
 	int				iLevel = 1;
 	int				iHealth_Max = 200;
 	int				iHealth = 200; //현재체력
-	int				iExp = 0;
+	unsigned int				iExp = 0;
 	int				iGold = 0;
 	int				iAttack = 30;
 	int				iArmor = 10;
