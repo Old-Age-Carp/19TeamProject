@@ -4,18 +4,21 @@
 #include "..\Public\CPrinter.h"
 
 
-void CPlayer::LevelUp()
+bool CPlayer::LevelUp()
 {
+    bool result = false;
 	if (iExp >= 100)
 	{
 		iExp -= 100;
 	}
 	iLevel++;
+    if (iLevel == 10)
+        result = true;
 	iHealth_Max = iHealth_Max + (iLevel * 20);
 	iHealth = iHealth_Max ;
 	iAttack += iLevel * 5;
 
-	
+    return result;
 }
 
 void CPlayer::Show_Inventory()

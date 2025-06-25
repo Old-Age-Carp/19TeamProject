@@ -37,6 +37,7 @@ private:
 	void goBattle();
 	void goShop();
 	void goInvetory();
+	void goGameOver();
 	void goLevelUp();
 
 	vector<class CItem> DropItem( CMonster* monster);
@@ -51,6 +52,7 @@ public:
 	static CGameManager* GetInstance();
 	static void				DestroyInstance();
 
+	bool* Get_pGameRunning() { return &m_bGameRunning; }
 	void Main(); //
 
 
@@ -58,6 +60,7 @@ public:
 	void		SetGameState(EGameState state) { m_eGameState = state; }
 
 protected:
+	bool		m_bGameRunning = true;
 	EGameState	m_eGameState = EGameState::START;
 
 

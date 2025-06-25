@@ -21,7 +21,7 @@ public:
 	}
 
 public:
-	void LevelUp();
+	bool LevelUp();
 
 	void Show_Inventory();
 	void Show_Inventory_part(int i_arg);
