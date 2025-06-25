@@ -7,7 +7,7 @@ class CShopManager
 private:
 	static CShopManager* instance; //싱글톤 선언
 
-	class CStaticDataManager* m_pStaticDataManger = nullptr;
+	class CStaticDataManager* m_pStaticDataManager = nullptr;
 
 	CShopManager(); // 생성자
 	~CShopManager(); //소멸자

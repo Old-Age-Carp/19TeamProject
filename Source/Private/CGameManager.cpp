@@ -18,8 +18,8 @@ CGameManager::CGameManager()
 {
 	m_pShopManager = CShopManager::GetInstance();
 
-	m_pStaticDataManger = &CStaticDataManager::getInstance();
-	m_pStaticDataManger->LoadAllStaticData();
+	m_pStaticDataManager = &CStaticDataManager::getInstance();
+	m_pStaticDataManager->LoadAllStaticData();
 	srand(static_cast<unsigned int>(time(nullptr)));
 }
 
@@ -299,16 +299,6 @@ void CGameManager::goLevelUp()
 
 }
 
-CMonster* CGameManager::MakeMonster(EMonsterType type)
-{
-	return nullptr;
-}
-
-vector<CItem> CGameManager::DropItem(CMonster* monster)
-{
-	return vector<CItem>();
-}
-
 void CGameManager::ShowStatus()
 {
 	wstring testname = m_pPlayer->getName();
@@ -352,8 +342,8 @@ CMonster* CGameManager::MakeMonster(EMonsterType type)
 
 	if (monsterIDs.empty())
 	{
-		return nullptr;
 	}
+	return nullptr;
 }
 
 //몬스터 처치 후 아이템 드랍
@@ -365,7 +355,7 @@ vector<CItem> CGameManager::DropItem(CMonster* monster)
 	if (!monster)
 		return droppedCItems;
 
-	const FMonsterData* pMonsterData = m_pStaticDataManager->GetMonsterData(monster->GetID());
+	const FMonsterData* pMonsterData = monster->GetData();
 	if (!pMonsterData)
 		return droppedCItems;
 
@@ -378,7 +368,7 @@ vector<CItem> CGameManager::DropItem(CMonster* monster)
 	//아이템 드랍
 	if (!pMonsterData->dropItemTableIDs.empty())
 	{
-		for (int itemID : pMonsterData->dropItemIDs)
+		for (int itemID : pMonsterData->dropItemTableIDs)
 		{
 			const FItemData* pItemDef = m_pStaticDataManager->GetItemData(itemID);
 			if (!pItemDef)
@@ -439,5 +429,5 @@ vector<CItem> CGameManager::DropItem(CMonster* monster)
 			}
 		}
 	}
-	return droppeddCItems;
+	return droppedCItems;
 }

@@ -53,6 +53,8 @@ public:
         return m_baseData ? m_baseData->dropItemTableIDs : emptyVec;
     }
 
+    const FMonsterData* GetData() { return m_baseData; }
+
     int GetExpReward() const { return m_baseData ? m_baseData->expReward : 0; }
     
     EMonsterType GetType() const { return m_baseData ? m_baseData->type : EMonsterType::Normal; }
