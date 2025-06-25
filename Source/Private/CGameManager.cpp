@@ -14,6 +14,7 @@ CGameManager::CGameManager()
 
 	m_pStaticDataManger = &CStaticDataManager::getInstance();
 	m_pStaticDataManger->LoadAllStaticData();
+	
 }
 
 CGameManager::~CGameManager()
@@ -163,6 +164,26 @@ void CGameManager::goStatus()
 }
 void CGameManager::goBattle()
 {
+	//플레이어 상태
+
+	// 몬스터 생성중
+	CPrinter::PrintLine(L"몬스터 생성 중");
+
+	// 레벨에 맞는 데이터 가져와서 확인
+	// 몬스터 생성
+	CMonster* monster = MakeMonster(EMonsterType::Normal);
+	// 몬스터 스텟 출력
+	// 전투 시작 입력 대기
+
+	// 전투 진행
+	// 로그 출력
+
+	// 기다리기
+
+	// 종료 될 때까지 반복
+
+	// 종료시 결과 출력
+
 }
 
 void CGameManager::goShop()
@@ -240,6 +261,11 @@ void CGameManager::goLevelUp()
 
 	}
 
+}
+
+CMonster* CGameManager::MakeMonster(EMonsterType type)
+{
+	return nullptr;
 }
 
 void CGameManager::Stanby_enter()

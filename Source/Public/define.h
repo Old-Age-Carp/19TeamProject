@@ -1,6 +1,9 @@
 ﻿#pragma once
 
 #include <string>
+#include <vector>
+
+using std::vector;
 
 /// <summary>
 ///  캐릭터가 각 턴에 할 수 있는 행동 종류
@@ -38,6 +41,15 @@ struct FItemData
 		:id(InID), name(InName), value(InValue) {
 	}
 };
+
+struct FDropItemData
+{
+public:
+	int mId;
+	vector<int>		mItemIDList;		//아이템 id 목록
+	vector<float>	mDropRate;	//각 아이템 드롭확률
+};
+
 
 struct FItemPotionData :public FItemData
 {
