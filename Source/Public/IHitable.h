@@ -10,7 +10,5 @@ public:
 
     virtual bool IsAlive() const = 0;
 
-    virtual int GetCurrentHP() const = 0;
-
     virtual const std::wstring& GetName() const = 0;
 };
