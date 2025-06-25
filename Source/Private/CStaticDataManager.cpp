@@ -202,6 +202,16 @@ FMonsterData* CStaticDataManager::GetMonsterData(int id)
     return nullptr;
 }
 
+FItemData* CStaticDataManager::GetItemData(const std::wstring& name)
+{
+    auto it = itemDataTableByName.find(name);
+    if (it != itemDataTableByName.end())
+    {
+        return it->second;
+    }
+    return nullptr;
+}
+
 FItemData* CStaticDataManager::GetItemData(int id) 
 {
     auto it = itemDataTableByID.find(id);
