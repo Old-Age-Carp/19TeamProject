@@ -14,7 +14,6 @@ CGameManager::CGameManager()
 
 	m_pStaticDataManger = &CStaticDataManager::getInstance();
 	m_pStaticDataManger->LoadAllStaticData();
-	
 }
 
 CGameManager::~CGameManager()
@@ -87,10 +86,11 @@ void CGameManager::CreateHero()
 	//cout << "캐릭터의 이름 입력:" << endl;
 
 	m_pPlayer = new CPlayer(PlayerName);
-
+	*(m_pPlayer->Get_pHealth()) = 20;
 	CPrinter::PrintLine(L"\nEnter를 눌러서 계속...");
 	std::wcin.get();  // Enter 키까지 대기
 	//Stanby_enter();
+	
 
 	Set_GameState(EGameState::SELECT); 
 	
@@ -139,23 +139,8 @@ void CGameManager::goStatus()
 
 	CPrinter::ClearScreen();
 
-	std::wstring testname = m_pPlayer->getName();
 
-	wchar_t buffer[256];
-	swprintf_s(buffer, 256, L"이름: %ws", testname.c_str());
-	CPrinter::PrintLine(buffer);
-	swprintf_s(buffer, 256, L"레벨: %d", m_pPlayer->getLevel());
-	CPrinter::PrintLine(buffer);
-	swprintf_s(buffer, 256, L"경험치: %d  / 100", *m_pPlayer->Get_pExp());
-	CPrinter::PrintLine(buffer);
-	swprintf_s(buffer, 256, L"공격력: %d", *m_pPlayer->Get_pAttack());
-	CPrinter::PrintLine(buffer);
-	swprintf_s(buffer, 256, L"방어력: %d", *m_pPlayer->Get_pArmor());
-	CPrinter::PrintLine(buffer);
-	swprintf_s(buffer, 256, L"체력: %d / %d", m_pPlayer->getHealth(), *m_pPlayer->Get_pHealthMax());
-	CPrinter::PrintLine(buffer);
-	swprintf_s(buffer, 256, L"골드: %d ", *m_pPlayer->Get_pGold());
-	CPrinter::PrintLine(buffer);
+	ShowStatus();
 
 	Stanby_enter();
 
@@ -164,26 +149,6 @@ void CGameManager::goStatus()
 }
 void CGameManager::goBattle()
 {
-	//플레이어 상태
-
-	// 몬스터 생성중
-	CPrinter::PrintLine(L"몬스터 생성 중");
-
-	// 레벨에 맞는 데이터 가져와서 확인
-	// 몬스터 생성
-	CMonster* monster = MakeMonster(EMonsterType::Normal);
-	// 몬스터 스텟 출력
-	// 전투 시작 입력 대기
-
-	// 전투 진행
-	// 로그 출력
-
-	// 기다리기
-
-	// 종료 될 때까지 반복
-
-	// 종료시 결과 출력
-
 }
 
 void CGameManager::goShop()
@@ -215,14 +180,28 @@ void CGameManager::goShop()
 
 void CGameManager::goInvetory()
 {
-	m_pPlayer->Show_Inventory();
-
-	wchar_t buffer[256];
 	int i_select = 0;
 
+	wchar_t buffer[256];
+	std::wstring testname = m_pPlayer->getName();
 
-	swprintf_s(buffer, 256, L"현재 골드 : %d", *m_pPlayer->Get_pGold());
+	m_pPlayer->Show_Inventory();
+
+
+	swprintf_s(buffer, 256, L"이름: %ws", testname.c_str());
 	CPrinter::PrintLine(buffer);
+	swprintf_s(buffer, 256, L"공격력: %d", *m_pPlayer->Get_pAttack());
+	CPrinter::PrintLine(buffer);
+	swprintf_s(buffer, 256, L"방어력: %d", *m_pPlayer->Get_pArmor());
+	CPrinter::PrintLine(buffer);
+	swprintf_s(buffer, 256, L"체력: %d / %d", m_pPlayer->getHealth(), *m_pPlayer->Get_pHealthMax());
+	CPrinter::PrintLine(buffer);
+	swprintf_s(buffer, 256, L"골드: %d ", *m_pPlayer->Get_pGold());
+	CPrinter::PrintLine(buffer);
+
+
+
+
 
 	swprintf_s(buffer, 256, L"사용하거나 장착할 아이템 ID: %d, (메뉴:9)", i_select);
 	CPrinter::PrintLine(buffer);
@@ -263,9 +242,26 @@ void CGameManager::goLevelUp()
 
 }
 
-CMonster* CGameManager::MakeMonster(EMonsterType type)
+void CGameManager::ShowStatus()
 {
-	return nullptr;
+	std::wstring testname = m_pPlayer->getName();
+
+	wchar_t buffer[256];
+	swprintf_s(buffer, 256, L"이름: %ws", testname.c_str());
+	CPrinter::PrintLine(buffer);
+	swprintf_s(buffer, 256, L"레벨: %d", m_pPlayer->getLevel());
+	CPrinter::PrintLine(buffer);
+	swprintf_s(buffer, 256, L"경험치: %d  / 100", *m_pPlayer->Get_pExp());
+	CPrinter::PrintLine(buffer);
+	swprintf_s(buffer, 256, L"공격력: %d", *m_pPlayer->Get_pAttack());
+	CPrinter::PrintLine(buffer);
+	swprintf_s(buffer, 256, L"방어력: %d", *m_pPlayer->Get_pArmor());
+	CPrinter::PrintLine(buffer);
+	swprintf_s(buffer, 256, L"체력: %d / %d", m_pPlayer->getHealth(), *m_pPlayer->Get_pHealthMax());
+	CPrinter::PrintLine(buffer);
+	swprintf_s(buffer, 256, L"골드: %d ", *m_pPlayer->Get_pGold());
+	CPrinter::PrintLine(buffer);
+
 }
 
 void CGameManager::Stanby_enter()
