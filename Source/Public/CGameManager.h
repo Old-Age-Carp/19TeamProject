@@ -33,7 +33,7 @@ private:
 	void goInvetory();
 	void goLevelUp();
 
-	vector<CItem> DropItem(CMonster* monster);
+	vector<class CItem> DropItem(class CMonster* monster);
 	CMonster* MakeMonster(EMonsterType type);
 
 	void Stanby_enter(); //엔터입력 대기
