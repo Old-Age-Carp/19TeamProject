@@ -271,4 +271,107 @@ void CGameManager::Stanby_enter()
 	std::wcin.get();  // Enter 키까지 대기
 }
 
+//몬스터 생성
+CMonster* CGameManager::MakeMonster(EMonsterType type)
+{
+	vector<int> monsterIDs;
+	if (type == EMonsterType::Boss)
+	{
+		monsterIDs = { 107, 108 }; //리치 드래곤
+	}
+	else
+	{
+		monsterIDs = { 101, 102, 103, 104, 105, 106 };
+	}
 
+	if (monsterIDs.empty())
+	{
+		return nullptr;
+	}
+}
+
+//몬스터 처치 후 아이템 드랍
+vector<CItem> CGameManager::DropItem(CMonster* monster)
+{
+	vector<CItem> droppedCItems;
+
+	//오류검사
+	if (!monster)
+		return droppedCItems;
+
+	const FMonsterData* pMonsterData = m_pStaticDataManager->GetMonsterData(monster->GetID());
+	if (!pMonsterData)
+		return droppedCItems;
+
+	//골드 드랍 100% exp reward의 1~3배 골드 드랍
+	int droppedGold = rand() % (pMonsterData->expReward * 2 + 1) + pMonsterData->expReward;
+	*(m_pPlayer->Get_pGold()) += droppedGold;
+	//디버깅 편의성을 위해 존재한대요..보고 삭제여부 확인좀..
+	//m_pLogManager->AddLog(L"골드 획득: " + std::to_wstring(daroppedGold) + L" 골드를 획득했습니다.");
+
+	//아이템 드랍
+	if (!pMonsterData->dropItemTableIDs.empty())
+	{
+		for (int itemID : pMonsterData->dropItemIDs)
+		{
+			const FItemData* pItemDef = m_pStaticDataManager->GetItemData(itemID);
+			if (!pItemDef)
+			{
+				m_pLogManager->AddLog(L"  - 알 수 없는 아이템 (ID: " + std::to_wstring(itemID) + L")이 드롭되었으나 데이터에서 찾을 수 없습니다.");
+				continue;
+			}
+
+			//아이템 드랍 확률
+			bool bDropped = false;
+			double dropChance = 0.0; //기본 확률 0
+
+			if (dynamic_cast<const FItemPotionData*>(pItemDef))
+			{
+				dropChance = 0.3; //포션 30%
+			}
+			else if (dynamic_cast<const FItemSpecialData*>(pItemDef) && pItemDef->id == 1234) //그 즉발 아이템! 내용필
+			{
+				dropChance = 0.3;
+			}
+
+			if (static_cast<double>(rand()) / RAND_MAX < dropChance)
+			{
+				bDropped = true;
+			}
+
+			if (bDropped)
+			{
+				if (dynamic_cast<const FItemSpecialData*>(pItemDef) && pItemDef->id == 1234)
+				{
+					if (static_cast<double>(rand()) / RAND_MAX < 0.3)
+					{
+						//체력 회복
+						int healAmount = 50;
+						*(m_pPlayer->Get_pHealth()) += healAmount;
+						if (*(m_pPlayer->Get_pHealth()) > *(m_pPlayer->Get_pHealthMax()))
+						{
+							*(m_pPlayer->Get_pHealth()) = *(m_pPlayer->Get_pHealthMax());
+						}
+					}
+					else
+					{
+						//공격력 증가
+						int attackBonus = 10;
+						*(m_pPlayer->Get_pAttack()) += attackBonus;
+					}
+				}
+				else
+				{
+					m_pPlayer->Add_Inventory(const_cast<FItemData*>(pItemDef));
+
+					droppedCItems.emplace_back(pItemDef, 1);
+				}
+			}
+			else
+			{
+
+			}
+		}
+	}
+	return droppeddCItems;
+}
