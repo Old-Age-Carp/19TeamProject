@@ -7,10 +7,12 @@
 using std::unique_ptr;
 using std::shared_ptr;
 using std::vector;
+using std::weak_ptr;
 
 class IBattleTurnSelector
 {
 public:
-	virtual unique_ptr<CGameObject> GetNextTurn() = 0;
-	virtual void SetTeams(vector<const shared_ptr<CIsBattleAble>> teamList) = 0;
+	virtual weak_ptr<CGameObject> GetNextTurn() = 0;
+	virtual weak_ptr<CIsBattleAble> GetCurrentTeam() = 0;
+	virtual void SetTeams(vector<const shared_ptr<CIsBattleAble>>& teamList) = 0;
 };
