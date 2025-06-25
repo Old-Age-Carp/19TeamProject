@@ -76,6 +76,11 @@ void CItem::SetCurrentStack(int NewStack)
     CurrentStack = NewStack > 0 ? NewStack : 0;
 }
 
+void CItem::AddCurrentStack(int NewStack)
+{
+    SetCurrentStack(CurrentStack + NewStack);
+}
+
 void CItem::SetEquipped(bool bEquipped)
 {
     bIsEquipped = bEquipped;

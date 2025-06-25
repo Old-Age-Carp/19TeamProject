@@ -5,10 +5,12 @@
 #include "..\Public\CPlayer.h"
 #include "..\Public\CPrinter.h"
 #include "..\Public\CStaticDataManager.h"
+
 #include "CGameView.h"
 #include "CBattleManager.h"
 #include "CBattleTurnSelectorEachTurn.h"
 #include "CMonster.h"
+#include <ctime>    // C++ 스타일
 
 using std::wstring;
 CGameManager* CGameManager::instance = nullptr;
@@ -168,21 +170,21 @@ void CGameManager::goBattle()
 	CMonster* monster = MakeMonster(EMonsterType::Normal);
 	// 몬스터 스텟 출력
 	// 전투 시작 입력 대기
-	CBattleManager& battleManager = CBattleManager::getInstance();
+	//CBattleManager& battleManager = CBattleManager::getInstance();
 
 	CGameView::getInstance().ViewObjectStat(*static_cast<CGameObject*>(monster));
 
 	Stanby_enter();
 
 	// 전투 진행 준비
-	battleManager.SetBattle(std::make_unique<CBattleTurnSelectorEachTurn>());
+	//battleManager.SetBattle(std::make_unique<CBattleTurnSelectorEachTurn>());
 
 	
 	// 로그 출력
-	while (battleManager.NextTurn())
-	{
-		
-	}
+	//while (battleManager.NextTurn())
+	//{
+	//	
+	//}
 
 	// 기다리기
 
@@ -246,9 +248,9 @@ void CGameManager::goInvetory()
 
 	swprintf_s(buffer, 256, L"사용하거나 장착할 아이템 ID: %d, (메뉴:9)", i_select);
 	CPrinter::PrintLine(buffer);
-
+	//Stanby_enter();
 	//i_select = GetInput
-	
+	i_select = GetInput<int>();
 	if (i_select == 9)
 	{
 		Set_GameState(EGameState::SELECT);

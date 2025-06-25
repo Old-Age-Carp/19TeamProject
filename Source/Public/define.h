@@ -65,7 +65,7 @@ struct FItemWeaponData :public FItemData
 	int attackBonus;
 	int defenseBonus;
 	int healthBonus;
-	bool bEquipped = false;//준식추가
+	//bool bEquipped = false;//준식추가
 
 	FItemWeaponData(int InID = 0, const std::wstring& InName = L"", int InValue = 0, int InAttackBonus = 0,
 		int InDefenseBonus = 0, int InHealthBonus = 0)
@@ -78,7 +78,7 @@ struct FItemArmorData :public FItemData
 {
 	int defenseBonus;
 	int healthBonus;
-	bool bEquipped = false; //준식추가
+	//bool bEquipped = false; //준식추가
 
 	FItemArmorData(int InID = 0, const std::wstring& InName = L"", int InValue = 0, int InDefenseBonus = 0, int InHealthBonus = 0)
 		:FItemData(InID, InName, InValue), defenseBonus(InDefenseBonus), healthBonus(InHealthBonus) {
