@@ -8,7 +8,9 @@
 #include "CGameView.h"
 #include "CBattleManager.h"
 #include "CBattleTurnSelectorEachTurn.h"
+#include "CMonster.h"
 
+using std::wstring;
 CGameManager* CGameManager::instance = nullptr;
 
 CGameManager::CGameManager()
@@ -17,7 +19,6 @@ CGameManager::CGameManager()
 
 	m_pStaticDataManger = &CStaticDataManager::getInstance();
 	m_pStaticDataManger->LoadAllStaticData();
-	std::unique_ptr<CGameView> m_pView = std::make_unique<CGameView>();
 }
 
 CGameManager::~CGameManager()
@@ -84,9 +85,9 @@ void CGameManager::Main()
 
 void CGameManager::CreateHero()
 {
-	std::wstring PlayerName;
+	wstring PlayerName;
 	CPrinter::PrintLine(L"캐릭터 이름을 입력하세요 : ");
-	PlayerName = CPrinter::GetInput<std::wstring>();
+	PlayerName = GetInput<wstring>();
 	//std::getline(std::wcin, PlayerName);
 	//cout << "캐릭터의 이름 입력:" << endl;
 
@@ -114,7 +115,7 @@ void CGameManager::SelectMenu()
 	int i_select = 0;
 	CPrinter::PrintLine(L"원하시는 번호 입력:");
 	//std::wcin >> i_select;
-	i_select = CPrinter::GetInput<int>();
+	i_select = GetInput<int>();
 
 	switch (i_select)
 	{
@@ -167,12 +168,19 @@ void CGameManager::goBattle()
 	// 전투 시작 입력 대기
 	CBattleManager& battleManager = CBattleManager::getInstance();
 
+	CGameView::getInstance().ViewObjectStat(*static_cast<CGameObject*>(monster));
+
 	Stanby_enter();
 
-	// 전투 진행
+	// 전투 진행 준비
 	battleManager.SetBattle(std::make_unique<CBattleTurnSelectorEachTurn>());
+
 	
 	// 로그 출력
+	while (battleManager.NextTurn())
+	{
+		
+	}
 
 	// 기다리기
 
@@ -196,7 +204,7 @@ void CGameManager::goShop()
 	swprintf_s(buffer, 256, L"구매할 아이템 ID 입력: %d, (메뉴:9)", i_select);
 	CPrinter::PrintLine(buffer);
 
-	i_select = CPrinter::GetInput<int>();
+	i_select = GetInput<int>();
 	if (i_select == 9)
 	{
 		Set_GameState(EGameState::SELECT);
@@ -214,7 +222,7 @@ void CGameManager::goInvetory()
 	int i_select = 0;
 
 	wchar_t buffer[256];
-	std::wstring testname = m_pPlayer->getName();
+	wstring testname = m_pPlayer->getName();
 
 	m_pPlayer->Show_Inventory();
 
@@ -237,13 +245,14 @@ void CGameManager::goInvetory()
 	swprintf_s(buffer, 256, L"사용하거나 장착할 아이템 ID: %d, (메뉴:9)", i_select);
 	CPrinter::PrintLine(buffer);
 
-	i_select = CPrinter::GetInput<int>();
+	//i_select = GetInput
 	
 	if (i_select == 9)
 	{
 		Set_GameState(EGameState::SELECT);
 	}
-	else {
+	else
+	{
 		m_pPlayer->Equip(i_select);
 		Stanby_enter();
 	}
@@ -274,7 +283,7 @@ void CGameManager::goLevelUp()
 
 }
 
-CMonster* MakeMonster(EMonsterType type)
+CMonster* CGameManager::MakeMonster(EMonsterType type)
 {
 	return nullptr;
 }
@@ -286,7 +295,7 @@ vector<CItem> CGameManager::DropItem(CMonster* monster)
 
 void CGameManager::ShowStatus()
 {
-	std::wstring testname = m_pPlayer->getName();
+	wstring testname = m_pPlayer->getName();
 
 	wchar_t buffer[256];
 	swprintf_s(buffer, 256, L"이름: %ws", testname.c_str());

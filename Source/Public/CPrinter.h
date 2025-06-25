@@ -20,9 +20,9 @@ public:
 	static std::wstring Trim(const std::wstring& str);
 
 	template<typename T>
-	static T GetInput();
+	static std::optional<T> GetInput();
 	template<typename T>
-	std::optional<T> ParseInput(const std::wstring& input);
+	static std::optional<T> ParseInput(const std::wstring& input);
 
 	static std::vector<std::wstring> WrapText(const std::wstring& text, size_t width);
 	static std::wstring PadRight(const std::wstring& text, size_t width);
@@ -67,7 +67,7 @@ std::optional<T> CPrinter::ParseInput(const std::wstring& input)
 }
 
 template<typename T>
-T CPrinter::GetInput()
+std::optional<T> CPrinter::GetInput()
 {
 	// 타입 제한 검사
 	static_assert(std::is_same_v<T, int> || std::is_same_v<T, std::wstring>,
