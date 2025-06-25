@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <random>
 #include <vector>
@@ -6,17 +6,7 @@
 #include "CMonster.h"
 #include "CLogManager.h"
 #include "CStaticDataManager.h"
-
-class CIsBattleAble
-{
-public:
-	CIsBattleAble(const std::vector<CIsBattleAble*>& battlers);
-	bool IsAvailable() const;
-	bool IsTeamBattleAvailable(int teamCount = 2) const;
-
-private:
-	const std::vector<CIsBattleAble*>& m_battlers;
-};
+#include "CIsBattleAble.h"
 
 class CBattleManager
 {
