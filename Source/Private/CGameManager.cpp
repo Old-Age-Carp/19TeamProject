@@ -371,7 +371,7 @@ vector<CItem> CGameManager::DropItem(CMonster* monster)
 	int droppedGold = rand() % (pMonsterData->expReward * 2 + 1) + pMonsterData->expReward;
 	*(m_pPlayer->Get_pGold()) += droppedGold;
 	//디버깅 편의성을 위해 존재한대요..보고 삭제여부 확인좀..
-	//m_pLogManager->AddLog(L"골드 획득: " + std::to_wstring(daroppedGold) + L" 골드를 획득했습니다.");
+	//m_pLogManager->AddLog(L"골드 획득: " + std::to_wstring(droppedGold) + L" 골드를 획득했습니다.");
 
 	//아이템 드랍
 	if (!pMonsterData->dropItemTableIDs.empty())
@@ -437,5 +437,5 @@ vector<CItem> CGameManager::DropItem(CMonster* monster)
 			}
 		}
 	}
-	return droppeddCItems;
+	return droppedCItems;
 }
