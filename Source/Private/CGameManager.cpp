@@ -263,6 +263,12 @@ void CGameManager::goLevelUp()
 
 }
 
+
+vector<CItem> CGameManager::DropItem(CMonster* monster)
+{
+	return vector<CItem>();
+}
+
 CMonster* CGameManager::MakeMonster(EMonsterType type)
 {
 	return nullptr;
