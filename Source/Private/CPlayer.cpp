@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "CPlayer.h"
-#include "..\19TeamProject\Source\Public\CPrinter.h"
+#include "..\Public\CPrinter.h"
 
 void CPlayer::LevelUp()
 {

@@ -19,8 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\**\*.cpp" />
-    <ClInclude Include="Source\**\*.h" />
+    <ClCompile Include="Source\Private\CItem.cpp" />
+    <ClInclude Include="Source\Public\CItem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

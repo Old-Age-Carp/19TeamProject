@@ -36,7 +36,7 @@ public:
 private:
 	void GenerateMonster(bool isBoss, int monsterId);
 	CGameObject* m_pGameObject;
-	CMonster m_Monster;
+	CMonster* m_pMonster;
 	CLogManager* m_pLogger;
 	CStaticDataManager* m_pStaticDataManager;
 	bool m_bIsBossBattle;

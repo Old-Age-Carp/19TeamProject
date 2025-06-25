@@ -16,8 +16,6 @@ public:
 
 	void Use();
 
-	void DisplayInfo() const;
-
 	int GetID() const;
 	std::wstring GetName() const;
 	int GetValue() const;
