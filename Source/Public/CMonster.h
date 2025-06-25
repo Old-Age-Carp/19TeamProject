@@ -3,6 +3,7 @@
 #include <vector>
 #include "IAttack.h"
 #include "IHitAble.h"
+#include "CGameObject.h"
 
 
 enum class EMonsterType
@@ -22,38 +23,45 @@ struct FMonsterData
     std::vector<int> dropItemTableIDs;
 };
 
-class CMonster
+/// <summary>
+/// 게임 내 몬스터 개체를 나타내는 클래스입니다.
+/// </summary>
+class CMonster : public CGameObject, public IAttack, public IHitAble
 {
 public:
     CMonster(const FMonsterData* baseData)
-        : m_baseData(baseData), m_currentHP(baseData ? baseData->hp : 0)
+        : CGameObject(baseData ? baseData->name : L"Unknown Monster",
+            1,
+            baseData ? baseData->hp : 0,
+            baseData ? baseData->atk : 0),
+        m_baseData(baseData),
+        m_currentHP(baseData ? baseData->hp : 0)
     {
-        if (!baseData)
-        {
-            m_currentHP = 0;
-        }
     }
-private:
 
-    CMonster() : m_baseData(nullptr), m_currentHP(0) {}
+    CMonster() : CGameObject(),
+        m_baseData(nullptr), m_currentHP(0)
+    {
+    }
 
 public:
-    void TakeDamage(int damage)
+    void TakeDamage(int damage) override
     {
-        m_currentHP -= damage;
-        if (m_currentHP < 0)
+        iHealth -= damage;
+        if (iHealth < 0)
         {
-            m_currentHP = 0;
+            iHealth = 0;
         }
+        m_currentHP = iHealth;
     }
 
-    bool IsAlive() const { return m_currentHP > 0; }
+    bool IsAlive() const override { return iHealth > 0; }
 
-    int GetCurrentHP() const { return m_currentHP; }
+    int GetAttackValue() const override { return iAttack; }
 
-    int GetAttackValue() const { return m_baseData ? m_baseData->atk : 0; }
+    const std::wstring& GetName() const override { return sName; }
 
-    const std::wstring& GetName() const { return m_baseData ? m_baseData->name : L"Unknown"; }
+    int GetCurrentHP() const { return iHealth; }
 
     const std::vector<int>& GetDropItemIDs() const
     {
