@@ -86,10 +86,11 @@ void CGameManager::CreateHero()
 	//cout << "캐릭터의 이름 입력:" << endl;
 
 	m_pPlayer = new CPlayer(PlayerName);
-
+	*(m_pPlayer->Get_pHealth()) = 20;
 	CPrinter::PrintLine(L"\nEnter를 눌러서 계속...");
 	std::wcin.get();  // Enter 키까지 대기
 	//Stanby_enter();
+	
 
 	Set_GameState(EGameState::SELECT); 
 	
@@ -194,14 +195,28 @@ void CGameManager::goShop()
 
 void CGameManager::goInvetory()
 {
-	m_pPlayer->Show_Inventory();
-
-	wchar_t buffer[256];
 	int i_select = 0;
 
+	wchar_t buffer[256];
+	std::wstring testname = m_pPlayer->getName();
 
-	swprintf_s(buffer, 256, L"현재 골드 : %d", *m_pPlayer->Get_pGold());
+	m_pPlayer->Show_Inventory();
+
+
+	swprintf_s(buffer, 256, L"이름: %ws", testname.c_str());
 	CPrinter::PrintLine(buffer);
+	swprintf_s(buffer, 256, L"공격력: %d", *m_pPlayer->Get_pAttack());
+	CPrinter::PrintLine(buffer);
+	swprintf_s(buffer, 256, L"방어력: %d", *m_pPlayer->Get_pArmor());
+	CPrinter::PrintLine(buffer);
+	swprintf_s(buffer, 256, L"체력: %d / %d", m_pPlayer->getHealth(), *m_pPlayer->Get_pHealthMax());
+	CPrinter::PrintLine(buffer);
+	swprintf_s(buffer, 256, L"골드: %d ", *m_pPlayer->Get_pGold());
+	CPrinter::PrintLine(buffer);
+
+
+
+
 
 	swprintf_s(buffer, 256, L"사용하거나 장착할 아이템 ID: %d, (메뉴:9)", i_select);
 	CPrinter::PrintLine(buffer);

@@ -29,7 +29,7 @@ public:
 	int Sub_Inventory(int i_arg,int i_num, bool b_sell =false);
 
 	void Equip(int i_arg);
-
+	void UsePotion(int i_arg);
 protected:
 	virtual ~CPlayer() = default;
 	std::vector<std::pair<int, FItemData*>> m_vecInventory;

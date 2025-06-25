@@ -1,7 +1,8 @@
 ﻿#pragma once
 
-#include "CPlayer.h"
+#include "..\Public\CPlayer.h"
 #include "..\Public\CPrinter.h"
+#include "CPlayer.h"
 
 void CPlayer::LevelUp()
 {
@@ -37,10 +38,11 @@ void CPlayer::Show_Inventory()
         std::wstring name = pItem->name;
         int id = pItem->id;
         int value = pItem->value;
+        int quantity = invItem.first;
         std::wstring Equipped;
         // 이름/가격/수량/장착 상태
-        swprintf_s(buffer, 256, L"이름: %ws | ID: %d | 가격: %d ",
-            name.c_str(), id, value);
+        swprintf_s(buffer, 256, L"이름: %ws | ID: %d | 가격: %d ,보유량 : %d ",
+            name.c_str(), id, value, quantity);
         CPrinter::PrintLine(buffer);
 
         // 아이템 타입별 정보
@@ -218,13 +220,51 @@ void CPlayer::Equip(int i_arg)
         {
             if (auto pWeapon = dynamic_cast<FItemWeaponData*>(pair.second))
             {
-                pWeapon->bEquipped = true;
+                if (pWeapon->bEquipped == false)
+                {
+                    pWeapon->bEquipped = true;
+
+                    iAttack         += pWeapon->attackBonus;
+                    iArmor          += pWeapon->defenseBonus;
+                    iHealth_Max     += pWeapon->healthBonus;
+                    iHealth         += pWeapon->healthBonus;
+                }
+                else
+                {
+                    pWeapon->bEquipped = false;
+
+                    iAttack     -= pWeapon->attackBonus;
+                    iArmor      -= pWeapon->defenseBonus;
+                    iHealth_Max -= pWeapon->healthBonus;
+                    iHealth     -= pWeapon->healthBonus;
+                }
       
             }
             else if (auto pArmor = dynamic_cast<FItemArmorData*>(pair.second))
             {
-                pArmor->bEquipped = true;
-           
+                if (pArmor->bEquipped == false)
+                {
+                    pArmor->bEquipped = true;
+
+                    iArmor          += pArmor->defenseBonus;
+                    iHealth_Max     += pArmor->healthBonus;
+                    iHealth         += pArmor->healthBonus;
+
+                }
+                else
+                {
+                    pArmor->bEquipped = false;
+
+                    iArmor          -= pArmor->defenseBonus;
+                    iHealth_Max     -= pArmor->healthBonus;
+                    iHealth         -= pArmor->healthBonus;
+                }
+
+            }
+
+            else if (auto pWeapon = dynamic_cast<FItemPotionData*>(pair.second))
+            {
+                UsePotion(i_arg);
             }
         }
 
@@ -232,13 +272,63 @@ void CPlayer::Equip(int i_arg)
         {
             if (auto pWeapon = dynamic_cast<FItemWeaponData*>(pair.second))
             {
-                pWeapon->bEquipped = false;
+                if (pWeapon->bEquipped == true)
+                {
+                    pWeapon->bEquipped = false;
+
+                    iAttack     -= pWeapon->attackBonus;
+                    iArmor      -= pWeapon->defenseBonus;
+                    iHealth_Max -= pWeapon->healthBonus;
+                    iHealth     -= pWeapon->healthBonus;
+                }
          
             }
             else if (auto pArmor = dynamic_cast<FItemArmorData*>(pair.second))
             {
-                pArmor->bEquipped = false;
+
+                if (pArmor->bEquipped == true)
+                {
+                    pArmor->bEquipped = false;
+
+                    iArmor      -= pArmor->defenseBonus;
+                    iHealth_Max -= pArmor->healthBonus;
+                    iHealth     -= pArmor->healthBonus;
+                
+                }
+
        
+            }
+        }
+    }
+}
+
+void CPlayer::UsePotion(int i_arg)
+{
+    wchar_t buffer[256];
+
+    for (auto& pair : m_vecInventory)
+    {
+        if (pair.second && pair.second->id == i_arg)
+        {
+            if (auto pPotion = dynamic_cast<FItemPotionData*>(pair.second))
+            {
+                if (pair.first > 0)
+                {
+                    int Potion_Heal = pPotion->healAmount;
+
+                    iHealth += Potion_Heal;
+                    if (iHealth >= iHealth_Max)
+                    {
+                        iHealth = iHealth_Max;
+                    }
+                    swprintf_s(buffer, 256, L"체력: %d / %d ",iHealth, iHealth_Max);
+                    CPrinter::PrintLine(buffer);
+                    pair.first--;
+                }
+                else {
+                    CPrinter::PrintLine(L"포션이 부족합니다");
+                }
+
             }
         }
     }
