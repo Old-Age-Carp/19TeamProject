@@ -98,7 +98,6 @@ bool CBattleManager::NextTurn()
 
     m_bIsPlayerTurn = !m_bIsPlayerTurn; 					// 턴 전환
 
-    // 현재 턴의 주체가 행동
     if (m_bIsPlayerTurn)
     {
         PlayerTurn();
