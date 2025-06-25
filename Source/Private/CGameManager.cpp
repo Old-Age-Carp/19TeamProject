@@ -139,23 +139,8 @@ void CGameManager::goStatus()
 
 	CPrinter::ClearScreen();
 
-	std::wstring testname = m_pPlayer->getName();
 
-	wchar_t buffer[256];
-	swprintf_s(buffer, 256, L"이름: %ws", testname.c_str());
-	CPrinter::PrintLine(buffer);
-	swprintf_s(buffer, 256, L"레벨: %d", m_pPlayer->getLevel());
-	CPrinter::PrintLine(buffer);
-	swprintf_s(buffer, 256, L"경험치: %d  / 100", *m_pPlayer->Get_pExp());
-	CPrinter::PrintLine(buffer);
-	swprintf_s(buffer, 256, L"공격력: %d", *m_pPlayer->Get_pAttack());
-	CPrinter::PrintLine(buffer);
-	swprintf_s(buffer, 256, L"방어력: %d", *m_pPlayer->Get_pArmor());
-	CPrinter::PrintLine(buffer);
-	swprintf_s(buffer, 256, L"체력: %d / %d", m_pPlayer->getHealth(), *m_pPlayer->Get_pHealthMax());
-	CPrinter::PrintLine(buffer);
-	swprintf_s(buffer, 256, L"골드: %d ", *m_pPlayer->Get_pGold());
-	CPrinter::PrintLine(buffer);
+	ShowStatus();
 
 	Stanby_enter();
 
@@ -254,6 +239,28 @@ void CGameManager::goLevelUp()
 		CPrinter::PrintLine(buffer);
 
 	}
+
+}
+
+void CGameManager::ShowStatus()
+{
+	std::wstring testname = m_pPlayer->getName();
+
+	wchar_t buffer[256];
+	swprintf_s(buffer, 256, L"이름: %ws", testname.c_str());
+	CPrinter::PrintLine(buffer);
+	swprintf_s(buffer, 256, L"레벨: %d", m_pPlayer->getLevel());
+	CPrinter::PrintLine(buffer);
+	swprintf_s(buffer, 256, L"경험치: %d  / 100", *m_pPlayer->Get_pExp());
+	CPrinter::PrintLine(buffer);
+	swprintf_s(buffer, 256, L"공격력: %d", *m_pPlayer->Get_pAttack());
+	CPrinter::PrintLine(buffer);
+	swprintf_s(buffer, 256, L"방어력: %d", *m_pPlayer->Get_pArmor());
+	CPrinter::PrintLine(buffer);
+	swprintf_s(buffer, 256, L"체력: %d / %d", m_pPlayer->getHealth(), *m_pPlayer->Get_pHealthMax());
+	CPrinter::PrintLine(buffer);
+	swprintf_s(buffer, 256, L"골드: %d ", *m_pPlayer->Get_pGold());
+	CPrinter::PrintLine(buffer);
 
 }
 

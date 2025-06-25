@@ -32,7 +32,7 @@ private:
 	void goShop();
 	void goInvetory();
 	void goLevelUp();
-
+	void ShowStatus();
 	void Stanby_enter(); //엔터입력 대기
 	void Set_GameState(EGameState arg) { m_eGameState = arg; }
 public:
