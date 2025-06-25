@@ -14,6 +14,7 @@ CGameManager::CGameManager()
 
 	m_pStaticDataManger = &CStaticDataManager::getInstance();
 	m_pStaticDataManger->LoadAllStaticData();
+	srand(static_cast<unsigned int>(time(nullptr)));
 }
 
 CGameManager::~CGameManager()
@@ -62,12 +63,13 @@ void CGameManager::Main()
 		goShop();
 		break;
 	case EGameState::LEVELUP:
-
+		
 		break;
 	case EGameState::INVENTORY:
 		goInvetory();
 		break;
 	case EGameState::GAMEOVER:
+		goGameOver();
 		break;
 	case EGameState::END:
 		DestroyInstance();
@@ -216,6 +218,18 @@ void CGameManager::goInvetory()
 		Stanby_enter();
 	}
 
+}
+
+void CGameManager::goGameOver()
+{
+	wchar_t buffer[256];
+
+	swprintf_s(buffer, 256, L"게임오버입니다");
+	CPrinter::PrintLine(buffer);
+
+	Stanby_enter();
+
+	m_bGameRunning = false;
 }
 
 void CGameManager::goLevelUp()
