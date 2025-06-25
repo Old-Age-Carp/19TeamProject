@@ -5,6 +5,9 @@
 #include "..\Public\CPlayer.h"
 #include "..\Public\CPrinter.h"
 #include "..\Public\CStaticDataManager.h"
+#include "CGameView.h"
+#include "CBattleManager.h"
+#include "CBattleTurnSelectorEachTurn.h"
 
 CGameManager* CGameManager::instance = nullptr;
 
@@ -14,7 +17,7 @@ CGameManager::CGameManager()
 
 	m_pStaticDataManger = &CStaticDataManager::getInstance();
 	m_pStaticDataManger->LoadAllStaticData();
-	
+	std::unique_ptr<CGameView> m_pView = std::make_unique<CGameView>();
 }
 
 CGameManager::~CGameManager()
@@ -83,7 +86,8 @@ void CGameManager::CreateHero()
 {
 	std::wstring PlayerName;
 	CPrinter::PrintLine(L"캐릭터 이름을 입력하세요 : ");
-	std::getline(std::wcin, PlayerName);
+	PlayerName = CPrinter::GetInput<std::wstring>();
+	//std::getline(std::wcin, PlayerName);
 	//cout << "캐릭터의 이름 입력:" << endl;
 
 	m_pPlayer = new CPlayer(PlayerName);
@@ -108,7 +112,8 @@ void CGameManager::SelectMenu()
 
 	int i_select = 0;
 	CPrinter::PrintLine(L"원하시는 번호 입력:");
-	std::wcin >> i_select;
+	//std::wcin >> i_select;
+	i_select = CPrinter::GetInput<int>();
 
 	switch (i_select)
 	{
@@ -174,8 +179,13 @@ void CGameManager::goBattle()
 	CMonster* monster = MakeMonster(EMonsterType::Normal);
 	// 몬스터 스텟 출력
 	// 전투 시작 입력 대기
+	CBattleManager& battleManager = CBattleManager::getInstance();
+
+	Stanby_enter();
 
 	// 전투 진행
+	battleManager.SetBattle(std::make_unique<CBattleTurnSelectorEachTurn>());
+	
 	// 로그 출력
 
 	// 기다리기
@@ -200,7 +210,7 @@ void CGameManager::goShop()
 	swprintf_s(buffer, 256, L"구매할 아이템 ID 입력: %d, (메뉴:9)", i_select);
 	CPrinter::PrintLine(buffer);
 
-	std::wcin >> i_select;
+	i_select = CPrinter::GetInput<int>();
 	if (i_select == 9)
 	{
 		Set_GameState(EGameState::SELECT);
@@ -227,7 +237,8 @@ void CGameManager::goInvetory()
 	swprintf_s(buffer, 256, L"사용하거나 장착할 아이템 ID: %d, (메뉴:9)", i_select);
 	CPrinter::PrintLine(buffer);
 
-	std::wcin >> i_select;
+	i_select = CPrinter::GetInput<int>();
+	
 	if (i_select == 9)
 	{
 		Set_GameState(EGameState::SELECT);
@@ -263,7 +274,6 @@ void CGameManager::goLevelUp()
 
 }
 
-
 vector<CItem> CGameManager::DropItem(CMonster* monster)
 {
 	return vector<CItem>();
@@ -276,9 +286,8 @@ CMonster* CGameManager::MakeMonster(EMonsterType type)
 
 void CGameManager::Stanby_enter()
 {
-	std::wcin.ignore(std::numeric_limits<std::streamsize>::max(), L'\n');
-	CPrinter::PrintLine(L"\nEnter를 눌러서 계속...");
-	std::wcin.get();  // Enter 키까지 대기
+	//CPrinter::PrintLine(L"\nEnter를 눌러서 계속...");
+	CPrinter::Pause();
 }
 
 
