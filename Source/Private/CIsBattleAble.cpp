@@ -1,7 +1,7 @@
 #include "..\Public\CIsBattleAble.h"
-#include "..\Public\IHitAble.h"
+#include "..\Public\IBattleAble.h"
 
-CIsBattleAble::CIsBattleAble(std::vector<IHitAble*>& battlers)
+CIsBattleAble::CIsBattleAble(std::vector<IBattleAble*>& battlers)
 	: m_battlers(battlers)
 {
 }
