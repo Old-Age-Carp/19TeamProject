@@ -16,11 +16,15 @@ class CStaticDataManager : public TSingleton<CStaticDataManager>
 public:
     bool LoadAllStaticData();
 
-    const FMonsterData* GetMonsterData(const std::wstring& name) const;
-    const FMonsterData* GetMonsterData(int id) const;
+    FMonsterData* GetMonsterData(const std::wstring& name) ;
+    FMonsterData* GetMonsterData(int id) ;
 
-    const FItemData* GetItemData(const std::wstring& name) const;
-    const FItemData* GetItemData(int id) const;
+    FItemData* GetItemData(const std::wstring& name) ;
+    FItemData* GetItemData(int id) ;
+
+
+
+    void Print_AllItem();
 
 private:
     CStaticDataManager() = default; 
