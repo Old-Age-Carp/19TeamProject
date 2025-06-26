@@ -372,6 +372,26 @@ void CGameManager::ShowStatus()
 
 }
 
+void CGameManager::Show_LevelUp()
+{
+	int pre_level = 0, pre_attack = 0, pre_health = 0;
+
+
+	pre_level = *m_pPlayer->Get_pLevel();
+	pre_attack = *m_pPlayer->Get_pAttack();
+	pre_health = m_pPlayer->getHealth_Max();
+	bool LevelUp_result = m_pPlayer->LevelUp();
+
+	wchar_t buffer[256];
+	swprintf_s(buffer, 256, L"레벨업!  %d  -> %d", pre_level, m_pPlayer->getLevel());
+	CPrinter::PrintLine(buffer);
+	swprintf_s(buffer, 256, L"공격력:  %d  -> %d", pre_attack, m_pPlayer->getAttack());
+	CPrinter::PrintLine(buffer);
+	swprintf_s(buffer, 256, L"체력:  %d  -> %d", pre_health, m_pPlayer->getHealth_Max());
+	CPrinter::PrintLine(buffer);
+
+}
+
 void CGameManager::Stanby_enter()
 {
 	//CPrinter::PrintLine(L"\nEnter를 눌러서 계속...");
