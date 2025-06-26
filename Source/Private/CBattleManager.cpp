@@ -2,20 +2,20 @@
 #include "..\Public\CMonster.h"
 #include "..\Public\CGameObject.h"
 #include "..\Public\CBattleAI.h"
-#include "CIsBattleAble.h"
+#include "CBattleTeam.h"
 #include <cstdlib>
 #include <algorithm>
 #include <string>
 #include <cwchar>
 
 void CBattleManager::SetBattle(std::unique_ptr<IBattleTurnSelector> turnSelector,
-	std::shared_ptr<CIsBattleAble> team1,
-	std::shared_ptr<CIsBattleAble> team2)
+	std::shared_ptr<CBattleTeam> team1,
+	std::shared_ptr<CBattleTeam> team2)
 {
 	m_turnSelector = std::move(turnSelector);
-	vector<shared_ptr<CIsBattleAble>> teams;
-	teams.push_back(std::shared_ptr<CIsBattleAble>(team1));
-	teams.push_back(std::shared_ptr<CIsBattleAble>(team2));
+	vector<shared_ptr<CBattleTeam>> teams;
+	teams.push_back(std::shared_ptr<CBattleTeam>(team1));
+	teams.push_back(std::shared_ptr<CBattleTeam>(team2));
 	m_turnSelector->SetTeams(teams);
 	m_pPlayer = team1;
 	m_pMonster = team2;
@@ -87,7 +87,7 @@ bool CBattleManager::NextTurn()
 		return false;
 	}
 	// 선택된 actor 의 팀
-	CIsBattleAble* turnOtherTeam = nullptr;
+	CBattleTeam* turnOtherTeam = nullptr;
 	const vector<CBattleAbleObject*>& playerMember = m_pPlayer->GetTeamBattlerList();
 	if (std::find(playerMember.begin(), playerMember.end(), nextActor) != playerMember.end())
 	{
@@ -99,7 +99,7 @@ bool CBattleManager::NextTurn()
 	}
 
 	EActionKind action = nextActor->GetAI().Think();
-	CBattleAbleObject* target = nextActor->GetAI().ThinkTarget(action, vector<CIsBattleAble*>{turnOtherTeam});
+	CBattleAbleObject* target = nextActor->GetAI().ThinkTarget(action, vector<CBattleTeam*>{turnOtherTeam});
 
 
 	wchar_t buffer[256];
@@ -146,7 +146,7 @@ bool CBattleManager::NextTurn()
     return true;
 }
 
-//void CBattleManager::MonsterTurn(const std::vector<CIsBattleAble*>& otherTeams)
+//void CBattleManager::MonsterTurn(const std::vector<CBattleTeam*>& otherTeams)
 //{
 //    if (!m_pMonster || !m_pPlayer)
 //	{

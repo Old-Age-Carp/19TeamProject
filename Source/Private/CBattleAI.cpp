@@ -1,5 +1,5 @@
 ﻿#include "CBattleAI.h"
-#include "CIsBattleAble.h"
+#include "CBattleTeam.h"
 
 #include <random>
 
@@ -31,7 +31,7 @@ EActionKind CBattleAI::Think() const
 	return EActionKind::Attack;
 }
 
-CBattleAbleObject* CBattleAI::ThinkTarget(EActionKind actionKind, std::vector<CIsBattleAble*> otherTeams) const
+CBattleAbleObject* CBattleAI::ThinkTarget(EActionKind actionKind, std::vector<CBattleTeam*> otherTeams) const
 {
 	CBattleAbleObject* target = nullptr;
 	switch (actionKind)

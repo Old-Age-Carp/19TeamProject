@@ -4,10 +4,10 @@
 
 #include "CBattleAbleObject.h"
 
-class CIsBattleAble
+class CBattleTeam
 {
 public:
-    CIsBattleAble(std::vector<CBattleAbleObject*> battlers);
+    CBattleTeam(std::vector<CBattleAbleObject*> battlers);
     bool IsAvailable() const;
     bool IsTeamBattleAvailable(int teamCount = 2) const;
     const std::vector<CBattleAbleObject*>& GetTeamBattlerList() { return m_battlers; }

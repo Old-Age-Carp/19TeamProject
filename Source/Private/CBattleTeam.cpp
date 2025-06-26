@@ -1,12 +1,12 @@
-﻿#include "..\Public\CIsBattleAble.h"
-#include "..\Public\IHitAble.h"
+﻿#include "CBattleTeam.h"
+#include "IHitAble.h"
 
-CIsBattleAble::CIsBattleAble(std::vector<CBattleAbleObject*> battlers)
+CBattleTeam::CBattleTeam(std::vector<CBattleAbleObject*> battlers)
 	: m_battlers(battlers)
 {
 }
 
-bool CIsBattleAble::IsAvailable() const
+bool CBattleTeam::IsAvailable() const
 {
 	int aliveCount = 0;
 	for(const auto& battler : m_battlers)
@@ -19,7 +19,7 @@ bool CIsBattleAble::IsAvailable() const
 	return aliveCount >= 1;
 }
 
-bool CIsBattleAble::IsTeamBattleAvailable(int teamCount) const
+bool CBattleTeam::IsTeamBattleAvailable(int teamCount) const
 {
     std::vector<int> teamAliveCount(teamCount, 0);
     for(const auto& battler : m_battlers)

@@ -11,7 +11,7 @@
 #include "CBattleTurnSelectorEachTurn.h"
 #include "CMonster.h"
 
-#include "CIsBattleAble.h"
+#include "CBattleTeam.h"
 
 #include <ctime>    // C++ 스타일
 
@@ -193,8 +193,8 @@ void CGameManager::goBattle()
 
 	// 전투 진행 준비
 	battleManager.SetBattle(std::make_unique<CBattleTurnSelectorEachTurn>(),
-		std::make_shared<CIsBattleAble>(allyMembers),
-		std::make_shared<CIsBattleAble>(enemyMembers));
+		std::make_shared<CBattleTeam>(allyMembers),
+		std::make_shared<CBattleTeam>(enemyMembers));
 	// 종료 될 때까지 반복
 	std::wstring monsterName = m_pMonster->getName().c_str();
 	if (m_pMonster->GetType() == EMonsterType::Boss)
@@ -618,3 +618,6 @@ vector<CItem> CGameManager::DropItem(CMonster* monster, int& outDropGolds)
 #pragma endregion
 	return droppedCItems;
 }
+
+
+

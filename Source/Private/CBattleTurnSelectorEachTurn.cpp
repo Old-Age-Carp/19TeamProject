@@ -1,5 +1,5 @@
 ﻿#include "CBattleTurnSelectorEachTurn.h"
-#include "CIsBattleAble.h"
+#include "CBattleTeam.h"
 #include <algorithm>
 
 CBattleAbleObject* CBattleTurnSelectorEachTurn::GetNextTurn()
@@ -15,7 +15,7 @@ CBattleAbleObject* CBattleTurnSelectorEachTurn::GetNextTurn()
 	if (teamMemberIndex >= mTeamList[mCurrentTeamIndex]->GetTeamBattlerList().size())
 		teamMemberIndex = 0;
 	
-	shared_ptr<CIsBattleAble> team = mTeamList[mCurrentTeamIndex];
+	shared_ptr<CBattleTeam> team = mTeamList[mCurrentTeamIndex];
 
 	auto& battlerList = team->GetTeamBattlerList();
 	return battlerList[teamMemberIndex];
@@ -24,7 +24,7 @@ CBattleAbleObject* CBattleTurnSelectorEachTurn::GetNextTurn()
 /// <summary>
 /// 리스트에 나열된 순서로 턴을 가집니다.
 /// </summary>
-void CBattleTurnSelectorEachTurn::SetTeams(vector<shared_ptr<CIsBattleAble>> teamList)
+void CBattleTurnSelectorEachTurn::SetTeams(vector<shared_ptr<CBattleTeam>> teamList)
 {
 	mTeamList = teamList;
 	mTeamLastTurnIndexList.resize(teamList.size());
