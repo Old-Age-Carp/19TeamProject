@@ -223,15 +223,16 @@ void CGameManager::goBattle()
 	else
 	{
 		CPrinter::PrintLine(L"승리!");
+
 	}
-	
+
+
 	(*m_pPlayer->Get_pExp()) += m_pMonster->GetExpReward();
 	swprintf_s(buffer, 256, L"%d 경험치 획득 ,현재경험치 %d / 100", m_pMonster->GetExpReward(), m_pMonster->GetExpReward());
 	CPrinter::PrintLine(buffer);
 	CLogManager::getInstance().AddLog(buffer);
-
-	//int curLevel = m_pPlayer->getLevel();
 	m_pPlayer->LevelUp();	//레벨업 시도
+
 	// 레벨업 했는지 확인
 
 	// 종료시 결과 출력
@@ -283,9 +284,11 @@ void CGameManager::goShop()
 
 	swprintf_s(buffer, 256, L"현재 골드 : %d", *m_pPlayer->Get_pGold());
 	CPrinter::PrintLine(buffer);
+	CLogManager::getInstance().AddLog(buffer);
 
 	swprintf_s(buffer, 256, L"구매할 아이템 ID 입력: (메뉴:9,판매:10)");
 	CPrinter::PrintLine(buffer);
+	CLogManager::getInstance().AddLog(buffer);
 	i_select = GetInput<int>();
 
 
@@ -299,9 +302,11 @@ void CGameManager::goShop()
 
 		swprintf_s(buffer, 256, L"판매할 아이템 ID 입력: (취소:9)");
 		CPrinter::PrintLine(buffer);
+		CLogManager::getInstance().AddLog(buffer);
 		i_select = GetInput<int>();
 		swprintf_s(buffer, 256, L"판매할 아이템의 갯수: (취소:9)");
 		CPrinter::PrintLine(buffer);
+		CLogManager::getInstance().AddLog(buffer);
 		i_stock= GetInput<int>();
 
 		m_pPlayer->Sell_item(i_select,i_stock);
@@ -309,6 +314,7 @@ void CGameManager::goShop()
 	else {
 		swprintf_s(buffer, 256, L"구매할 아이템의 갯수: (취소:9)");
 		CPrinter::PrintLine(buffer);
+		CLogManager::getInstance().AddLog(buffer);
 		i_stock = GetInput<int>();
 		FItemData* Buyed_item = m_pShopManager->Buy_Item(i_select,m_pPlayer, i_stock);
 		Stanby_enter();
@@ -319,8 +325,11 @@ void CGameManager::goShop()
 
 void CGameManager::goViewAllLog()
 {
-
+	CPrinter::PrintLine(L"모든 로그 출력");
+	CPrinter::ClearScreen();
+	CGameView::getInstance().ViewLogs(CLogManager::getInstance().GetLogs());
 	CPrinter::Pause();
+
 
 	Set_GameState(EGameState::SELECT);
 }
@@ -337,14 +346,19 @@ void CGameManager::goInvetory()
 
 	swprintf_s(buffer, 256, L"이름: %ws", testname.c_str());
 	CPrinter::PrintLine(buffer);
+	CLogManager::getInstance().AddLog(buffer);
 	swprintf_s(buffer, 256, L"공격력: %d", *m_pPlayer->Get_pAttack());
 	CPrinter::PrintLine(buffer);
+	CLogManager::getInstance().AddLog(buffer);
 	swprintf_s(buffer, 256, L"방어력: %d", *m_pPlayer->Get_pArmor());
 	CPrinter::PrintLine(buffer);
+	CLogManager::getInstance().AddLog(buffer);
 	swprintf_s(buffer, 256, L"체력: %d / %d", m_pPlayer->getHealth(), *m_pPlayer->Get_pHealthMax());
 	CPrinter::PrintLine(buffer);
+	CLogManager::getInstance().AddLog(buffer);
 	swprintf_s(buffer, 256, L"골드: %d ", *m_pPlayer->Get_pGold());
 	CPrinter::PrintLine(buffer);
+	CLogManager::getInstance().AddLog(buffer);
 
 
 
@@ -352,6 +366,7 @@ void CGameManager::goInvetory()
 
 	swprintf_s(buffer, 256, L"사용하거나 장착할 아이템 ID: %d, (메뉴:9)", i_select);
 	CPrinter::PrintLine(buffer);
+	CLogManager::getInstance().AddLog(buffer);
 	//Stanby_enter();
 	//i_select = GetInput
 	i_select = GetInput<int>();
@@ -371,7 +386,7 @@ void CGameManager::goGameOver()
 {
 	wchar_t buffer[256];
 
-	swprintf_s(buffer, 256, L"게임오버입니다");
+	swprintf_s(buffer, 256, L"게임을 클리어했습니다.");
 	CPrinter::PrintLine(buffer);
 
 	Stanby_enter();

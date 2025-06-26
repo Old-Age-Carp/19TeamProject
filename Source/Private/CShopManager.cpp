@@ -4,6 +4,7 @@
 #include "..\Public\CPrinter.h"
 #include		"define.h"
 #include "..\Public\CPlayer.h"
+#include "..\Public\CLogManager.h"
 
 CShopManager* CShopManager::instance = nullptr;
 
@@ -36,13 +37,16 @@ FItemData* CShopManager::Buy_Item(int i_arg ,class CPlayer* pPlayer, int item_st
 	{
 		swprintf_s(buffer, 256, L"%d 인 상품은 없습니다",i_arg);
 		CPrinter::PrintLine(buffer);
+
+		CLogManager::getInstance().AddLog(buffer);
 	}
 	else
 	{
 		int total_price = Select_item->value * item_stock;
 		swprintf_s(buffer, 256, L"%ws x %d 의 가격은 %d 입니다.", Select_item->name.c_str(),item_stock, total_price);
 		CPrinter::PrintLine(buffer);
-	
+		CLogManager::getInstance().AddLog(buffer);
+
 		item_value = Select_item->value;
 
 		int* Player_gold = pPlayer->Get_pGold();
@@ -50,6 +54,7 @@ FItemData* CShopManager::Buy_Item(int i_arg ,class CPlayer* pPlayer, int item_st
 		{
 			swprintf_s(buffer, 256, L"골드가 부족합니다.");
 			CPrinter::PrintLine(buffer);
+			CLogManager::getInstance().AddLog(buffer);
 		}
 		else
 		{
