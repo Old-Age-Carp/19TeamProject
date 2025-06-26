@@ -13,7 +13,7 @@
 struct FGameDropTable
 {
     int id;
-    std::vector<FDropItemData> possibleDrops;
+    FDropItemData possibleDrops;
 };
 
 
@@ -32,6 +32,8 @@ public:
     FItemData* GetItemData(int id);
 
     FGameDropTable* GetDropTable(int id);
+
+    vector<FMonsterData> GetAllMonsterDatas() { vector<FMonsterData>(monsterDataTableByID); }
 
     void Print_AllItem();
 

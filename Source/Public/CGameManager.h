@@ -23,7 +23,6 @@ private:
 	//class CStaticDataManager	m_pStaticDataManger;
 	class CStaticDataManager*	m_pStaticDataManager = nullptr;
 	class CPlayer* m_pPlayer = nullptr;
-	std::unique_ptr<class CIsBattleAble> m_pPlayerTeam = nullptr;
 	
 	CGameManager(); // 생성자
 	~CGameManager(); //소멸자
@@ -41,7 +40,7 @@ private:
 	void goLevelUp();
 
 	vector<class CItem> DropItem( CMonster* monster);
-	CMonster* MakeMonster(EMonsterType type);
+	CMonster* MakeMonster();
 
 	void ShowStatus();
 	void Stanby_enter(); //엔터입력 대기

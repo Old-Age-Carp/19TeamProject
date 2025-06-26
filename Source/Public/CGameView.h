@@ -14,6 +14,7 @@ class CGameView : public TSingleton<CGameView>
 
 public:
 	void ViewLogs(const std::vector<std::unique_ptr<ILogable>>& logs);
+	void ViewLogs(const vector<ILogable*>& logs);
 
 	void ViewGameState(const CGameManager& gameMgr);
 

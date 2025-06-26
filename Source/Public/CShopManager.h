@@ -17,7 +17,7 @@ private:
 public:
 	void Show_ShopItem();
 
-	FItemData* Buy_Item(int i_arg,class CPlayer* pPlayer);
+	FItemData* Buy_Item(int i_arg,class CPlayer* pPlayer, int item_stock = 1);
 	void Check_money();
 	static CShopManager* GetInstance();
 	static void				DestroyInstance();

@@ -296,7 +296,7 @@ bool CStaticDataManager::LoadDropTableDataInternal()
         FDropItemData potionDropItem;
         potionDropItem.mItemIDList.push_back(1001);
         potionDropItem.mDropRate.push_back(300);
-        dropTable1001.possibleDrops.push_back(potionDropItem);
+        dropTable1001.possibleDrops = potionDropItem;
         dropTableDataByID[dropTable1001.id] = dropTable1001;
 
         FGameDropTable dropTable1002;
@@ -304,7 +304,7 @@ bool CStaticDataManager::LoadDropTableDataInternal()
         FDropItemData bigPotionDropItem;
         bigPotionDropItem.mItemIDList.push_back(1002);
         bigPotionDropItem.mDropRate.push_back(200);
-        dropTable1002.possibleDrops.push_back(bigPotionDropItem);
+        dropTable1002.possibleDrops =(bigPotionDropItem);
         dropTableDataByID[dropTable1002.id] = dropTable1002;
 
         FGameDropTable dropTable2001;
@@ -312,7 +312,7 @@ bool CStaticDataManager::LoadDropTableDataInternal()
         FDropItemData ironSwordDropItem;
         ironSwordDropItem.mItemIDList.push_back(2001);
         ironSwordDropItem.mDropRate.push_back(150);
-        dropTable2001.possibleDrops.push_back(ironSwordDropItem);
+        dropTable2001.possibleDrops =(ironSwordDropItem);
         dropTableDataByID[dropTable2001.id] = dropTable2001;
 
         FGameDropTable dropTable2002;
@@ -320,7 +320,7 @@ bool CStaticDataManager::LoadDropTableDataInternal()
         FDropItemData mithrilSwordDropItem;
         mithrilSwordDropItem.mItemIDList.push_back(2002);
         mithrilSwordDropItem.mDropRate.push_back(100);
-        dropTable2002.possibleDrops.push_back(mithrilSwordDropItem);
+        dropTable2002.possibleDrops =(mithrilSwordDropItem);
         dropTableDataByID[dropTable2002.id] = dropTable2002;
 
         FGameDropTable dropTable2003;
@@ -328,7 +328,7 @@ bool CStaticDataManager::LoadDropTableDataInternal()
         FDropItemData legendarySwordDropItem;
         legendarySwordDropItem.mItemIDList.push_back(2003);
         legendarySwordDropItem.mDropRate.push_back(50);
-        dropTable2003.possibleDrops.push_back(legendarySwordDropItem);
+        dropTable2003.possibleDrops =(legendarySwordDropItem);
         dropTableDataByID[dropTable2003.id] = dropTable2003;
 
         FGameDropTable dropTable3001;
@@ -336,7 +336,7 @@ bool CStaticDataManager::LoadDropTableDataInternal()
         FDropItemData oldRobeDropItem;
         oldRobeDropItem.mItemIDList.push_back(3001);
         oldRobeDropItem.mDropRate.push_back(250);
-        dropTable3001.possibleDrops.push_back(oldRobeDropItem);
+        dropTable3001.possibleDrops =(oldRobeDropItem);
         dropTableDataByID[dropTable3001.id] = dropTable3001;
 
         FGameDropTable dropTable3002;
@@ -344,7 +344,7 @@ bool CStaticDataManager::LoadDropTableDataInternal()
         FDropItemData ironArmorDropItem;
         ironArmorDropItem.mItemIDList.push_back(3002);
         ironArmorDropItem.mDropRate.push_back(150);
-        dropTable3002.possibleDrops.push_back(ironArmorDropItem);
+        dropTable3002.possibleDrops =(ironArmorDropItem);
         dropTableDataByID[dropTable3002.id] = dropTable3002;
 
         FGameDropTable dropTable3003;
@@ -352,7 +352,7 @@ bool CStaticDataManager::LoadDropTableDataInternal()
         FDropItemData immortalArmorDropItem;
         immortalArmorDropItem.mItemIDList.push_back(3003);
         immortalArmorDropItem.mDropRate.push_back(70);
-        dropTable3003.possibleDrops.push_back(immortalArmorDropItem);
+        dropTable3003.possibleDrops =(immortalArmorDropItem);
         dropTableDataByID[dropTable3003.id] = dropTable3003;
 
         return true;

@@ -3,6 +3,8 @@
 #include "..\Public\CPlayer.h"
 #include "..\Public\CPrinter.h"
 
+#include <cmath>
+
 
 CPlayer::~CPlayer()
 {
@@ -198,7 +200,7 @@ void CPlayer::Add_Inventory(CItem* Item)
     m_vecInventory.push_back(Item);
 }
 
-void CPlayer::Add_Inventory_FItemData(FItemData* Item)
+void CPlayer::Add_Inventory_FItemData(FItemData* Item, int item_stock )
 {
     if (Item == nullptr)
         return;
@@ -207,13 +209,15 @@ void CPlayer::Add_Inventory_FItemData(FItemData* Item)
     {
         if (invItem->Get_pItemData() == Item)
         {
-            invItem->AddCurrentStack(1);
+            invItem->AddCurrentStack(item_stock);
             return;
         }
     }
 
     CItem* new_Item = new CItem(Item);
+    new_Item->SetCurrentStack(item_stock);
     m_vecInventory.push_back(new_Item);
+
 }
 
 int CPlayer::Sub_Inventory(int i_id, int i_num,bool b_sell)
@@ -360,8 +364,9 @@ void CPlayer::UsePotion(int i_arg)
 {
     wchar_t buffer[256];
 
-    for (auto& pair : m_vecInventory)
+    for (auto it = m_vecInventory.begin(); it != m_vecInventory.end(); )
     {
+        CItem* pair = *it;
         if (pair&& pair->GetID() == i_arg)
         {
             const FItemData* PItemData = pair->Get_pItemData();
@@ -381,6 +386,15 @@ void CPlayer::UsePotion(int i_arg)
                     swprintf_s(buffer, 256, L"체력: %d / %d ",iHealth, iHealth_Max);
                     CPrinter::PrintLine(buffer);
                     pair->AddCurrentStack(-1);
+
+                    //0되면 삭제
+                    if (pair->GetCurrentStack() == 0)
+                    {
+                        delete pair;
+                        it = m_vecInventory.erase(it); //벡터에서도 삭제;
+                        //pair = nullptr; //포인트 삭제
+                        break;
+                    }
                 }
                 else {
                     CPrinter::PrintLine(L"포션이 부족합니다");
@@ -388,7 +402,61 @@ void CPlayer::UsePotion(int i_arg)
 
             }
         }
+
+        ++it;
+
     }
+}
+
+void CPlayer::Sell_item(int item_id, int item_stock)
+{
+    wchar_t buffer[256];
+
+    bool b_sell = false;
+    for (auto it = m_vecInventory.begin(); it != m_vecInventory.end(); )
+    {
+        CItem* pair = *it;
+        if (pair && pair->GetID() == item_id)
+        {
+            const FItemData* PItemData = pair->Get_pItemData();
+
+          
+            if (pair->GetCurrentStack() >= item_stock && b_sell == false)
+            {
+
+                b_sell = true;
+                int item_price = pair->GetValue();
+                int sell_price = static_cast<int>(std::round(item_price * 0.6f));
+                iGold += sell_price * item_stock;
+
+                swprintf_s(buffer, 256, L"%ws 의 판매금액의 합은 %d 입니다.",pair->GetName().c_str(), sell_price * item_stock);
+                CPrinter::PrintLine(buffer);
+                pair->AddCurrentStack(-1 * item_stock);
+                CPrinter::Pause();
+                //0되면 삭제
+                if (pair->GetCurrentStack() == 0)
+                {
+                    delete pair;
+                    it = m_vecInventory.erase(it); //벡터에서도 삭제;
+                    //pair = nullptr; //포인트 삭제
+                    break;
+                }
+            }
+            else
+            {
+                CPrinter::PrintLine(L"판매할 아이템이 부족합니다");
+                CPrinter::Pause();
+
+            }
+
+            
+        }
+
+        ++it;
+
+    }
+
+
 }
 
 std::vector<CItem*> CPlayer::GetHaveItems()

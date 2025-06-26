@@ -27,11 +27,12 @@ public:
 	void Show_Inventory();
 	void Show_Inventory_part(int i_arg);
 	void Add_Inventory(CItem* Item);
-	void Add_Inventory_FItemData(FItemData* Item);
+	void Add_Inventory_FItemData(FItemData* Item,int item_stock= 1);
 	int Sub_Inventory(int i_id,int i_num, bool b_sell =false);
 
 	void Equip(int i_arg);
 	void UsePotion(int i_arg);
+	void Sell_item(int item_id,int item_stock =1);
 	std::vector<CItem*> GetHaveItems() override;
 protected:
 	//virtual ~CPlayer() = default;
