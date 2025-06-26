@@ -22,6 +22,7 @@ private:
 	void goStatus();
 	void goBattle();
 	void goShop();
+	void goViewAllLog();
 	void goInvetory();
 	void goGameOver();
 	void goLevelUp();

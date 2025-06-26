@@ -81,6 +81,9 @@ void CGameManager::Main()
 	case EGameState::GAMEOVER:
 		goGameOver();
 		break;
+	case EGameState::VIEWALLLOG:
+		goViewAllLog();
+		break;
 	case EGameState::END:
 		DestroyInstance();
 		break;
@@ -118,8 +121,10 @@ void CGameManager::SelectMenu()
 	CPrinter::PrintLine(L"2: 상점  ");
 	CPrinter::PrintLine(L"3: 인벤토리 ");
 	CPrinter::PrintLine(L"4: 사냥시작 ");
-	CPrinter::PrintLine(L"5: 게임종료");
+	CPrinter::PrintLine(L"5: 모든로그보기");
+	CPrinter::PrintLine(L"6: 게임종료");
 
+	
 	int i_select = 0;
 	CPrinter::PrintLine(L"원하시는 번호 입력:");
 	//std::wcin >> i_select;
@@ -143,8 +148,11 @@ void CGameManager::SelectMenu()
 
 		break;
 	case 5:
-		Set_GameState(EGameState::GAMEOVER);
+		Set_GameState(EGameState::VIEWALLLOG);
+		break;
 
+	case 6:
+		Set_GameState(EGameState::GAMEOVER);
 		break;
 	}
 }
@@ -225,12 +233,7 @@ void CGameManager::goBattle()
 	//int curLevel = m_pPlayer->getLevel();
 	m_pPlayer->LevelUp();	//레벨업 시도
 	// 레벨업 했는지 확인
-	//if (curLevel < m_pPlayer->getLevel())
-	//{
-	//	swprintf_s(buffer, 256, L"Level Up!! %d -> %d", curLevel, m_pPlayer->getLevel());
-	//	CLogManager::getInstance().AddLog(buffer);
-	//	//Show_LevelUp();
-	//}
+
 	// 종료시 결과 출력
 	// 아이템 드롭
 	int dropGold = 0;
@@ -312,6 +315,14 @@ void CGameManager::goShop()
 	}
 
 
+}
+
+void CGameManager::goViewAllLog()
+{
+
+	CPrinter::Pause();
+
+	Set_GameState(EGameState::SELECT);
 }
 
 void CGameManager::goInvetory()

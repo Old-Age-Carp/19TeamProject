@@ -14,7 +14,7 @@ enum class EActionKind : char
 {
 	Attack,
 	UseItem,
-	// ....
+	// ....                   
 };
 
 enum class EGameState
