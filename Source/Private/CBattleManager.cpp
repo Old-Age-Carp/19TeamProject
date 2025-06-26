@@ -76,6 +76,32 @@ void CBattleManager::PlayerTurn()
 	}
 }
 
+bool CBattleManager::NextTurn()
+{	
+	if (!m_turnSelector)
+	{
+        return true;
+	}
+
+ 	CBattleAbleObject* nextActor = m_turnSelector->GetNextTurn();
+	if (!nextActor)
+	{
+		return true;
+	}
+
+	if (nextActor == m_pPlayer)
+	{
+		PlayerTurn();
+		return !IsAlive(*m_pMonster->Get_pHealth());
+	}
+	else if (nextActor == m_pMonster)
+	{
+		MonsterTurn(m_monsterTeams);
+		return !IsAlive(*m_pPlayer->Get_pHealth());
+	}
+    return true;
+}
+
 void CBattleManager::MonsterTurn(const std::vector<CIsBattleAble*>& otherTeams)
 {
     if (!m_pMonster || !m_pPlayer)
