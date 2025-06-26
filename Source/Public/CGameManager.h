@@ -30,6 +30,7 @@ private:
 	void MakeMonster(); //멤버변수에 할당하도록 수정
 
 	void ShowStatus();
+	void Show_LevelUp();
 	void Stanby_enter(); //엔터입력 대기
 	template<typename T>
 	T GetInput();
