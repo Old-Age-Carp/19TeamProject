@@ -320,8 +320,7 @@ void CGameManager::goLevelUp()
 		pre_level = *m_pPlayer->Get_pLevel();
 		pre_attack = *m_pPlayer->Get_pAttack();
 		pre_health  = m_pPlayer->getHealth_Max();
-		m_pPlayer->LevelUp();
-
+		bool LevelUp_result = m_pPlayer->LevelUp();
 
 		wchar_t buffer[256];
 		swprintf_s(buffer, 256, L"레벨업!  %d  -> %d", pre_level, m_pPlayer->getLevel());
@@ -330,6 +329,12 @@ void CGameManager::goLevelUp()
 		CPrinter::PrintLine(buffer);
 		swprintf_s(buffer, 256, L"체력:  %d  -> %d", pre_health, m_pPlayer->getHealth_Max());
 		CPrinter::PrintLine(buffer);
+		if (LevelUp_result == true)
+		{
+			CPrinter::Pause();
+			Set_GameState(EGameState::GAMEOVER);
+			//게임클리어
+		}
 
 	}
 
