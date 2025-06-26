@@ -5,6 +5,8 @@
 
 using std::vector;
 
+const int MaxPlayerLevel = 10;
+
 /// <summary>
 ///  캐릭터가 각 턴에 할 수 있는 행동 종류
 /// </summary>
@@ -48,6 +50,7 @@ public:
 	int mId;
 	vector<int>		mItemIDList;		//아이템 id 목록
 	vector<float>	mDropRate;	//각 아이템 드롭확률
+	//vector<int>		mDropMaxCount;
 };
 
 

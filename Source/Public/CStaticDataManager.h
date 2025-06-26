@@ -13,7 +13,7 @@
 struct FGameDropTable
 {
     int id;
-    std::vector<FDropItemData> possibleDrops;
+    FDropItemData possibleDrops;
 };
 
 

@@ -171,31 +171,49 @@ void CGameManager::goBattle()
 
 	// 레벨에 맞는 데이터 가져와서 확인
 	// 몬스터 생성
-	CMonster* monster = MakeMonster(EMonsterType::Normal);
+	CMonster* monster = MakeMonster();
+
+	vector<CBattleAbleObject*> allyMembers{ m_pPlayer };
+	vector<CBattleAbleObject*> enemyMembers{ m_pPlayer };
+	CIsBattleAble allyTeam(allyMembers);
+	CIsBattleAble enemyTeam(enemyMembers);
+
 	// 몬스터 스텟 출력
 	// 전투 시작 입력 대기
-	//CBattleManager& battleManager = CBattleManager::getInstance();
+	CBattleManager& battleManager = CBattleManager::getInstance();
 
 	CGameView::getInstance().ViewObjectStat(*static_cast<CGameObject*>(monster));
 
 	Stanby_enter();
 
 	// 전투 진행 준비
-	//battleManager.SetBattle(std::make_unique<CBattleTurnSelectorEachTurn>());
+	//battleManager.SetBattle(std::make_unique<CBattleTurnSelectorEachTurn>(), allyTeam, enemyTeam);
 
-	
-	// 로그 출력
+	vector<ILogable> battleLogs;
+	battleLogs.reserve(100);
+
+	wchar_t buffer[256];
+	// 종료 될 때까지 반복
 	//while (battleManager.NextTurn())
 	//{
-	//	
+	//	// 전투로그 관리하여 출력
+	CPrinter::ClearScreen();
+	swprintf_s(buffer, 256, L"전투 진행 중! vs %s", monster->getName());
+	CPrinter::PrintLine(buffer);
+	for (size_t i = 0; i < battleLogs.size(); i++)
+	{
+
+	}
 	//}
 
+	// 전체로그에 전투 로그 추가
+	// 레벨업 했다면 상태 레벨업으로
+	// 그외 선택으로
 	// 기다리기
 
-	// 종료 될 때까지 반복
-
 	// 종료시 결과 출력
-
+	// 몬스터 메모리 해재
+	delete monster;
 }
 
 void CGameManager::goShop()
@@ -332,9 +350,11 @@ void CGameManager::Stanby_enter()
 }
 
 //몬스터 생성
-CMonster* CGameManager::MakeMonster(EMonsterType type)
+CMonster* CGameManager::MakeMonster()
 {
+	EMonsterType type = m_pPlayer->getLevel() == MaxPlayerLevel ? EMonsterType::Boss : EMonsterType::Normal;
 	vector<int> monsterIDs;
+
 	if (type == EMonsterType::Boss)
 	{
 		monsterIDs = { 107, 108 }; //리치 드래곤
@@ -366,72 +386,97 @@ vector<CItem> CGameManager::DropItem(CMonster* monster)
 	//골드 드랍 100% exp reward의 1~3배 골드 드랍
 	int droppedGold = rand() % (pMonsterData->expReward * 2 + 1) + pMonsterData->expReward;
 	*(m_pPlayer->Get_pGold()) += droppedGold;
-	//디버깅 편의성을 위해 존재한대요..보고 삭제여부 확인좀..
-	//m_pLogManager->AddLog(L"골드 획득: " + std::to_wstring(droppedGold) + L" 골드를 획득했습니다.");
 
-	//아이템 드랍
+	const vector<int> dropTableIds = pMonsterData->dropItemTableIDs;
+
 	if (!pMonsterData->dropItemTableIDs.empty())
 	{
-		for (int itemID : pMonsterData->dropItemTableIDs)
+		return droppedCItems;
+	}
+
+	for (int itemID : pMonsterData->dropItemTableIDs)
+	{
+		const FGameDropTable* dropData = m_pStaticDataManager->GetDropTable(itemID);
+		const FDropItemData& data = dropData->possibleDrops;
+
+		for (int i = 0; i < data.mItemIDList.size(); i++)
 		{
-			const FItemData* pItemDef = m_pStaticDataManager->GetItemData(itemID);
-			if (!pItemDef)
+			float value = static_cast<float>(std::rand()) / RAND_MAX;
+			if (data.mDropRate[i] >= value)
 			{
-				m_pLogManager->AddLog(L"  - 알 수 없는 아이템 (ID: " + std::to_wstring(itemID) + L")이 드롭되었으나 데이터에서 찾을 수 없습니다.");
-				continue;
-			}
-
-			//아이템 드랍 확률
-			bool bDropped = false;
-			double dropChance = 0.0; //기본 확률 0
-
-			if (dynamic_cast<const FItemPotionData*>(pItemDef))
-			{
-				dropChance = 0.3; //포션 30%
-			}
-			else if (dynamic_cast<const FItemSpecialData*>(pItemDef) && pItemDef->id == 1234) //그 즉발 아이템! 내용필
-			{
-				dropChance = 0.3;
-			}
-
-			if (static_cast<double>(rand()) / RAND_MAX < dropChance)
-			{
-				bDropped = true;
-			}
-
-			if (bDropped)
-			{
-				if (dynamic_cast<const FItemSpecialData*>(pItemDef) && pItemDef->id == 1234)
-				{
-					if (static_cast<double>(rand()) / RAND_MAX < 0.3)
-					{
-						//체력 회복
-						int healAmount = 50;
-						*(m_pPlayer->Get_pHealth()) += healAmount;
-						if (*(m_pPlayer->Get_pHealth()) > *(m_pPlayer->Get_pHealthMax()))
-						{
-							*(m_pPlayer->Get_pHealth()) = *(m_pPlayer->Get_pHealthMax());
-						}
-					}
-					else
-					{
-						//공격력 증가
-						int attackBonus = 10;
-						*(m_pPlayer->Get_pAttack()) += attackBonus;
-					}
-				}
-				else
-				{
-					m_pPlayer->Add_Inventory(const_cast<FItemData*>(pItemDef));
-
-					droppedCItems.emplace_back(pItemDef, 1);
-				}
-			}
-			else
-			{
-
+				const FItemData* itemData = m_pStaticDataManager->GetItemData(data.mItemIDList[i]);
+				droppedCItems.push_back(CItem(itemData, 1));
 			}
 		}
 	}
+
+	//디버깅 편의성을 위해 존재한대요..보고 삭제여부 확인좀..
+	//m_pLogManager->AddLog(L"골드 획득: " + std::to_wstring(droppedGold) + L" 골드를 획득했습니다.");
+#pragma region 이전코드
+	//아이템 드랍
+	//if (!pMonsterData->dropItemTableIDs.empty())
+	//{
+	//	for (int itemID : pMonsterData->dropItemTableIDs)
+	//	{
+	//		const FItemData* pItemDef = m_pStaticDataManager->GetItemData(itemID);
+	//		if (!pItemDef)
+	//		{
+	//			m_pLogManager->AddLog(L"  - 알 수 없는 아이템 (ID: " + std::to_wstring(itemID) + L")이 드롭되었으나 데이터에서 찾을 수 없습니다.");
+	//			continue;
+	//		}
+
+	//		//아이템 드랍 확률
+	//		bool bDropped = false;
+	//		double dropChance = 0.0; //기본 확률 0
+
+	//		if (dynamic_cast<const FItemPotionData*>(pItemDef))
+	//		{
+	//			dropChance = 0.3; //포션 30%
+	//		}
+	//		else if (dynamic_cast<const FItemSpecialData*>(pItemDef) && pItemDef->id == 1234) //그 즉발 아이템! 내용필
+	//		{
+	//			dropChance = 0.3;
+	//		}
+
+	//		if (static_cast<double>(rand()) / RAND_MAX < dropChance)
+	//		{
+	//			bDropped = true;
+	//		}
+
+	//		if (bDropped)
+	//		{
+	//			if (dynamic_cast<const FItemSpecialData*>(pItemDef) && pItemDef->id == 1234)
+	//			{
+	//				if (static_cast<double>(rand()) / RAND_MAX < 0.3)
+	//				{
+	//					//체력 회복
+	//					int healAmount = 50;
+	//					*(m_pPlayer->Get_pHealth()) += healAmount;
+	//					if (*(m_pPlayer->Get_pHealth()) > *(m_pPlayer->Get_pHealthMax()))
+	//					{
+	//						*(m_pPlayer->Get_pHealth()) = *(m_pPlayer->Get_pHealthMax());
+	//					}
+	//				}
+	//				else
+	//				{
+	//					//공격력 증가
+	//					int attackBonus = 10;
+	//					*(m_pPlayer->Get_pAttack()) += attackBonus;
+	//				}
+	//			}
+	//			else
+	//			{
+	//				m_pPlayer->Add_Inventory(const_cast<FItemData*>(pItemDef));
+
+	//				droppedCItems.emplace_back(pItemDef, 1);
+	//			}
+	//		}
+	//		else
+	//		{
+
+	//		}
+	//	}
+	//}
+#pragma endregion
 	return droppedCItems;
 }
