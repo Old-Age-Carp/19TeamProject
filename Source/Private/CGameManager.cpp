@@ -100,7 +100,7 @@ void CGameManager::CreateHero()
 
 	m_pPlayer = new CPlayer(PlayerName);
 	m_pPlayer->SetBattleAI(std::make_unique<CBattleAI>(m_pPlayer));
-	*(m_pPlayer->Get_pHealth()) = 20;
+	//*(m_pPlayer->Get_pHealth()) = 20;
 
 	ShowStatus();
 	Stanby_enter();
@@ -218,6 +218,19 @@ void CGameManager::goBattle()
 	}
 	
 	(*m_pPlayer->Get_pExp()) += m_pMonster->GetExpReward();
+	swprintf_s(buffer, 256, L"%d 경험치 획득 ,현재경험치 %d / 100", m_pMonster->GetExpReward(), m_pMonster->GetExpReward());
+	CPrinter::PrintLine(buffer);
+	CLogManager::getInstance().AddLog(buffer);
+
+	//int curLevel = m_pPlayer->getLevel();
+	m_pPlayer->LevelUp();	//레벨업 시도
+	// 레벨업 했는지 확인
+	//if (curLevel < m_pPlayer->getLevel())
+	//{
+	//	swprintf_s(buffer, 256, L"Level Up!! %d -> %d", curLevel, m_pPlayer->getLevel());
+	//	CLogManager::getInstance().AddLog(buffer);
+	//	//Show_LevelUp();
+	//}
 	// 종료시 결과 출력
 	// 아이템 드롭
 	int dropGold = 0;
@@ -246,15 +259,7 @@ void CGameManager::goBattle()
 	delete m_pMonster;
 	m_pMonster = nullptr;
 
-	int curLevel = m_pPlayer->getLevel();
-	m_pPlayer->LevelUp();	//레벨업 시도
-	// 레벨업 했는지 확인
-	if (curLevel < m_pPlayer->getLevel())
-	{
-		swprintf_s(buffer, 256, L"Level Up!! %d -> %d", curLevel, m_pPlayer->getLevel());
-		CLogManager::getInstance().AddLog(buffer);
-		Show_LevelUp();
-	}
+
 
 	CPrinter::PrintLine(L"이어서 전투하시겠습니까? (Y/N)");
 	wstring input = GetInput<wstring>();
@@ -422,7 +427,7 @@ void CGameManager::Show_LevelUp()
 	pre_level = *m_pPlayer->Get_pLevel();
 	pre_attack = *m_pPlayer->Get_pAttack();
 	pre_health = m_pPlayer->getHealth_Max();
-	bool LevelUp_result = m_pPlayer->LevelUp();
+	//bool LevelUp_result = m_pPlayer->LevelUp();
 
 	wchar_t buffer[256];
 	swprintf_s(buffer, 256, L"레벨업!  %d  -> %d", pre_level, m_pPlayer->getLevel());

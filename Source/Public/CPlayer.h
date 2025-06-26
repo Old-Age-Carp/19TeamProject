@@ -23,7 +23,7 @@ public:
 	~CPlayer();
 public:
 	bool LevelUp();
-
+	void LevelUp_Stat();
 	void Show_Inventory();
 	void Show_Inventory_part(int i_arg);
 	void Add_Inventory(CItem* Item);

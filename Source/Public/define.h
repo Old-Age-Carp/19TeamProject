@@ -29,6 +29,7 @@ enum class EGameState
 	LEVELUP,			//레벨업상태
 	INVENTORY,			//인벤토리
 	GAMEOVER,			//게임오버
+	VIEWALLLOG,
 	END
 };
 

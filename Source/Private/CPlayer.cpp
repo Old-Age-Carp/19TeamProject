@@ -18,18 +18,41 @@ CPlayer::~CPlayer()
 bool CPlayer::LevelUp()
 {
     bool result = false;
-	if (iExp >= 100)
+	while (iExp >= 100)
 	{
 		iExp -= 100;
-	}
-	iLevel++;
-    if (iLevel == 10)
+	    iLevel++;
+        LevelUp_Stat();
         result = true;
-	iHealth_Max = iHealth_Max + (iLevel * 20);
-	iHealth = iHealth_Max ;
-	iAttack += iLevel * 5;
-
+	}
+    //if (iLevel == 10)
+    //    result = true;
     return result;
+}
+
+void CPlayer::LevelUp_Stat()
+{
+    int pre_level = 0, pre_attack = 0, pre_health = 0;
+
+
+    pre_level = getLevel();
+    pre_attack = getAttack();
+    pre_health = getHealth_Max();
+
+    iHealth_Max = iHealth_Max + (iLevel * 20);
+    iHealth = iHealth_Max;
+    iAttack += iLevel * 5;
+
+
+    //bool LevelUp_result = m_pPlayer->Level)Up();
+
+    wchar_t buffer[256];
+    swprintf_s(buffer, 256, L"레벨업!  %d  -> %d", iLevel- 1, iLevel);
+    CPrinter::PrintLine(buffer);
+    swprintf_s(buffer, 256, L"공격력:  %d  -> %d", pre_attack, iAttack);
+    CPrinter::PrintLine(buffer);
+    swprintf_s(buffer, 256, L"체력:  %d  -> %d", pre_health, iHealth_Max);
+    CPrinter::PrintLine(buffer);
 }
 
 void CPlayer::Show_Inventory()
