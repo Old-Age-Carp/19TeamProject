@@ -217,17 +217,19 @@ void CGameManager::goBattle()
 		CPrinter::PrintLine(L"승리!");
 	}
 
+
+	
 	(*m_pPlayer->Get_pExp()) += m_pMonster->GetExpReward();
-
-	// 그외 선택으로
-	// 기다리기
-
 	// 종료시 결과 출력
 	// 아이템 드롭
 	int dropGold = 0;
 	vector<CItem> drops = DropItem(m_pMonster, dropGold);
 
 	swprintf_s(buffer, 256, L"%d 골드 획득", dropGold);
+	CPrinter::PrintLine(buffer);
+	CLogManager::getInstance().AddLog(buffer);
+
+	swprintf_s(buffer, 256, L"%d 경험치 획득", m_pMonster->GetExpReward());
 	CPrinter::PrintLine(buffer);
 	CLogManager::getInstance().AddLog(buffer);
 
@@ -240,8 +242,6 @@ void CGameManager::goBattle()
 		CLogManager::getInstance().AddLog(buffer);
 	}
 
-
-
 	// 몬스터 메모리 해재
 	delete m_pMonster;
 	m_pMonster = nullptr;
@@ -253,10 +253,12 @@ void CGameManager::goBattle()
 	{
 		swprintf_s(buffer, 256, L"Level Up!! %d -> %d", curLevel, m_pPlayer->getLevel());
 		CLogManager::getInstance().AddLog(buffer);
+		Show_LevelUp();
 	}
 
 	CPrinter::PrintLine(L"이어서 전투하시겠습니까? (Y/N)");
 	wstring input = GetInput<wstring>();
+	// 이어서 전투한다면 상태변경하지 않고 탈출
 	if (input == L"n" or input == L"N")
 	{
 		Set_GameState(EGameState::SELECT);
