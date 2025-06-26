@@ -191,7 +191,8 @@ void CGameManager::goBattle()
 	// 전투 진행 준비
 	battleManager.SetBattle(std::make_unique<CBattleTurnSelectorEachTurn>(), &allyTeam, &enemyTeam);
 	// 종료 될 때까지 반복
-	while (battleManager.NextTurn())
+	battleManager.NextTurn();
+	do
 	{
 		// 전투로그 관리하여 출력
 		CPrinter::ClearScreen();
@@ -199,7 +200,8 @@ void CGameManager::goBattle()
 		CPrinter::PrintLine(buffer);
 		CGameView::getInstance().ViewLogs(battleManager.GetBattleLog());
 		Sleep(500);	// 0.5초 간격 대기
-	}
+	} while (battleManager.NextTurn());
+
 	// 전체로그에 전투 로그 추가
 	for (auto& log : battleManager.GetBattleLog())
 	{
@@ -446,10 +448,10 @@ void CGameManager::MakeMonster()
 {
 	EMonsterType type = m_pPlayer->getLevel() == MaxPlayerLevel ? EMonsterType::Boss : EMonsterType::Normal;
 
-	CMonster* result = nullptr;
 	const vector<FMonsterData>& monsterDatas = m_pStaticDataManager->GetAllMonsterDatas();
 	int randomIndex = std::rand() % monsterDatas.size();
-	m_pMonster = new CMonster(&monsterDatas[randomIndex]);
+	int id = monsterDatas[randomIndex].id;
+	m_pMonster = new CMonster(m_pStaticDataManager->GetMonsterData(id));
 
 	int level = m_pPlayer->getLevel();
 	// 공격력: (레벨 × 5) ~ (레벨 × 10)
@@ -467,13 +469,11 @@ void CGameManager::MakeMonster()
 
 	*(m_pMonster->Get_pAttack()) = attack;
 	*(m_pMonster->Get_pHealth()) = health;
+	*(m_pMonster->Get_pHealthMax()) = health;
 	*(m_pMonster->Get_pArmor()) = level;
 	*(m_pMonster->Get_pLevel()) = level;
 
 	m_pMonster->SetBattleAI(std::make_unique<CBattleAI>(m_pMonster));
-	//result->SetBattleAI(std::make_unique<CBattleAI>(result));
-
-	//m_pMonster = result;
 }
 
 //몬스터 처치 후 아이템 드랍

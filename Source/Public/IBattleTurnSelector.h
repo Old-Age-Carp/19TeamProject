@@ -15,5 +15,5 @@ public:
 	virtual ~IBattleTurnSelector() = default;
 	virtual CBattleAbleObject* GetNextTurn() = 0;
 	virtual weak_ptr<CIsBattleAble> GetCurrentTeam() = 0;
-	virtual void SetTeams(vector<shared_ptr<CIsBattleAble>>& teamList) = 0;
+	virtual void SetTeams(vector<shared_ptr<CIsBattleAble>> teamList) = 0;
 };

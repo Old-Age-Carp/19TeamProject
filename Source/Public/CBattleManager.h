@@ -18,7 +18,7 @@ public:
 	bool NextTurn();				// 턴 넘기기 + 전투 종료 여부 반환
     CBattleAbleObject* GetCurrentTurn();	// 현재 턴 주체 반환
 	ILogable* GetCurrentLog() { return &m_BattleLog.back(); }
-	const std::vector<ILogable*>& GetBattleLog();
+	const std::vector<ILogable*> GetBattleLog();
 private:
 	std::vector<LogWString>	m_BattleLog;
 	CIsBattleAble* m_pPlayer = nullptr;

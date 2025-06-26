@@ -19,7 +19,7 @@ CBattleAbleObject* CBattleTurnSelectorEachTurn::GetNextTurn()
 /// <summary>
 /// 리스트에 나열된 순서로 턴을 가집니다.
 /// </summary>
-void CBattleTurnSelectorEachTurn::SetTeams(vector<shared_ptr<CIsBattleAble>>& teamList)
+void CBattleTurnSelectorEachTurn::SetTeams(vector<shared_ptr<CIsBattleAble>> teamList)
 {
 	mTeamList = teamList;
 	mTeamLastTurnIndexList.resize(teamList.size());

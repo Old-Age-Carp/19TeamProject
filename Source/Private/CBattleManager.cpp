@@ -11,7 +11,10 @@
 void CBattleManager::SetBattle(std::unique_ptr<IBattleTurnSelector> turnSelector, CIsBattleAble* team1, CIsBattleAble* team2)
 {
 	m_turnSelector = std::move(turnSelector);
-
+	vector<shared_ptr<CIsBattleAble>> teams;
+	teams.push_back(std::shared_ptr<CIsBattleAble>(team1));
+	teams.push_back(std::shared_ptr<CIsBattleAble>(team2));
+	m_turnSelector->SetTeams(teams);
 	m_pPlayer = team1;
 	m_pMonster = team2;
 
@@ -106,7 +109,7 @@ bool CBattleManager::NextTurn()
 		int damage = nextActor->GetAttackValue();
 		target->TakeDamage(damage);
 		swprintf_s(buffer, 256, L"%ws 이가 %ws 에게 공격 %d 대미지!",
-			nextActor->getName().c_str(), target->getName().c_str(), std::to_wstring(damage).c_str());
+			nextActor->getName().c_str(), target->getName().c_str(), damage);
 		m_BattleLog.push_back(LogWString(buffer));
 
 		if (target->IsAlive() == false)
@@ -169,7 +172,7 @@ CBattleAbleObject* CBattleManager::GetCurrentTurn()
     return m_turnSelector ? m_turnSelector->GetNextTurn() : nullptr;
 }
 
-const std::vector<ILogable*>& CBattleManager::GetBattleLog()
+const std::vector<ILogable*> CBattleManager::GetBattleLog()
 {
 	std::vector<ILogable*> retVector = {};
 

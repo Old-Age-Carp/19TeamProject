@@ -22,7 +22,7 @@ public:
 		return mCurrentTeamIndex < 0 ? weak_ptr<CIsBattleAble>()
 			: weak_ptr(mTeamList[mCurrentTeamIndex]);
 	}
-	void SetTeams(vector<shared_ptr<CIsBattleAble>>& teamList) override;
+	void SetTeams(vector<shared_ptr<CIsBattleAble>> teamList) override;
 
 	~CBattleTurnSelectorEachTurn() override = default;
 };
