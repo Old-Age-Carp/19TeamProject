@@ -154,3 +154,80 @@ flowchart TD
     class MonsterData,ItemData,DropTable,Inventory,PlayerStats data
     class GV,Printer ui
 ```
+
+```mermaid
+flowchart TD
+    %% 전투 시작
+    GameMgr[CGameManager<br/>goBattle 호출] --> CreateMonster[몬스터 생성<br/>레벨 기반 랜덤]
+    GameMgr --> SetupBattle[전투 설정]
+
+    %% 전투 설정
+    SetupBattle --> BattleMgr[CBattleManager<br/>SetBattle]
+    BattleMgr --> PlayerTeam[CBattleTeam<br/>플레이어 팀]
+    BattleMgr --> MonsterTeam[CBattleTeam<br/>몬스터 팀]
+    BattleMgr --> TurnSelector[CBattleTurnSelectorEachTurn<br/>턴 순서 관리]
+
+    %% 전투 루프
+    subgraph "전투 루프 (Battle Loop)"
+        NextTurn[NextTurn 호출] --> GetTurn[현재 턴 액터 선택]
+        GetTurn --> AIThink[CBattleAI::Think<br/>행동 결정]
+        AIThink --> ActionDecision{행동 종류}
+
+        ActionDecision -->|Attack| AttackAction[공격 실행<br/>데미지 계산]
+        ActionDecision -->|UseItem| ItemAction[아이템 사용<br/>효과 적용]
+
+        AttackAction --> ApplyDamage[TakeDamage 호출]
+        ItemAction --> ApplyEffect[아이템 효과 적용]
+
+        ApplyDamage --> LogBattle[전투 로그 기록]
+        ApplyEffect --> LogBattle
+
+        LogBattle --> CheckEnd{전투 종료?}
+        CheckEnd -->|Continue| NextTurn
+        CheckEnd -->|End| BattleResult[전투 결과 처리]
+    end
+
+    %% 전투 결과
+    BattleResult --> Victory{승리?}
+    Victory -->|Yes| ExpGain[경험치 획득]
+    Victory -->|Yes| GoldGain[골드 획득]
+    Victory -->|Yes| ItemDrop[아이템 드롭]
+    Victory -->|Yes| LevelCheck[레벨업 체크]
+    Victory -->|No| GameOver[게임오버]
+
+    ExpGain --> Player[CPlayer 상태 업데이트]
+    GoldGain --> Player
+    ItemDrop --> Player
+    LevelCheck --> Player
+
+    %% 인터페이스 구조
+    subgraph "전투 관련 인터페이스"
+        IAttack[IAttack<br/>공격 능력]
+        IHitable[IHitAble<br/>피격 가능]
+        IBattleAI[IBattleAI<br/>AI 행동]
+        IBattleTurnSelector[IBattleTurnSelector<br/>턴 관리]
+    end
+
+    PlayerTeam -.->|implements| IAttack
+    MonsterTeam -.->|implements| IAttack
+    PlayerTeam -.->|implements| IHitable
+    MonsterTeam -.->|implements| IHitable
+
+    %% 데이터 흐름
+    Player -.->|스탯 정보| AIThink
+    Monster -.->|스탯 정보| AIThink
+    StaticDataMgr[CStaticDataManager] -.->|드롭 테이블| ItemDrop
+
+    %% 스타일링
+    classDef manager fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef gameObject fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef interface fill:#fff8e1,stroke:#ff8f00,stroke-width:2px
+    classDef process fill:#f1f8e9,stroke:#33691e,stroke-width:2px
+    classDef decision fill:#fce4ec,stroke:#ad1457,stroke-width:2px
+
+    class BattleMgr,TurnSelector manager
+    class PlayerTeam,MonsterTeam,Player,Monster gameObject
+    class IAttack,IHitable,IBattleAI,IBattleTurnSelector interface
+    class NextTurn,AIThink,AttackAction,ItemAction,LogBattle process
+    class ActionDecision,CheckEnd,Victory decision
+```
