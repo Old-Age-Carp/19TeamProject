@@ -33,6 +33,8 @@ public:
 
     FGameDropTable* GetDropTable(int id);
 
+    vector<FMonsterData> GetAllMonsterDatas() { vector<FMonsterData>(monsterDataTableByID); }
+
     void Print_AllItem();
 
 private:
