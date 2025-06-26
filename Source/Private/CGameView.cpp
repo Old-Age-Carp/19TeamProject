@@ -28,10 +28,10 @@ void CGameView::ViewLogs(const std::vector<std::unique_ptr<ILogable>>& logs)
     CPrinter::PrintBoxes(wrappedLog, 80, wrappedLog.size() + 3, 1);
 }
 
-void CGameView::ViewLogs(const vector<ILogable>& logs)
+void CGameView::ViewLogs(const vector<ILogable*>& logs)
 {
-    for (const ILogable& log : logs)
-        CPrinter::PrintLine(log.ToString());
+    for (const ILogable* log : logs)
+        CPrinter::PrintLine(log->ToString());
 }
 
 void CGameView::ViewGameState(const CGameManager& gameMgr)

@@ -189,7 +189,7 @@ void CGameManager::goBattle()
 	// 전투 진행 준비
 	//battleManager.SetBattle(std::make_unique<CBattleTurnSelectorEachTurn>(), allyTeam, enemyTeam);
 
-	vector<ILogable> battleLogs;
+	vector<ILogable*> battleLogs;
 	battleLogs.reserve(100);
 
 	wchar_t buffer[256];
@@ -198,12 +198,9 @@ void CGameManager::goBattle()
 	//{
 	//	// 전투로그 관리하여 출력
 	CPrinter::ClearScreen();
-	swprintf_s(buffer, 256, L"전투 진행 중! vs %s", monster->getName());
+	swprintf_s(buffer, 256, L"전투 진행 중! vs %s", monster->getName().c_str());
 	CPrinter::PrintLine(buffer);
-	for (size_t i = 0; i < battleLogs.size(); i++)
-	{
-
-	}
+	CGameView::getInstance().ViewLogs(battleLogs);
 	//}
 
 	// 전체로그에 전투 로그 추가
@@ -390,15 +387,15 @@ CMonster* CGameManager::MakeMonster()
 //몬스터 처치 후 아이템 드랍
 vector<CItem> CGameManager::DropItem(CMonster* monster)
 {
-	//vector<CItem> droppedCItems;
+	vector<CItem> droppedCItems;
 
-	////오류검사
-	//if (!monster)
-	//	return droppedCItems;
+	//오류검사
+	if (!monster)
+		return droppedCItems;
 
-	//const FMonsterData* pMonsterData = monster->GetData();
-	//if (!pMonsterData)
-	//	return droppedCItems;
+	const FMonsterData* pMonsterData = monster->GetData();
+	if (!pMonsterData)
+		return droppedCItems;
 
 	//골드 드랍 100% exp reward의 1~3배 골드 드랍
 	int droppedGold = rand() % (pMonsterData->expReward * 2 + 1) + pMonsterData->expReward;
