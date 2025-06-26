@@ -444,36 +444,43 @@ void CPlayer::Sell_item(int item_id, int item_stock)
         {
             const FItemData* PItemData = pair->Get_pItemData();
 
-          
-            if (pair->GetCurrentStack() >= item_stock && b_sell == false)
+            if (pair->IsEquipped() == true)
             {
-
-                b_sell = true;
-                int item_price = pair->GetValue();
-                int sell_price = static_cast<int>(std::round(item_price * 0.6f));
-                iGold += sell_price * item_stock;
-
-                swprintf_s(buffer, 256, L"%ws 의 판매금액의 합은 %d 입니다.",pair->GetName().c_str(), sell_price * item_stock);
-                CPrinter::PrintLine(buffer);
-                CLogManager::getInstance().AddLog(buffer);
-                pair->AddCurrentStack(-1 * item_stock);
+                CPrinter::PrintLine(L"장착한 아이템은 팔 수 없습니다.");
                 CPrinter::Pause();
-                //0되면 삭제
-                if (pair->GetCurrentStack() == 0)
-                {
-                    delete pair;
-                    it = m_vecInventory.erase(it); //벡터에서도 삭제;
-                    //pair = nullptr; //포인트 삭제
-                    break;
-                }
             }
             else
             {
-                CPrinter::PrintLine(L"판매할 아이템이 부족합니다");
-                CLogManager::getInstance().AddLog(buffer);
-                CPrinter::Pause();
+                if (pair->GetCurrentStack() >= item_stock && b_sell == false)
+                {
 
+                    b_sell = true;
+                    int item_price = pair->GetValue();
+                    int sell_price = static_cast<int>(std::round(item_price * 0.6f));
+                    iGold += sell_price * item_stock;
+
+                    swprintf_s(buffer, 256, L"%ws 의 판매금액의 합은 %d 입니다.", pair->GetName().c_str(), sell_price * item_stock);
+                    CPrinter::PrintLine(buffer);
+                    CLogManager::getInstance().AddLog(buffer);
+                    pair->AddCurrentStack(-1 * item_stock);
+                    CPrinter::Pause();
+                    //0되면 삭제
+                    if (pair->GetCurrentStack() == 0)
+                    {
+                        delete pair;
+                        it = m_vecInventory.erase(it); //벡터에서도 삭제;
+                        //pair = nullptr; //포인트 삭제
+                        break;
+                    }
+                }
+                else
+                {
+                    CPrinter::PrintLine(L"판매할 아이템이 부족합니다");
+                    CPrinter::Pause();
+
+                }
             }
+   
 
             
         }
