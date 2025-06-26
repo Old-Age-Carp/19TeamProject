@@ -491,7 +491,7 @@ vector<CItem> CGameManager::DropItem(CMonster* monster, int& outDropGolds)
 
 	const vector<int> dropTableIds = pMonsterData->dropItemTableIDs;
 
-	if (!pMonsterData->dropItemTableIDs.empty())
+	if (pMonsterData->dropItemTableIDs.empty())
 	{
 		return droppedCItems;
 	}
@@ -581,4 +581,15 @@ vector<CItem> CGameManager::DropItem(CMonster* monster, int& outDropGolds)
 	//}
 #pragma endregion
 	return droppedCItems;
+}
+
+/// <summary>
+/// 여태 있었던 모든 로그 출력
+/// </summary>
+void goLogs()
+{
+	CPrinter::PrintLine(L"모든 로그 출력");
+	CPrinter::ClearScreen();
+	CGameView::getInstance().ViewLogs(CLogManager::getInstance().GetLogs());
+	CPrinter::Pause();
 }
