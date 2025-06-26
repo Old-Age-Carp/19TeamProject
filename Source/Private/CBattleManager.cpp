@@ -8,7 +8,9 @@
 #include <string>
 #include <cwchar>
 
-void CBattleManager::SetBattle(std::unique_ptr<IBattleTurnSelector> turnSelector, CIsBattleAble* team1, CIsBattleAble* team2)
+void CBattleManager::SetBattle(std::unique_ptr<IBattleTurnSelector> turnSelector,
+	std::shared_ptr<CIsBattleAble> team1,
+	std::shared_ptr<CIsBattleAble> team2)
 {
 	m_turnSelector = std::move(turnSelector);
 	vector<shared_ptr<CIsBattleAble>> teams;
@@ -89,11 +91,11 @@ bool CBattleManager::NextTurn()
 	const vector<CBattleAbleObject*>& playerMember = m_pPlayer->GetTeamBattlerList();
 	if (std::find(playerMember.begin(), playerMember.end(), nextActor) != playerMember.end())
 	{
-		turnOtherTeam = m_pMonster;
+		turnOtherTeam = m_pMonster.get();
 	}
 	else
 	{
-		turnOtherTeam = m_pPlayer;
+		turnOtherTeam = m_pPlayer.get();
 	}
 
 	EActionKind action = nextActor->GetAI().Think();

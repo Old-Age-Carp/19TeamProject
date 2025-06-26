@@ -177,9 +177,6 @@ void CGameManager::goBattle()
 
 	vector<CBattleAbleObject*> allyMembers{ m_pPlayer };
 	vector<CBattleAbleObject*> enemyMembers{ m_pMonster };
-	CIsBattleAble allyTeam(allyMembers);
-	CIsBattleAble enemyTeam(enemyMembers);
-
 	// 몬스터 스텟 출력
 	// 전투 시작 입력 대기
 	CBattleManager& battleManager = CBattleManager::getInstance();
@@ -189,7 +186,9 @@ void CGameManager::goBattle()
 	Stanby_enter();
 
 	// 전투 진행 준비
-	battleManager.SetBattle(std::make_unique<CBattleTurnSelectorEachTurn>(), &allyTeam, &enemyTeam);
+	battleManager.SetBattle(std::make_unique<CBattleTurnSelectorEachTurn>(),
+		std::make_shared<CIsBattleAble>(allyMembers),
+		std::make_shared<CIsBattleAble>(enemyMembers));
 	// 종료 될 때까지 반복
 	battleManager.NextTurn();
 	do
@@ -217,8 +216,6 @@ void CGameManager::goBattle()
 	{
 		CPrinter::PrintLine(L"승리!");
 	}
-
-
 	
 	(*m_pPlayer->Get_pExp()) += m_pMonster->GetExpReward();
 	// 종료시 결과 출력
