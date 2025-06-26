@@ -76,33 +76,6 @@ void CBattleManager::PlayerTurn()
 	}
 }
 
-void CBattleManager::MonsterTurn(const std::vector<CIsBattleAble*>& monsterTeam)
-{
-	if (!m_pMonster || !m_pPlayer) 
-	{
-		return;
-	}
-	
-	IBattleAI* ai = new CBattleAI(m_pMonster);
-	EActionKind action = ai->Think();
-	CBattleAbleObject* target = ai->ThinkTarget(action, monsterTeam);
-
-	if (!target)
-	{
-		return;
-	}
-
-	if (action == EActionKind::Attack)
-    {
-        target->TakeDamage(m_pMonster->GetAttackValue());
-    }
-	
-	if (*m_pPlayer->Get_pHealth() < 0)
-	{
-		*m_pPlayer->Get_pHealth() = 0;
-	}
-}
-
 void CBattleManager::MonsterTurn(const std::vector<CIsBattleAble*>& otherTeams)
 {
     if (!m_pMonster || !m_pPlayer)
