@@ -97,24 +97,41 @@ bool CBattleManager::NextTurn()
 	CBattleAbleObject* target = nextActor->GetAI().ThinkTarget(action, vector<CIsBattleAble*>{turnOtherTeam});
 
 
-	if (action == EActionKind::Attack)
+	wchar_t buffer[256];
+
+	switch (action)
 	{
-		if (target)
+	case EActionKind::Attack:
+	{
+		int damage = nextActor->GetAttackValue();
+		target->TakeDamage(damage);
+		swprintf_s(buffer, 256, L"%ws 이가 %ws 에게 공격 %d 대미지!",
+			nextActor->getName().c_str(), target->getName().c_str(), std::to_wstring(damage).c_str());
+		m_BattleLog.push_back(LogWString(buffer));
+
+		if (target->IsAlive() == false)
 		{
-			int damage = nextActor->GetAttackValue();
-			target->TakeDamage(damage);
-			wchar_t buffer[256];
-			swprintf_s(buffer, 256, L"%ws 이가 %ws 에게 공격 %d 대미지!",
-				nextActor->getName().c_str(), target->getName().c_str(), std::to_wstring(damage).c_str());
+			swprintf_s(buffer, 256, L"%ws 사망했다!",target->getName().c_str());
 			m_BattleLog.push_back(LogWString(buffer));
-
-			if (target->IsAlive() == false)
-			{
-				swprintf_s(buffer, 256, L"%ws 사망했다!",target->getName().c_str());
-				m_BattleLog.push_back(LogWString(buffer));
-			}
 		}
-
+	}
+		break;
+	case EActionKind::UseItem:
+	{
+		// 사용 가능한 아이템만 들어있음
+		vector<CItem*> items = nextActor->GetHaveItems();
+		if (items.size() > 0)
+		{
+			// 사용할 수 있는 아이템들 중에서 랜덤하게 하나 사용.
+			int randomIndex = rand() % items.size();
+			CItem* useItem = items[randomIndex];
+			swprintf_s(buffer, 256, L"아이템 %ws 사용!", useItem->GetName().c_str());
+			//m_BattleLog.push_back(LogWString(buffer));
+		}
+	}
+		break;
+	default:
+		break;
 	}
 
 	if ((m_pPlayer->IsAvailable() or m_pMonster->IsAvailable()) == false)

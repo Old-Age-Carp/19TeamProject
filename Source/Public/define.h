@@ -6,7 +6,7 @@
 using std::vector;
 
 const int MaxPlayerLevel = 10;
-
+const double UseItemRatio = 0.1;	// 0~1 1이면 100%
 /// <summary>
 ///  캐릭터가 각 턴에 할 수 있는 행동 종류
 /// </summary>
@@ -38,6 +38,7 @@ struct FItemData
 	std::wstring name;
 	int value;
 	virtual ~FItemData() = default;
+	virtual bool IsUseAble() const { return false; }
 
 	FItemData(int InID = 0, const std::wstring& InName = L"", int InValue = 0)
 		:id(InID), name(InName), value(InValue) {
@@ -57,6 +58,7 @@ public:
 struct FItemPotionData :public FItemData
 {
 	int healAmount;
+	bool IsUseAble() const override { return true; }
 
 	FItemPotionData(int InID = 0, const std::wstring& InName = L"", int InValue = 0, int InHealAmount = 0)
 		:FItemData(InID, InName, InValue), healAmount(InHealAmount) {

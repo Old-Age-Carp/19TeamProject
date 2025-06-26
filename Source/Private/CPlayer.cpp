@@ -461,5 +461,19 @@ void CPlayer::Sell_item(int item_id, int item_stock)
 
 std::vector<CItem*> CPlayer::GetHaveItems()
 {
-    return std::vector<CItem*>();
+    vector<CItem*> returnVector;
+
+    for (CItem* item : m_vecInventory)
+    {
+        // 사용할 수 있는 아이템인지 확인
+        if (item->Get_pItemData()->IsUseAble())
+        {
+            returnVector.push_back(item);
+        }
+    }
+    return returnVector;
+}
+
+void CPlayer::UseItem(CItem* item)
+{
 }

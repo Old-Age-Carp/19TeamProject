@@ -27,7 +27,12 @@ public:
     }
 
     virtual ~CBattleAbleObject() = default;
+    /// <summary>
+    /// 사용 가능한 아이템 목록을 반환.
+    /// </summary>
     virtual std::vector<CItem*> GetHaveItems() = 0;
+
+    virtual void UseItem(CItem* item) {};
 
     const IBattleAI& GetAI() { return *ai; }
 
@@ -48,4 +53,5 @@ public:
     int GetAttackValue() const override { return iAttack; }
 
     bool IsAlive() const override { return iHealth > 0; }
+
 };

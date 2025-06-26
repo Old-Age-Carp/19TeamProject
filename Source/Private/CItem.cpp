@@ -7,7 +7,7 @@ CItem::CItem(const FItemData* InDefinition, int InStack)
     : ItemDefinition(InDefinition), CurrentStack(InStack), bIsEquipped(false)
 {}
 
-void CItem::Use()
+void CItem::Use() // 아이템, 누구한테, 사용되면 어떻게되는지
 {
     if (!ItemDefinition || CurrentStack <= 0)
     {
@@ -17,7 +17,8 @@ void CItem::Use()
     CurrentStack--;
 
     if (const FItemPotionData* PotionData = dynamic_cast<const FItemPotionData*>(ItemDefinition))
-    {}
+    {
+    }
     else if (const FItemWeaponData* WeaponData = dynamic_cast<const FItemWeaponData*>(ItemDefinition))
     {
         if (!bIsEquipped)

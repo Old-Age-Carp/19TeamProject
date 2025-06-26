@@ -166,7 +166,6 @@ void CGameManager::goBattle()
 {
 	wchar_t buffer[256];
 
-
 	//플레이어 상태
 
 	// 몬스터 생성중
@@ -199,7 +198,7 @@ void CGameManager::goBattle()
 		swprintf_s(buffer, 256, L"전투 진행 중! vs %s", m_pMonster->getName().c_str());
 		CPrinter::PrintLine(buffer);
 		CGameView::getInstance().ViewLogs(battleManager.GetBattleLog());
-		Sleep(500);	// 0.5초 간격 대기
+		Sleep(300);	// 0.5초 간격 대기
 	}
 	// 전체로그에 전투 로그 추가
 	for (auto& log : battleManager.GetBattleLog())

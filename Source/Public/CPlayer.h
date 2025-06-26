@@ -34,6 +34,7 @@ public:
 	void UsePotion(int i_arg);
 	void Sell_item(int item_id,int item_stock =1);
 	std::vector<CItem*> GetHaveItems() override;
+	void UseItem(CItem* item) override;
 protected:
 	//virtual ~CPlayer() = default;
 
