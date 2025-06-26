@@ -201,7 +201,7 @@ void CGameManager::goBattle()
 void CGameManager::goShop()
 {
 	wchar_t buffer[256];
-	int i_select = 0;
+	int i_select = 0,i_stock;
 
 	CPrinter::ClearScreen();
 	m_pShopManager->Show_ShopItem();
@@ -209,16 +209,33 @@ void CGameManager::goShop()
 	swprintf_s(buffer, 256, L"현재 골드 : %d", *m_pPlayer->Get_pGold());
 	CPrinter::PrintLine(buffer);
 
-	swprintf_s(buffer, 256, L"구매할 아이템 ID 입력: %d, (메뉴:9)", i_select);
+	swprintf_s(buffer, 256, L"구매할 아이템 ID 입력: (메뉴:9,판매:10)");
 	CPrinter::PrintLine(buffer);
-
 	i_select = GetInput<int>();
+
+
 	if (i_select == 9)
 	{
 		Set_GameState(EGameState::SELECT);
 	}
+	else if (i_select == 10)
+	{
+		m_pPlayer->Show_Inventory();
+
+		swprintf_s(buffer, 256, L"판매할 아이템 ID 입력: (취소:9)");
+		CPrinter::PrintLine(buffer);
+		i_select = GetInput<int>();
+		swprintf_s(buffer, 256, L"판매할 아이템의 갯수: (취소:9)");
+		CPrinter::PrintLine(buffer);
+		i_stock= GetInput<int>();
+
+		m_pPlayer->Sell_item(i_select,i_stock);
+	}
 	else {
-		FItemData* Buyed_item = m_pShopManager->Buy_Item(i_select,m_pPlayer);
+		swprintf_s(buffer, 256, L"구매할 아이템의 갯수: (취소:9)");
+		CPrinter::PrintLine(buffer);
+		i_stock = GetInput<int>();
+		FItemData* Buyed_item = m_pShopManager->Buy_Item(i_select,m_pPlayer, i_stock);
 		Stanby_enter();
 	}
 
@@ -353,85 +370,86 @@ CMonster* CGameManager::MakeMonster(EMonsterType type)
 //몬스터 처치 후 아이템 드랍
 vector<CItem> CGameManager::DropItem(CMonster* monster)
 {
-	vector<CItem> droppedCItems;
+	//vector<CItem> droppedCItems;
 
-	//오류검사
-	if (!monster)
-		return droppedCItems;
+	////오류검사
+	//if (!monster)
+	//	return droppedCItems;
 
-	const FMonsterData* pMonsterData = monster->GetData();
-	if (!pMonsterData)
-		return droppedCItems;
+	//const FMonsterData* pMonsterData = monster->GetData();
+	//if (!pMonsterData)
+	//	return droppedCItems;
 
-	//골드 드랍 100% exp reward의 1~3배 골드 드랍
-	int droppedGold = rand() % (pMonsterData->expReward * 2 + 1) + pMonsterData->expReward;
-	*(m_pPlayer->Get_pGold()) += droppedGold;
-	//디버깅 편의성을 위해 존재한대요..보고 삭제여부 확인좀..
-	//m_pLogManager->AddLog(L"골드 획득: " + std::to_wstring(droppedGold) + L" 골드를 획득했습니다.");
+	////골드 드랍 100% exp reward의 1~3배 골드 드랍
+	//int droppedGold = rand() % (pMonsterData->expReward * 2 + 1) + pMonsterData->expReward;
+	//*(m_pPlayer->Get_pGold()) += droppedGold;
+	////디버깅 편의성을 위해 존재한대요..보고 삭제여부 확인좀..
+	////m_pLogManager->AddLog(L"골드 획득: " + std::to_wstring(droppedGold) + L" 골드를 획득했습니다.");
 
-	//아이템 드랍
-	if (!pMonsterData->dropItemTableIDs.empty())
-	{
-		for (int itemID : pMonsterData->dropItemTableIDs)
-		{
-			const FItemData* pItemDef = m_pStaticDataManager->GetItemData(itemID);
-			if (!pItemDef)
-			{
-				m_pLogManager->AddLog(L"  - 알 수 없는 아이템 (ID: " + std::to_wstring(itemID) + L")이 드롭되었으나 데이터에서 찾을 수 없습니다.");
-				continue;
-			}
+	////아이템 드랍
+	//if (!pMonsterData->dropItemTableIDs.empty())
+	//{
+	//	for (int itemID : pMonsterData->dropItemTableIDs)
+	//	{
+	//		const FItemData* pItemDef = m_pStaticDataManager->GetItemData(itemID);
+	//		if (!pItemDef)
+	//		{
+	//			m_pLogManager->AddLog(L"  - 알 수 없는 아이템 (ID: " + std::to_wstring(itemID) + L")이 드롭되었으나 데이터에서 찾을 수 없습니다.");
+	//			continue;
+	//		}
 
-			//아이템 드랍 확률
-			bool bDropped = false;
-			double dropChance = 0.0; //기본 확률 0
+	//		//아이템 드랍 확률
+	//		bool bDropped = false;
+	//		double dropChance = 0.0; //기본 확률 0
 
-			if (dynamic_cast<const FItemPotionData*>(pItemDef))
-			{
-				dropChance = 0.3; //포션 30%
-			}
-			else if (dynamic_cast<const FItemSpecialData*>(pItemDef) && pItemDef->id == 1234) //그 즉발 아이템! 내용필
-			{
-				dropChance = 0.3;
-			}
+	//		if (dynamic_cast<const FItemPotionData*>(pItemDef))
+	//		{
+	//			dropChance = 0.3; //포션 30%
+	//		}
+	//		else if (dynamic_cast<const FItemSpecialData*>(pItemDef) && pItemDef->id == 1234) //그 즉발 아이템! 내용필
+	//		{
+	//			dropChance = 0.3;
+	//		}
 
-			if (static_cast<double>(rand()) / RAND_MAX < dropChance)
-			{
-				bDropped = true;
-			}
+	//		if (static_cast<double>(rand()) / RAND_MAX < dropChance)
+	//		{
+	//			bDropped = true;
+	//		}
 
-			if (bDropped)
-			{
-				if (dynamic_cast<const FItemSpecialData*>(pItemDef) && pItemDef->id == 1234)
-				{
-					if (static_cast<double>(rand()) / RAND_MAX < 0.3)
-					{
-						//체력 회복
-						int healAmount = 50;
-						*(m_pPlayer->Get_pHealth()) += healAmount;
-						if (*(m_pPlayer->Get_pHealth()) > *(m_pPlayer->Get_pHealthMax()))
-						{
-							*(m_pPlayer->Get_pHealth()) = *(m_pPlayer->Get_pHealthMax());
-						}
-					}
-					else
-					{
-						//공격력 증가
-						int attackBonus = 10;
-						*(m_pPlayer->Get_pAttack()) += attackBonus;
-					}
-				}
-				else
-				{
-					m_pPlayer->Add_Inventory(const_cast<FItemData*>(pItemDef));
+	//		if (bDropped)
+	//		{
+	//			if (dynamic_cast<const FItemSpecialData*>(pItemDef) && pItemDef->id == 1234)
+	//			{
+	//				if (static_cast<double>(rand()) / RAND_MAX < 0.3)
+	//				{
+	//					//체력 회복
+	//					int healAmount = 50;
+	//					*(m_pPlayer->Get_pHealth()) += healAmount;
+	//					if (*(m_pPlayer->Get_pHealth()) > *(m_pPlayer->Get_pHealthMax()))
+	//					{
+	//						*(m_pPlayer->Get_pHealth()) = *(m_pPlayer->Get_pHealthMax());
+	//					}
+	//				}
+	//				else
+	//				{
+	//					//공격력 증가
+	//					int attackBonus = 10;
+	//					*(m_pPlayer->Get_pAttack()) += attackBonus;
+	//				}
+	//			}
+	//			else
+	//			{
+	//				m_pPlayer->Add_Inventory(const_cast<FItemData*>(pItemDef));
 
-					droppedCItems.emplace_back(pItemDef, 1);
-				}
-			}
-			else
-			{
+	//				droppedCItems.emplace_back(pItemDef, 1);
+	//			}
+	//		}
+	//		else
+	//		{
 
-			}
-		}
-	}
-	return droppedCItems;
+	//		}
+	//	}
+	//}
+	vector<CItem> c;
+	return c;
 }

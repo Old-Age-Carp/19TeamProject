@@ -23,7 +23,7 @@ void CShopManager::Show_ShopItem()
 
 }
 
-FItemData* CShopManager::Buy_Item(int i_arg , class CPlayer* pPlayer)
+FItemData* CShopManager::Buy_Item(int i_arg ,class CPlayer* pPlayer, int item_stock)
 {
 	FItemData* Select_item = nullptr;
 	wchar_t buffer[256];
@@ -36,29 +36,27 @@ FItemData* CShopManager::Buy_Item(int i_arg , class CPlayer* pPlayer)
 	{
 		swprintf_s(buffer, 256, L"%d 인 상품은 없습니다",i_arg);
 		CPrinter::PrintLine(buffer);
-
-	
-
 	}
 	else
 	{
-		swprintf_s(buffer, 256, L"%ws의 가격은 %d 입니다.", Select_item->name.c_str(), Select_item->value);
+		int total_price = Select_item->value * item_stock;
+		swprintf_s(buffer, 256, L"%ws x %d 의 가격은 %d 입니다.", Select_item->name.c_str(),item_stock, total_price);
 		CPrinter::PrintLine(buffer);
 	
 		item_value = Select_item->value;
 
 		int* Player_gold = pPlayer->Get_pGold();
-		if (item_value > *Player_gold)
+		if (item_value * item_stock> *Player_gold)
 		{
 			swprintf_s(buffer, 256, L"골드가 부족합니다.");
 			CPrinter::PrintLine(buffer);
 		}
 		else
 		{
-			*Player_gold -= item_value;
+			*Player_gold -= total_price;
 			//pPlayer->Add_Inventory(Select_item);
 			//CItem* pCItem
-			pPlayer->Add_Inventory_FItemData(Select_item);
+			pPlayer->Add_Inventory_FItemData(Select_item,item_stock);
 		}
 
 		return Select_item;
