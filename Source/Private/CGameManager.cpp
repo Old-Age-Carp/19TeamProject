@@ -177,7 +177,7 @@ void CGameManager::goBattle()
 	MakeMonster();
 
 	vector<CBattleAbleObject*> allyMembers{ m_pPlayer };
-	vector<CBattleAbleObject*> enemyMembers{ m_pPlayer };
+	vector<CBattleAbleObject*> enemyMembers{ m_pMonster };
 	CIsBattleAble allyTeam(allyMembers);
 	CIsBattleAble enemyTeam(enemyMembers);
 
@@ -213,11 +213,14 @@ void CGameManager::goBattle()
 	// 종료시 결과 출력
 	// 몬스터 메모리 해재
 	delete m_pMonster;
+	m_pMonster = nullptr;
 
-	//swprintf_s(buffer, 256, L"이어서 전투하시겠습니까? 인풋값 받아서 하시면될듯");
-	//CPrinter::PrintLine(buffer);
-	//Set_GameState(EGameState::SELECT);
-
+	CPrinter::PrintLine(L"이어서 전투하시겠습니까? (Y/N)");
+	wstring input = GetInput<wstring>();
+	if (input == L"n" or input == L"N")
+	{
+		Set_GameState(EGameState::SELECT);
+	}
 }
 
 void CGameManager::goShop()
@@ -382,33 +385,30 @@ void CGameManager::MakeMonster()
 	EMonsterType type = m_pPlayer->getLevel() == MaxPlayerLevel ? EMonsterType::Boss : EMonsterType::Normal;
 
 	CMonster* result = nullptr;
-	vector<int> monsterIDs;
-	
+	const vector<FMonsterData>& monsterDatas = m_pStaticDataManager->GetAllMonsterDatas();
+	int randomIndex = std::rand() % monsterDatas.size();
+	m_pMonster = new CMonster(&monsterDatas[randomIndex]);
+
+	int level = m_pPlayer->getLevel();
+	// 공격력: (레벨 × 5) ~ (레벨 × 10)
+	// 체력·공격력은 기존 몬스터의 1.5배 범위를 랜덤으로 설정!
+	int attack = level * (rand() % 5 + 5);
+	// 체력: (레벨 × 20) ~ (레벨 × 30)
+	int health = level * (rand() % 10 + 20);
+
 	if (type == EMonsterType::Boss)
 	{
-		monsterIDs = { 107, 108 }; //리치 드래곤
-
-		randomIndex = std::rand() % monsterIDs.size();
-		FMonsterData* Copyed_Monsterdata = m_pStaticDataManager->GetMonsterData(monsterIDs[randomIndex]);
-		m_pMonster = new CMonster(Copyed_Monsterdata);
-
-	}
-	else
-	{
-		monsterIDs = { 101, 102, 103, 104, 105, 106 };
-		randomIndex = std::rand() % monsterIDs.size();
-		FMonsterData* Copyed_Monsterdata = m_pStaticDataManager->GetMonsterData(monsterIDs[randomIndex]);
-
-
-		m_pMonster = new CMonster(Copyed_Monsterdata);
-
+		float multiple = (static_cast<float>(rand()) / RAND_MAX) * 0.5f + 1.0f;
+		attack = attack * multiple;
 	}
 
-	if (monsterIDs.empty())
-	{
+	(*result->Get_pAttack()) = attack;
+	(*result->Get_pHealth()) = health;
+	(*result->Get_pArmor()) = level;
+	(*result->Get_pLevel()) = level;
+	result->SetBattleAI(std::make_unique<CBattleAI>(result));
 
-	}
-	//return nullptr;
+	m_pMonster = result;
 }
 
 //몬스터 처치 후 아이템 드랍
