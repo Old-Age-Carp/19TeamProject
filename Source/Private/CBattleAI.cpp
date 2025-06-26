@@ -20,7 +20,7 @@ EActionKind CBattleAI::Think() const
 		// 확률계산해서 아이템을 사용할건가?
 		// 0~1;
 		float random01 = static_cast<float>(rand()) / RAND_MAX;
-		if (UseItemRatio <= rand()) // 0~1 0.1 보다 작거나 같으면 
+		if (UseItemRatio >= rand()) // 0~1 0.1 보다 작거나 같으면 
 		{
 			// 아이템사용
 			return EActionKind::UseItem;

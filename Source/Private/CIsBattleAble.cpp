@@ -16,7 +16,7 @@ bool CIsBattleAble::IsAvailable() const
 			aliveCount++;
 		}
 	}
-	return aliveCount >= 2;
+	return aliveCount >= 1;
 }
 
 bool CIsBattleAble::IsTeamBattleAvailable(int teamCount) const

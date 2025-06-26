@@ -171,8 +171,9 @@ void CGameManager::goBattle()
 {
 	wchar_t buffer[256];
 
+	CPrinter::ClearScreen();
 	//플레이어 상태
-
+	ShowStatus();
 	// 몬스터 생성중
 	CPrinter::PrintLine(L"몬스터 생성 중");
 
@@ -195,16 +196,23 @@ void CGameManager::goBattle()
 		std::make_shared<CIsBattleAble>(allyMembers),
 		std::make_shared<CIsBattleAble>(enemyMembers));
 	// 종료 될 때까지 반복
-	battleManager.NextTurn();
-	do
+	std::wstring monsterName = m_pMonster->getName().c_str();
+	if (m_pMonster->GetType() == EMonsterType::Boss)
+		monsterName += L" [보스]";
+	swprintf_s(buffer, 256, L"전투 시작 중! vs %s", monsterName.c_str());
+	CLogManager::getInstance().AddLog(buffer);
+	while (true)
 	{
+		bool isBattleContinue = battleManager.NextTurn();
 		// 전투로그 관리하여 출력
 		CPrinter::ClearScreen();
-		swprintf_s(buffer, 256, L"전투 진행 중! vs %s", m_pMonster->getName().c_str());
 		CPrinter::PrintLine(buffer);
 		CGameView::getInstance().ViewLogs(battleManager.GetBattleLog());
 		Sleep(500);	// 0.5초 간격 대기
-	} while (battleManager.NextTurn());
+		if (isBattleContinue == false)
+			break;
+	}
+	CLogManager::getInstance().AddLog(L"");
 
 	// 전체로그에 전투 로그 추가
 	for (auto& log : battleManager.GetBattleLog())
@@ -220,46 +228,54 @@ void CGameManager::goBattle()
 	else
 	{
 		CPrinter::PrintLine(L"승리!");
+
+		(*m_pPlayer->Get_pExp()) += m_pMonster->GetExpReward();
+		swprintf_s(buffer, 256, L"%d 경험치 획득 ,현재경험치 %d / 100", m_pMonster->GetExpReward(), m_pMonster->GetExpReward());
+		CPrinter::PrintLine(buffer);
+		CLogManager::getInstance().AddLog(buffer);
+
+		//int curLevel = m_pPlayer->getLevel();
+		m_pPlayer->LevelUp();	//레벨업 시도
+		// 레벨업 했는지 확인
+
+		// 종료시 결과 출력
+		// 아이템 드롭
+		int dropGold = 0;
+		vector<CItem> drops = DropItem(m_pMonster, dropGold);
+		if (drops.size() > 0)
+		{
+			swprintf_s(buffer, 256, L"%d 골드 획득", dropGold);
+			CPrinter::PrintLine(buffer);
+			CLogManager::getInstance().AddLog(buffer);
+
+			swprintf_s(buffer, 256, L"%d 경험치 획득", m_pMonster->GetExpReward());
+			CPrinter::PrintLine(buffer);
+			CLogManager::getInstance().AddLog(buffer);
+		}
+
+		for (CItem item : drops)
+		{
+			m_pPlayer->Add_Inventory(new CItem(item));
+
+			swprintf_s(buffer, 256, L"[아이템 획득 : %ws \t %d 개]", item.GetName().c_str(), item.GetCurrentStack());
+			CPrinter::PrintLine(buffer);
+			CLogManager::getInstance().AddLog(buffer);
+		}
 	}
 	
-	(*m_pPlayer->Get_pExp()) += m_pMonster->GetExpReward();
-	swprintf_s(buffer, 256, L"%d 경험치 획득 ,현재경험치 %d / 100", m_pMonster->GetExpReward(), m_pMonster->GetExpReward());
-	CPrinter::PrintLine(buffer);
-	CLogManager::getInstance().AddLog(buffer);
 
-	//int curLevel = m_pPlayer->getLevel();
-	m_pPlayer->LevelUp();	//레벨업 시도
-	// 레벨업 했는지 확인
-
-	// 종료시 결과 출력
-	// 아이템 드롭
-	int dropGold = 0;
-	vector<CItem> drops = DropItem(m_pMonster, dropGold);
-	if (drops.size() > 0)
-	{
-		swprintf_s(buffer, 256, L"%d 골드 획득", dropGold);
-		CPrinter::PrintLine(buffer);
-		CLogManager::getInstance().AddLog(buffer);
-
-		swprintf_s(buffer, 256, L"%d 경험치 획득", m_pMonster->GetExpReward());
-		CPrinter::PrintLine(buffer);
-		CLogManager::getInstance().AddLog(buffer);
-	}
-
-	for (CItem item : drops)
-	{
-		m_pPlayer->Add_Inventory(new CItem(item));
-
-		swprintf_s(buffer, 256, L"[아이템 획득 : %ws \t %d 개]", item.GetName().c_str(), item.GetCurrentStack());
-		CPrinter::PrintLine(buffer);
-		CLogManager::getInstance().AddLog(buffer);
-	}
+	bool IsLastBattle = m_pMonster->GetType() == EMonsterType::Boss and
+		m_pPlayer->getLevel() >= MaxPlayerLevel;
 
 	// 몬스터 메모리 해재
 	delete m_pMonster;
 	m_pMonster = nullptr;
 
-
+	if (IsLastBattle)
+	{
+		Set_GameState(EGameState::GAMEOVER);
+		return;
+	}
 
 	CPrinter::PrintLine(L"이어서 전투하시겠습니까? (Y/N)");
 	wstring input = GetInput<wstring>();
@@ -316,7 +332,9 @@ void CGameManager::goShop()
 
 void CGameManager::goViewAllLog()
 {
-
+	CPrinter::ClearScreen();
+	CPrinter::PrintLine(L"모든 로그 출력");
+	CGameView::getInstance().ViewLogs(CLogManager::getInstance().GetLogs());
 	CPrinter::Pause();
 
 	Set_GameState(EGameState::SELECT);
@@ -594,15 +612,4 @@ vector<CItem> CGameManager::DropItem(CMonster* monster, int& outDropGolds)
 	//}
 #pragma endregion
 	return droppedCItems;
-}
-
-/// <summary>
-/// 여태 있었던 모든 로그 출력
-/// </summary>
-void goLogs()
-{
-	CPrinter::PrintLine(L"모든 로그 출력");
-	CPrinter::ClearScreen();
-	CGameView::getInstance().ViewLogs(CLogManager::getInstance().GetLogs());
-	CPrinter::Pause();
 }

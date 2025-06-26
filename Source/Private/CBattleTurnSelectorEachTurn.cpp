@@ -8,7 +8,12 @@ CBattleAbleObject* CBattleTurnSelectorEachTurn::GetNextTurn()
 		return nullptr;
 
 	++mCurrentTeamIndex;
+	if (mCurrentTeamIndex >= mTeamList.size())
+		mCurrentTeamIndex = 0;
 	int teamMemberIndex = ++mTeamLastTurnIndexList[mCurrentTeamIndex];
+
+	if (teamMemberIndex >= mTeamList[mCurrentTeamIndex]->GetTeamBattlerList().size())
+		teamMemberIndex = 0;
 	
 	shared_ptr<CIsBattleAble> team = mTeamList[mCurrentTeamIndex];
 

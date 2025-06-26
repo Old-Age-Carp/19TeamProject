@@ -131,7 +131,8 @@ bool CBattleManager::NextTurn()
 			int randomIndex = rand() % items.size();
 			CItem* useItem = items[randomIndex];
 			swprintf_s(buffer, 256, L"아이템 %ws 사용!", useItem->GetName().c_str());
-			//m_BattleLog.push_back(LogWString(buffer));
+			m_BattleLog.push_back(LogWString(buffer));
+			nextActor->UseItem(useItem);
 		}
 	}
 		break;
@@ -139,7 +140,7 @@ bool CBattleManager::NextTurn()
 		break;
 	}
 
-	if ((m_pPlayer->IsAvailable() or m_pMonster->IsAvailable()) == false)
+	if ((m_pPlayer->IsAvailable() and m_pMonster->IsAvailable()) == false)
 		return false;
 	
     return true;

@@ -499,4 +499,13 @@ std::vector<CItem*> CPlayer::GetHaveItems()
 
 void CPlayer::UseItem(CItem* item)
 {
+    if (item->GetCurrentStack() > 0)
+    {
+        const FItemData* data = item->Get_pItemData();
+        const FItemPotionData* potionData = dynamic_cast<const FItemPotionData*>(data);
+        if (potionData)
+        {
+            UsePotion(potionData->id);
+        }
+    }
 }
