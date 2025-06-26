@@ -1,4 +1,4 @@
-#include "..\Public\CBattleManager.h"
+﻿#include "..\Public\CBattleManager.h"
 #include "..\Public\CMonster.h"
 #include "..\Public\CGameObject.h"
 #include "..\Public\CBattleAI.h"
@@ -103,29 +103,6 @@ void CBattleManager::MonsterTurn(const std::vector<CIsBattleAble*>& monsterTeam)
 	}
 }
 
-void CBattleManager::MonsterTurn(const std::vector<CIsBattleAble*>& otherTeams)
-{
-    if (!m_pMonster || !m_pPlayer)
-	{
-		return;
-	}
-		
-    CBattleAI ai(m_pMonster);
-    EActionKind action = ai.Think();
-    CBattleAbleObject* target = ai.ThinkTarget(action, otherTeams);
-
-    if (!target) return;
-
-    if (action == EActionKind::Attack)
-	{
-		target->TakeDamage(m_pMonster->GetAttackValue());
-	}
-	
-	if (*m_pPlayer->Get_pHealth() < 0)
-	{
-		*m_pPlayer->Get_pHealth() = 0;
-	}
-}
 
 CBattleAbleObject* CBattleManager::GetCurrentTurn()
 {

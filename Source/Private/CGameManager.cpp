@@ -164,6 +164,9 @@ void CGameManager::goStatus()
 }
 void CGameManager::goBattle()
 {
+	wchar_t buffer[256];
+
+
 	//플레이어 상태
 
 	// 몬스터 생성중
@@ -171,7 +174,7 @@ void CGameManager::goBattle()
 
 	// 레벨에 맞는 데이터 가져와서 확인
 	// 몬스터 생성
-	CMonster* monster = MakeMonster();
+	MakeMonster();
 
 	vector<CBattleAbleObject*> allyMembers{ m_pPlayer };
 	vector<CBattleAbleObject*> enemyMembers{ m_pPlayer };
@@ -182,7 +185,7 @@ void CGameManager::goBattle()
 	// 전투 시작 입력 대기
 	CBattleManager& battleManager = CBattleManager::getInstance();
 
-	CGameView::getInstance().ViewObjectStat(*static_cast<CGameObject*>(monster));
+	CGameView::getInstance().ViewObjectStat(*static_cast<CGameObject*>(m_pMonster));
 
 	Stanby_enter();
 
@@ -192,13 +195,12 @@ void CGameManager::goBattle()
 	vector<ILogable*> battleLogs;
 	battleLogs.reserve(100);
 
-	wchar_t buffer[256];
 	// 종료 될 때까지 반복
 	//while (battleManager.NextTurn())
 	//{
 	//	// 전투로그 관리하여 출력
 	CPrinter::ClearScreen();
-	swprintf_s(buffer, 256, L"전투 진행 중! vs %s", monster->getName().c_str());
+	swprintf_s(buffer, 256, L"전투 진행 중! vs %s", m_pMonster->getName().c_str());
 	CPrinter::PrintLine(buffer);
 	CGameView::getInstance().ViewLogs(battleLogs);
 	//}
@@ -210,7 +212,12 @@ void CGameManager::goBattle()
 
 	// 종료시 결과 출력
 	// 몬스터 메모리 해재
-	delete monster;
+	delete m_pMonster;
+
+	//swprintf_s(buffer, 256, L"이어서 전투하시겠습니까? 인풋값 받아서 하시면될듯");
+	//CPrinter::PrintLine(buffer);
+	//Set_GameState(EGameState::SELECT);
+
 }
 
 void CGameManager::goShop()
@@ -369,24 +376,39 @@ void CGameManager::Stanby_enter()
 }
 
 //몬스터 생성
-CMonster* CGameManager::MakeMonster()
+void CGameManager::MakeMonster()
 {
+	int randomIndex = 0;
 	EMonsterType type = m_pPlayer->getLevel() == MaxPlayerLevel ? EMonsterType::Boss : EMonsterType::Normal;
-	vector<int> monsterIDs;
 
+	CMonster* result = nullptr;
+	vector<int> monsterIDs;
+	
 	if (type == EMonsterType::Boss)
 	{
 		monsterIDs = { 107, 108 }; //리치 드래곤
+
+		randomIndex = std::rand() % monsterIDs.size();
+		FMonsterData* Copyed_Monsterdata = m_pStaticDataManager->GetMonsterData(monsterIDs[randomIndex]);
+		m_pMonster = new CMonster(Copyed_Monsterdata);
+
 	}
 	else
 	{
 		monsterIDs = { 101, 102, 103, 104, 105, 106 };
+		randomIndex = std::rand() % monsterIDs.size();
+		FMonsterData* Copyed_Monsterdata = m_pStaticDataManager->GetMonsterData(monsterIDs[randomIndex]);
+
+
+		m_pMonster = new CMonster(Copyed_Monsterdata);
+
 	}
 
 	if (monsterIDs.empty())
 	{
+
 	}
-	return nullptr;
+	//return nullptr;
 }
 
 //몬스터 처치 후 아이템 드랍
