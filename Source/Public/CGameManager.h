@@ -26,7 +26,7 @@ private:
 	void goGameOver();
 	void goLevelUp();
 
-	vector<class CItem> DropItem( CMonster* monster);
+	vector<class CItem> DropItem( CMonster* monster, int& outDropGolds);
 	void MakeMonster(); //멤버변수에 할당하도록 수정
 
 	void ShowStatus();

@@ -190,30 +190,70 @@ void CGameManager::goBattle()
 	Stanby_enter();
 
 	// 전투 진행 준비
-	battleManager.SetBattle(std::make_unique<CBattleTurnSelectorEachTurn>(), allyTeam, enemyTeam);
-
-	vector<ILogable*> battleLogs;
-	battleLogs.reserve(100);
-
+	battleManager.SetBattle(std::make_unique<CBattleTurnSelectorEachTurn>(), &allyTeam, &enemyTeam);
 	// 종료 될 때까지 반복
-	//while (battleManager.NextTurn())
-	//{
-	//	// 전투로그 관리하여 출력
-	CPrinter::ClearScreen();
-	swprintf_s(buffer, 256, L"전투 진행 중! vs %s", m_pMonster->getName().c_str());
-	CPrinter::PrintLine(buffer);
-	CGameView::getInstance().ViewLogs(battleLogs);
-	//}
-
+	while (battleManager.NextTurn())
+	{
+		// 전투로그 관리하여 출력
+		CPrinter::ClearScreen();
+		swprintf_s(buffer, 256, L"전투 진행 중! vs %s", m_pMonster->getName().c_str());
+		CPrinter::PrintLine(buffer);
+		CGameView::getInstance().ViewLogs(battleManager.GetBattleLog());
+		Sleep(500);	// 0.5초 간격 대기
+	}
 	// 전체로그에 전투 로그 추가
-	// 레벨업 했다면 상태 레벨업으로
+	for (auto& log : battleManager.GetBattleLog())
+	{
+		CLogManager::getInstance().AddLog(std::make_unique<LogWString>(log->ToString()));
+	}
+	
+	if (m_pPlayer->IsAlive() == false)
+	{
+		CPrinter::PrintLine(L"사망하셨습니다.");
+		Set_GameState(EGameState::GAMEOVER);
+	}
+	else
+	{
+		CPrinter::PrintLine(L"승리!");
+	}
+
+	(*m_pPlayer->Get_pExp()) += m_pMonster->GetExpReward();
+
 	// 그외 선택으로
 	// 기다리기
 
 	// 종료시 결과 출력
+	// 아이템 드롭
+	int dropGold = 0;
+	vector<CItem> drops = DropItem(m_pMonster, dropGold);
+
+	swprintf_s(buffer, 256, L"%d 골드 획득", dropGold);
+	CPrinter::PrintLine(buffer);
+	CLogManager::getInstance().AddLog(buffer);
+
+	for (CItem item : drops)
+	{
+		m_pPlayer->Add_Inventory(new CItem(item));
+
+		swprintf_s(buffer, 256, L"[아이템 획득 : %ws \t %d 개]", item.GetName().c_str(), item.GetCurrentStack());
+		CPrinter::PrintLine(buffer);
+		CLogManager::getInstance().AddLog(buffer);
+	}
+
+
+
 	// 몬스터 메모리 해재
 	delete m_pMonster;
 	m_pMonster = nullptr;
+
+	int curLevel = m_pPlayer->getLevel();
+	m_pPlayer->LevelUp();	//레벨업 시도
+	// 레벨업 했는지 확인
+	if (curLevel < m_pPlayer->getLevel())
+	{
+		swprintf_s(buffer, 256, L"Level Up!! %d -> %d", curLevel, m_pPlayer->getLevel());
+		CLogManager::getInstance().AddLog(buffer);
+	}
 
 	CPrinter::PrintLine(L"이어서 전투하시겠습니까? (Y/N)");
 	wstring input = GetInput<wstring>();
@@ -381,7 +421,6 @@ void CGameManager::Stanby_enter()
 //몬스터 생성
 void CGameManager::MakeMonster()
 {
-	int randomIndex = 0;
 	EMonsterType type = m_pPlayer->getLevel() == MaxPlayerLevel ? EMonsterType::Boss : EMonsterType::Normal;
 
 	CMonster* result = nullptr;
@@ -399,7 +438,7 @@ void CGameManager::MakeMonster()
 	if (type == EMonsterType::Boss)
 	{
 		float multiple = (static_cast<float>(rand()) / RAND_MAX) * 0.5f + 1.0f;
-		attack = attack * multiple;
+		attack = (float)attack * multiple;	// 소수점 단위 절삭
 	}
 
 	(*result->Get_pAttack()) = attack;
@@ -412,7 +451,7 @@ void CGameManager::MakeMonster()
 }
 
 //몬스터 처치 후 아이템 드랍
-vector<CItem> CGameManager::DropItem(CMonster* monster)
+vector<CItem> CGameManager::DropItem(CMonster* monster, int& outDropGolds)
 {
 	vector<CItem> droppedCItems;
 
@@ -425,8 +464,7 @@ vector<CItem> CGameManager::DropItem(CMonster* monster)
 		return droppedCItems;
 
 	//골드 드랍 100% exp reward의 1~3배 골드 드랍
-	int droppedGold = rand() % (pMonsterData->expReward * 2 + 1) + pMonsterData->expReward;
-	*(m_pPlayer->Get_pGold()) += droppedGold;
+	outDropGolds = rand() % (pMonsterData->expReward * 2 + 1) + pMonsterData->expReward;
 
 	const vector<int> dropTableIds = pMonsterData->dropItemTableIDs;
 

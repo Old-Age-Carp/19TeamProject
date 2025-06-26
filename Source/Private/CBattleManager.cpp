@@ -2,8 +2,11 @@
 #include "..\Public\CMonster.h"
 #include "..\Public\CGameObject.h"
 #include "..\Public\CBattleAI.h"
+#include "CIsBattleAble.h"
 #include <cstdlib>
-#include <ctime>
+#include <algorithm>
+#include <string>
+#include <cwchar>
 
 void CBattleManager::SetBattle(std::unique_ptr<IBattleTurnSelector> turnSelector, CIsBattleAble* team1, CIsBattleAble* team2)
 {
@@ -16,6 +19,8 @@ void CBattleManager::SetBattle(std::unique_ptr<IBattleTurnSelector> turnSelector
 	{
 		return;
 	}
+
+	m_BattleLog.clear();
 
 	//std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
@@ -39,30 +44,30 @@ void CBattleManager::SetBattle(std::unique_ptr<IBattleTurnSelector> turnSelector
 	//GenerateMonster(m_bIsBossBattle, *m_pMonsterId);
 }
 
-void CBattleManager::PlayerTurn()
-{
-	if (!m_pMonster || !m_pPlayer) 
-	{
-		return;
-	}
-	
-	m_pMonster->TakeDamage( m_pPlayer->GetAttackValue());
-
-	if (!m_pMonster->IsAlive())
-	{
-		*m_pPlayer->Get_pExp() += static_cast<CMonster*>(m_pMonster)->GetExpReward();
-
-		if (*m_pPlayer->Get_pExp() >= 100)
-		{
-			while (*m_pPlayer->Get_pExp() >= 100)
-			{
-				*m_pPlayer->Get_pLevel() += 1;
-				*m_pPlayer->Get_pExp() -= 100;
-			}
-			*m_pPlayer->Get_pHealth() = *m_pPlayer->Get_pHealthMax();
-		}
-	}
-}
+//void CBattleManager::PlayerTurn()
+//{
+//	if (!m_pMonster || !m_pPlayer) 
+//	{
+//		return;
+//	}
+//	
+//	m_pMonster->TakeDamage( m_pPlayer->GetAttackValue());
+//
+//	if (!m_pMonster->IsAlive())
+//	{
+//		*m_pPlayer->Get_pExp() += static_cast<CMonster*>(m_pMonster)->GetExpReward();
+//
+//		if (*m_pPlayer->Get_pExp() >= 100)
+//		{
+//			while (*m_pPlayer->Get_pExp() >= 100)
+//			{
+//				*m_pPlayer->Get_pLevel() += 1;
+//				*m_pPlayer->Get_pExp() -= 100;
+//			}
+//			*m_pPlayer->Get_pHealth() = *m_pPlayer->Get_pHealthMax();
+//		}
+//	}
+//}
 
 bool CBattleManager::NextTurn()
 {	
@@ -74,47 +79,87 @@ bool CBattleManager::NextTurn()
  	CBattleAbleObject* nextActor = m_turnSelector->GetNextTurn();
 	if (!nextActor)
 	{
-		return true;
+		return false;
+	}
+	// 선택된 actor 의 팀
+	CIsBattleAble* turnOtherTeam = nullptr;
+	const vector<CBattleAbleObject*>& playerMember = m_pPlayer->GetTeamBattlerList();
+	if (std::find(playerMember.begin(), playerMember.end(), nextActor) != playerMember.end())
+	{
+		turnOtherTeam = m_pMonster;
+	}
+	else
+	{
+		turnOtherTeam = m_pPlayer;
 	}
 
-	if (nextActor == m_pPlayer)
+	EActionKind action = nextActor->GetAI().Think();
+	CBattleAbleObject* target = nextActor->GetAI().ThinkTarget(action, vector<CIsBattleAble*>{turnOtherTeam});
+
+
+	if (action == EActionKind::Attack)
 	{
-		PlayerTurn();
-		return !IsAlive(*m_pMonster->Get_pHealth());
+		if (target)
+		{
+			int damage = nextActor->GetAttackValue();
+			target->TakeDamage(damage);
+			wchar_t buffer[256];
+			swprintf_s(buffer, 256, L"%ws 이가 %ws 에게 공격 %d 대미지!",
+				nextActor->getName().c_str(), target->getName().c_str(), std::to_wstring(damage).c_str());
+			m_BattleLog.push_back(LogWString(buffer));
+
+			if (target->IsAlive() == false)
+			{
+				swprintf_s(buffer, 256, L"%ws 사망했다!",target->getName().c_str());
+				m_BattleLog.push_back(LogWString(buffer));
+			}
+		}
+
 	}
-	else if (nextActor == m_pMonster)
-	{
-		MonsterTurn(m_monsterTeams);
-		return !IsAlive(*m_pPlayer->Get_pHealth());
-	}
+
+	if ((m_pPlayer->IsAvailable() or m_pMonster->IsAvailable()) == false)
+		return false;
+	
     return true;
 }
 
-void CBattleManager::MonsterTurn(const std::vector<CIsBattleAble*>& otherTeams)
-{
-    if (!m_pMonster || !m_pPlayer)
-	{
-		return;
-	}
-		
-    CBattleAI ai(m_pMonster);
-    EActionKind action = ai.Think();
-    CBattleAbleObject* target = ai.ThinkTarget(action, otherTeams);
-
-    if (!target) return;
-
-    if (action == EActionKind::Attack)
-	{
-		target->TakeDamage(m_pMonster->GetAttackValue());
-	}
-	
-	if (*m_pPlayer->Get_pHealth() < 0)
-	{
-		*m_pPlayer->Get_pHealth() = 0;
-	}
-}
+//void CBattleManager::MonsterTurn(const std::vector<CIsBattleAble*>& otherTeams)
+//{
+//    if (!m_pMonster || !m_pPlayer)
+//	{
+//		return;
+//	}
+//		
+//    CBattleAI ai(m_pMonster);
+//    EActionKind action = ai.Think();
+//    CBattleAbleObject* target = ai.ThinkTarget(action, otherTeams);
+//
+//    if (!target) return;
+//
+//    if (action == EActionKind::Attack)
+//	{
+//		target->TakeDamage(m_pMonster->GetAttackValue());
+//	}
+//	
+//	if (*m_pPlayer->Get_pHealth() < 0)
+//	{
+//		*m_pPlayer->Get_pHealth() = 0;
+//	}
+//}
 
 CBattleAbleObject* CBattleManager::GetCurrentTurn()
 {
     return m_turnSelector ? m_turnSelector->GetNextTurn() : nullptr;
+}
+
+const std::vector<ILogable*>& CBattleManager::GetBattleLog()
+{
+	std::vector<ILogable*> retVector = {};
+
+	for (LogWString& log : m_BattleLog)
+	{
+		retVector.push_back(static_cast<ILogable*>(&log));
+	}
+
+	return retVector;
 }

@@ -33,7 +33,15 @@ public:
 
     FGameDropTable* GetDropTable(int id);
 
-    vector<FMonsterData> GetAllMonsterDatas() { vector<FMonsterData>(monsterDataTableByID); }
+    vector<FMonsterData> GetAllMonsterDatas()
+    {
+        vector<FMonsterData> result;
+        result.reserve(monsterDataTableByID.size());
+        for (const auto& [key, value] : monsterDataTableByID) {
+            result.push_back(value);
+        }
+        return result;
+    }
 
     void Print_AllItem();
 

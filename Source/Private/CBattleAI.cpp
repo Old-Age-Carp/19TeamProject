@@ -5,14 +5,14 @@
 
 using std::vector;
 
-EActionKind CBattleAI::Think()
+EActionKind CBattleAI::Think() const 
 {
 	// TODO: 아이템 사용 처리
 
 	return EActionKind::Attack;
 }
 
-CBattleAbleObject* CBattleAI::ThinkTarget(EActionKind actionKind, std::vector<CIsBattleAble*> otherTeams)
+CBattleAbleObject* CBattleAI::ThinkTarget(EActionKind actionKind, std::vector<CIsBattleAble*> otherTeams) const
 {
 	CBattleAbleObject* target = nullptr;
 	switch (actionKind)

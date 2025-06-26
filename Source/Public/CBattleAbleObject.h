@@ -28,6 +28,9 @@ public:
 
     virtual ~CBattleAbleObject() = default;
     virtual std::vector<CItem*> GetHaveItems() = 0;
+
+    const IBattleAI& GetAI() { return *ai; }
+
     inline void SetBattleAI(std::unique_ptr<IBattleAI> ai)
     {
         this->ai = std::move(ai);
