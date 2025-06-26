@@ -382,33 +382,30 @@ void CGameManager::MakeMonster()
 	EMonsterType type = m_pPlayer->getLevel() == MaxPlayerLevel ? EMonsterType::Boss : EMonsterType::Normal;
 
 	CMonster* result = nullptr;
-	vector<int> monsterIDs;
-	
+	const vector<FMonsterData>& monsterDatas = m_pStaticDataManager->GetAllMonsterDatas();
+	int randomIndex = std::rand() % monsterDatas.size();
+	m_pMonster = new CMonster(&monsterDatas[randomIndex]);
+
+	int level = m_pPlayer->getLevel();
+	// 공격력: (레벨 × 5) ~ (레벨 × 10)
+	// 체력·공격력은 기존 몬스터의 1.5배 범위를 랜덤으로 설정!
+	int attack = level * (rand() % 5 + 5);
+	// 체력: (레벨 × 20) ~ (레벨 × 30)
+	int health = level * (rand() % 10 + 20);
+
 	if (type == EMonsterType::Boss)
 	{
-		monsterIDs = { 107, 108 }; //리치 드래곤
-
-		randomIndex = std::rand() % monsterIDs.size();
-		FMonsterData* Copyed_Monsterdata = m_pStaticDataManager->GetMonsterData(monsterIDs[randomIndex]);
-		m_pMonster = new CMonster(Copyed_Monsterdata);
-
-	}
-	else
-	{
-		monsterIDs = { 101, 102, 103, 104, 105, 106 };
-		randomIndex = std::rand() % monsterIDs.size();
-		FMonsterData* Copyed_Monsterdata = m_pStaticDataManager->GetMonsterData(monsterIDs[randomIndex]);
-
-
-		m_pMonster = new CMonster(Copyed_Monsterdata);
-
+		float multiple = (static_cast<float>(rand()) / RAND_MAX) * 0.5f + 1.0f;
+		attack = attack * multiple;
 	}
 
-	if (monsterIDs.empty())
-	{
+	(*result->Get_pAttack()) = attack;
+	(*result->Get_pHealth()) = health;
+	(*result->Get_pArmor()) = level;
+	(*result->Get_pLevel()) = level;
+	result->SetBattleAI(std::make_unique<CBattleAI>(result));
 
-	}
-	//return nullptr;
+	m_pMonster = result;
 }
 
 //몬스터 처치 후 아이템 드랍
