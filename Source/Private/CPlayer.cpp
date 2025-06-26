@@ -2,7 +2,7 @@
 
 #include "..\Public\CPlayer.h"
 #include "..\Public\CPrinter.h"
-
+#include "..\Public\CLogManager.h"
 #include <cmath>
 
 
@@ -317,6 +317,7 @@ void CPlayer::Equip(int i_arg)
                 swprintf_s(buffer, 256, L"이름: %ws (을)를 장비하여 공격력: %d, 방어력 : %d ,체력: %d 을 얻습니다.",
                     (WeaponData->name).c_str(), WeaponData->attackBonus, WeaponData->defenseBonus, WeaponData->healthBonus);
                 CPrinter::PrintLine(buffer);
+                CLogManager::getInstance().AddLog(buffer);
             }
             else //해제!
             {
@@ -360,7 +361,7 @@ void CPlayer::Equip(int i_arg)
                 swprintf_s(buffer, 256, L"이름: %ws (을)를 장비하여 , 방어력 : %d ,체력: %d 을 얻습니다.",
                     (ArmorData->name).c_str(), ArmorData->defenseBonus, ArmorData->healthBonus);
                 CPrinter::PrintLine(buffer);
-
+                CLogManager::getInstance().AddLog(buffer);
             }
             else
             {
@@ -454,6 +455,7 @@ void CPlayer::Sell_item(int item_id, int item_stock)
 
                 swprintf_s(buffer, 256, L"%ws 의 판매금액의 합은 %d 입니다.",pair->GetName().c_str(), sell_price * item_stock);
                 CPrinter::PrintLine(buffer);
+                CLogManager::getInstance().AddLog(buffer);
                 pair->AddCurrentStack(-1 * item_stock);
                 CPrinter::Pause();
                 //0되면 삭제
@@ -468,6 +470,7 @@ void CPlayer::Sell_item(int item_id, int item_stock)
             else
             {
                 CPrinter::PrintLine(L"판매할 아이템이 부족합니다");
+                CLogManager::getInstance().AddLog(buffer);
                 CPrinter::Pause();
 
             }
