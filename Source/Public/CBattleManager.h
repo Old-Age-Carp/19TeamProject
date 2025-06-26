@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <memory>
 #include "TSingleton.h"
@@ -11,7 +11,7 @@ class CBattleManager : public TSingleton<CBattleManager>
 public:
 	CBattleManager() = default;
 
-	void SetBattle(std::unique_ptr<IBattleTurnSelector> turnSelector, CBattleAbleObject* team1, CBattleAbleObject* team2);
+	void SetBattle(std::unique_ptr<IBattleTurnSelector> turnSelector, CIsBattleAble* team1, CIsBattleAble* team2);
 	void PlayerTurn();
 	void MonsterTurn(const std::vector<CIsBattleAble*>& otherTeams);
 	bool IsAlive(int health) const { return health > 0; };
@@ -21,8 +21,8 @@ public:
 private:
 	void GenerateMonster(bool isBoss, int monsterId);
 	
-	CBattleAbleObject* m_pPlayer = nullptr;
-    CBattleAbleObject* m_pMonster = nullptr;
+	CIsBattleAble* m_pPlayer = nullptr;
+	CIsBattleAble* m_pMonster = nullptr;
 	CStaticDataManager* m_pStaticDataManager = nullptr;
 	std::unique_ptr<IBattleTurnSelector> m_turnSelector;
 	bool m_bIsBossBattle = false;

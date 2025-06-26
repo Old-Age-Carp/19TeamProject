@@ -190,7 +190,7 @@ void CGameManager::goBattle()
 	Stanby_enter();
 
 	// 전투 진행 준비
-	//battleManager.SetBattle(std::make_unique<CBattleTurnSelectorEachTurn>(), allyTeam, enemyTeam);
+	battleManager.SetBattle(std::make_unique<CBattleTurnSelectorEachTurn>(), allyTeam, enemyTeam);
 
 	vector<ILogable*> battleLogs;
 	battleLogs.reserve(100);

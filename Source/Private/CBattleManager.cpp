@@ -1,11 +1,11 @@
-#include "..\Public\CBattleManager.h"
+﻿#include "..\Public\CBattleManager.h"
 #include "..\Public\CMonster.h"
 #include "..\Public\CGameObject.h"
 #include "..\Public\CBattleAI.h"
 #include <cstdlib>
 #include <ctime>
 
-void CBattleManager::SetBattle(std::unique_ptr<IBattleTurnSelector> turnSelector, CBattleAbleObject* team1, CBattleAbleObject* team2)
+void CBattleManager::SetBattle(std::unique_ptr<IBattleTurnSelector> turnSelector, CIsBattleAble* team1, CIsBattleAble* team2)
 {
 	m_turnSelector = std::move(turnSelector);
 
@@ -17,38 +17,26 @@ void CBattleManager::SetBattle(std::unique_ptr<IBattleTurnSelector> turnSelector
 		return;
 	}
 
-	std::srand(static_cast<unsigned int>(std::time(nullptr)));
+	//std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
-    
-	if (*(static_cast<CGameObject*>(m_pPlayer)->Get_pLevel()) >= 10)
-    {	
-		int BossIds[] = { 107, 108 };
-    	int numBosses = static_cast<int>(std::size(BossIds));
-        *m_pMonsterId = BossIds[rand() % numBosses];
-        m_bIsBossBattle = true;
-    }
-    else
-    {
-        int normalMonsterMinId = 101;
-        int normalMonsterMaxId = 106;
+ //   
+	//if (*(static_cast<CGameObject*>(m_pPlayer)->Get_pLevel()) >= 10)
+ //   {	
+	//	int BossIds[] = { 107, 108 };
+ //   	int numBosses = static_cast<int>(std::size(BossIds));
+ //       *m_pMonsterId = BossIds[rand() % numBosses];
+ //       m_bIsBossBattle = true;
+ //   }
+ //   else
+ //   {
+ //       int normalMonsterMinId = 101;
+ //       int normalMonsterMaxId = 106;
 
-        int normalRange = normalMonsterMaxId - normalMonsterMinId + 1;
-        *m_pMonsterId = normalMonsterMinId + rand() % normalRange;
-        m_bIsBossBattle = false;
-    }
-	GenerateMonster(m_bIsBossBattle, *m_pMonsterId);
-}
-
-void CBattleManager::GenerateMonster(bool isBoss, int monsterId)
-{
-    const FMonsterData* pData = m_pStaticDataManager->GetMonsterData(monsterId);
-    if (!pData)
-	{
-		return;
-	}
-
-    delete m_pMonster;
-    m_pMonster = new CMonster(pData);
+ //       int normalRange = normalMonsterMaxId - normalMonsterMinId + 1;
+ //       *m_pMonsterId = normalMonsterMinId + rand() % normalRange;
+ //       m_bIsBossBattle = false;
+ //   }
+	//GenerateMonster(m_bIsBossBattle, *m_pMonsterId);
 }
 
 void CBattleManager::PlayerTurn()
