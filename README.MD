@@ -3,9 +3,6 @@
 - [1. 구현 내용](#구현-내용)
 - [2. 변형](#구현과-다르게-된-내용)
 
-
-
-
 ### 구현 내용.
 
 1. ##### **캐릭터 생성 및 관리**
@@ -105,3 +102,55 @@
    - 기본 사용 아이템은 없습니다 본문의 [사용아이템](#아이템-및-골드-관리)
    - 대신 소지한 포션 아이템을 10% 확률로 사용합니다!.
    - 포션과 장비는 사전에 정의된 드롭 테이블에 맞춰서 그려집니다.
+
+```mermaid
+flowchart TD
+    %% 메인 시스템
+    Main[main.cpp<br/>게임 시작점] --> GM[CGameManager<br/>게임 전체 제어]
+
+    %% 매니저 시스템들
+    GM --> SM[CShopManager<br/>상점 관리]
+    GM --> BM[CBattleManager<br/>전투 관리]
+    GM --> LM[CLogManager<br/>로그 관리]
+    GM --> SDM[CStaticDataManager<br/>정적 데이터 관리]
+
+    %% 게임 객체들
+    GM --> Player[CPlayer<br/>플레이어 캐릭터]
+    GM --> Monster[CMonster<br/>몬스터 인스턴스]
+
+    %% UI/출력 시스템
+    GM --> GV[CGameView<br/>게임 UI 출력]
+    GV --> Printer[CPrinter<br/>콘솔 출력 유틸]
+
+    %% 정적 데이터들
+    SDM --> MonsterData[(FMonsterData<br/>몬스터 스펙)]
+    SDM --> ItemData[(FItemData<br/>아이템 스펙)]
+    SDM --> DropTable[(FGameDropTable<br/>드롭 테이블)]
+
+    %% 동적 데이터들
+    Player --> Inventory[인벤토리<br/>CItem 리스트]
+    Player --> PlayerStats[플레이어 상태<br/>레벨/체력/골드]
+
+    %% 전투 시스템
+    BM --> BattleTeam[CBattleTeam<br/>팀 관리]
+    BM --> TurnSelector[IBattleTurnSelector<br/>턴 순서 관리]
+    BM --> BattleAI[CBattleAI<br/>AI 행동 결정]
+
+    %% 데이터 플로우 표시
+    SDM -.->|몬스터 데이터 제공| Monster
+    SDM -.->|아이템 데이터 제공| SM
+    SM -.->|아이템 구매/판매| Player
+    BM -.->|전투 결과| Player
+    Monster -.->|드롭 아이템| Player
+
+    %% 스타일링
+    classDef manager fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef gameObject fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef data fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
+    classDef ui fill:#fff3e0,stroke:#e65100,stroke-width:2px
+
+    class GM,SM,BM,LM,SDM manager
+    class Player,Monster,BattleTeam gameObject
+    class MonsterData,ItemData,DropTable,Inventory,PlayerStats data
+    class GV,Printer ui
+```
