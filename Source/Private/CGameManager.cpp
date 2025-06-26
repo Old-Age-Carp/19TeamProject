@@ -177,7 +177,7 @@ void CGameManager::goBattle()
 	MakeMonster();
 
 	vector<CBattleAbleObject*> allyMembers{ m_pPlayer };
-	vector<CBattleAbleObject*> enemyMembers{ m_pPlayer };
+	vector<CBattleAbleObject*> enemyMembers{ m_pMonster };
 	CIsBattleAble allyTeam(allyMembers);
 	CIsBattleAble enemyTeam(enemyMembers);
 
@@ -213,11 +213,14 @@ void CGameManager::goBattle()
 	// 종료시 결과 출력
 	// 몬스터 메모리 해재
 	delete m_pMonster;
+	m_pMonster = nullptr;
 
-	//swprintf_s(buffer, 256, L"이어서 전투하시겠습니까? 인풋값 받아서 하시면될듯");
-	//CPrinter::PrintLine(buffer);
-	//Set_GameState(EGameState::SELECT);
-
+	CPrinter::PrintLine(L"이어서 전투하시겠습니까? (Y/N)");
+	wstring input = GetInput<wstring>();
+	if (input == L"n" or input == L"N")
+	{
+		Set_GameState(EGameState::SELECT);
+	}
 }
 
 void CGameManager::goShop()
