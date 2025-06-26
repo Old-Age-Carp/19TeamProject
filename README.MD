@@ -3,6 +3,102 @@
 - [1. 구현 내용](#구현-내용)
 - [2. 변형](#구현과-다르게-된-내용)
 
+📦 프로젝트 클래스 구조 (UML 텍스트 다이어그램)
+markdown
+복사
+편집
+# 🎮 클래스 다이어그램 요약
+
+CGameManager
+├── +CPlayer* m_pPlayer
+├── +CMonster* m_pMonster
+├── +void MakeMonster()
+├── +void InitGame()
+├── +void StartBattle()
+└── +void EndGame()
+
+CPlayer : CBattleAbleObject
+├── +int iGold
+├── +int iLevel
+├── +int iHealth
+├── +vector<CItem*> m_vecInventory
+├── +void UsePotion(int itemID)
+├── +void SellItem(int itemID, int count)
+└── +void BuyItem(int itemID)
+
+CMonster : CBattleAbleObject
+├── +const FMonsterData* m_baseData
+├── +int GetCurrentHP()
+├── +int GetExpReward()
+├── +EMonsterType GetType()
+└── +const vector<int>& GetDropItemIDs()
+
+CBattleAbleObject (추상 or 공통 클래스)
+├── +wstring Name
+├── +int* iHealth
+├── +int* iArmor
+├── +int* iLevel
+├── +unique_ptr<IBattleAI> ai
+├── +virtual void Attack(CBattleAbleObject* target)
+├── +virtual vector<CItem*> GetHaveItems()
+└── +virtual ~CBattleAbleObject()
+
+FMonsterData (데이터 구조체)
+├── int id
+├── wstring name
+├── int atk
+├── int hp
+├── EMonsterType type
+└── vector<int> dropItemTableIDs
+
+CItem
+├── +int id
+├── +wstring name
+├── +int value
+├── +int stack
+├── +const FItemData* Get_pItemData()
+└── +int GetCurrentStack()
+
+FItemData (기본 아이템 데이터 구조체)
+├── int id
+├── wstring name
+├── int value
+└── EItemType type
+
+FItemPotionData : FItemData
+└── int healAmount
+
+CIsBattleAble
+├── +vector<CBattleAbleObject*>& m_battlers
+├── +bool IsAvailable()
+├── +bool IsTeamBattleAvailable(int teamCount)
+└── +const vector<CBattleAbleObject*>& GetTeamBattlerList()
+
+IBattleAI (인터페이스)
+└── +virtual void DoTurn() = 0
+
+CBattleAI : IBattleAI
+├── +CBattleAbleObject* m_owner
+└── +void DoTurn() override
+
+🔗 클래스 관계 요약
+markdown
+복사
+편집
+관계 요약 (→ 포함, ▷ 상속):
+
+- CGameManager → CPlayer
+- CGameManager → CMonster
+- CGameManager → CIsBattleAble (전투 팀 구성)
+- CPlayer ▷ CBattleAbleObject
+- CMonster ▷ CBattleAbleObject
+- CMonster → FMonsterData
+- CBattleAbleObject → IBattleAI
+- CItem → FItemData
+- FItemPotionData ▷ FItemData
+- CBattleAI ▷ IBattleAI
+
+
 ### 구현 내용.
 
 1. ##### **캐릭터 생성 및 관리**
