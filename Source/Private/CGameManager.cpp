@@ -199,7 +199,8 @@ void CGameManager::goBattle()
 		swprintf_s(buffer, 256, L"전투 진행 중! vs %s", m_pMonster->getName().c_str());
 		CPrinter::PrintLine(buffer);
 		CGameView::getInstance().ViewLogs(battleManager.GetBattleLog());
-		Sleep(500);	// 0.5초 간격 대기
+		//Sleep(500);	// 0.5초 간격 대기
+		Sleep(5000);	// 0.5초 간격 대기
 	}
 	// 전체로그에 전투 로그 추가
 	for (auto& log : battleManager.GetBattleLog())
@@ -224,14 +225,19 @@ void CGameManager::goBattle()
 	// 아이템 드롭
 	int dropGold = 0;
 	vector<CItem> drops = DropItem(m_pMonster, dropGold);
+	if (drops.size() > 0)
+	{
+		swprintf_s(buffer, 256, L"%d 골드 획득", dropGold);
+		CPrinter::PrintLine(buffer);
+		CLogManager::getInstance().AddLog(buffer);
 
-	swprintf_s(buffer, 256, L"%d 골드 획득", dropGold);
-	CPrinter::PrintLine(buffer);
-	CLogManager::getInstance().AddLog(buffer);
+		swprintf_s(buffer, 256, L"%d 경험치 획득", m_pMonster->GetExpReward());
+		CPrinter::PrintLine(buffer);
+		CLogManager::getInstance().AddLog(buffer);
+	}
+	else {
 
-	swprintf_s(buffer, 256, L"%d 경험치 획득", m_pMonster->GetExpReward());
-	CPrinter::PrintLine(buffer);
-	CLogManager::getInstance().AddLog(buffer);
+	}
 
 	for (CItem item : drops)
 	{
@@ -463,13 +469,16 @@ void CGameManager::MakeMonster()
 		attack = (float)attack * multiple;	// 소수점 단위 절삭
 	}
 
-	(*result->Get_pAttack()) = attack;
-	(*result->Get_pHealth()) = health;
-	(*result->Get_pArmor()) = level;
-	(*result->Get_pLevel()) = level;
-	result->SetBattleAI(std::make_unique<CBattleAI>(result));
 
-	m_pMonster = result;
+	*(m_pMonster->Get_pAttack()) = attack;
+	*(m_pMonster->Get_pHealth()) = health;
+	*(m_pMonster->Get_pArmor()) = level;
+	*(m_pMonster->Get_pLevel()) = level;
+
+	m_pMonster->SetBattleAI(std::make_unique<CBattleAI>(m_pMonster));
+	//result->SetBattleAI(std::make_unique<CBattleAI>(result));
+
+	//m_pMonster = result;
 }
 
 //몬스터 처치 후 아이템 드랍
