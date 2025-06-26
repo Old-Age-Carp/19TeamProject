@@ -1,5 +1,6 @@
 ﻿#include "CGameView.h"
 #include "define.h"
+#include <memory>
 
 using std::vector;
 using std::unique_ptr;
@@ -7,25 +8,9 @@ using std::wstring;
 using std::to_wstring;
 
 void CGameView::ViewLogs(const std::vector<std::unique_ptr<ILogable>>& logs)
-
 {
-    vector<wstring> wrappedLog(logs.size() * 2);
-    for (const unique_ptr<ILogable>& log : logs)
-    {
-        vector<wstring> wrapped = CPrinter::WrapText(log.get()->ToString(), 80); // 80은 박스 너비
-        for (size_t i = 0; i < wrapped.size(); ++i)
-        {
-            if (i < wrappedLog.size())
-            {
-                wrappedLog[i] += wrapped[i];
-            }
-            else
-            {
-                wrappedLog.push_back(wrapped[i]);
-            }
-        }
-    }
-    CPrinter::PrintBoxes(wrappedLog, 80, wrappedLog.size() + 3, 1);
+    for (int i = 0; i < logs.size(); i++)
+        CPrinter::PrintLine(logs[i]->ToString());
 }
 
 void CGameView::ViewLogs(const vector<ILogable*>& logs)
@@ -50,8 +35,6 @@ void CGameView::ViewGameState(const CGameManager& gameMgr)
     case EGameState::SELECT:
         break;
     case EGameState::SHOP:
-        break;
-    case EGameState::LEVELUP:
         break;
     case EGameState::INVENTORY:
         break;

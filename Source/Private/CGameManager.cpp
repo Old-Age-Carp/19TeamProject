@@ -72,9 +72,6 @@ void CGameManager::Main()
 	case EGameState::SHOP:
 		goShop();
 		break;
-	case EGameState::LEVELUP:
-		
-		break;
 	case EGameState::INVENTORY:
 		goInvetory();
 		break;
